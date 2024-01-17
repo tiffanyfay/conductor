@@ -140,8 +140,8 @@ public class WorkflowClient extends ClientBase {
                                                 .getWorkflowInputMaxPayloadThresholdKB()
                                         * 1024L)) {
                     String errorMsg =
-                            String.format(
-                                    "Input payload larger than the allowed threshold of: %d KB",
+                            
+                                    "Input payload larger than the allowed threshold of: %d KB".formatted(
                                     conductorClientConfiguration
                                             .getWorkflowInputPayloadThresholdKB());
                     throw new ConductorClientException(errorMsg);
@@ -161,8 +161,8 @@ public class WorkflowClient extends ClientBase {
             }
         } catch (IOException e) {
             String errorMsg =
-                    String.format(
-                            "Unable to start workflow:%s, version:%s",
+                    
+                            "Unable to start workflow:%s, version:%s".formatted(
                             startWorkflowRequest.getName(), version);
             LOGGER.error(errorMsg, e);
             MetricsContainer.incrementWorkflowStartErrorCount(startWorkflowRequest.getName(), e);
@@ -177,8 +177,8 @@ public class WorkflowClient extends ClientBase {
                     startWorkflowRequest.getName());
         } catch (ConductorClientException e) {
             String errorMsg =
-                    String.format(
-                            "Unable to send start workflow request:%s, version:%s",
+                    
+                            "Unable to send start workflow request:%s, version:%s".formatted(
                             startWorkflowRequest.getName(), version);
             LOGGER.error(errorMsg, e);
             MetricsContainer.incrementWorkflowStartErrorCount(startWorkflowRequest.getName(), e);

@@ -121,6 +121,6 @@ public class MapType extends GenericType {
             throw new IllegalArgumentException(
                     "cannot map non-scalar map key: " + this.getJavaType());
         }
-        return String.format("map<%s, %s>", keyType.getProtoType(), valueType.getProtoType());
+        return "map<%s, %s>".formatted(keyType.getProtoType(), valueType.getProtoType());
     }
 }

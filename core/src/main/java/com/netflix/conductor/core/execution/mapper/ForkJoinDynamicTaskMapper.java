@@ -183,7 +183,7 @@ public class ForkJoinDynamicTaskMapper implements TaskMapper {
         List<String> joinOnTaskRefs = new LinkedList<>();
         // Add each dynamic task to the mapped tasks and also get the last dynamic task in the list,
         // which indicates that the following task after that needs to be a join task
-        if (!exists.isPresent()) {
+        if (exists.isEmpty()) {
             // Add each dynamic task to the mapped tasks and also get the last dynamic task in the
             // list,
             // which indicates that the following task after that needs to be a join task
@@ -239,8 +239,8 @@ public class ForkJoinDynamicTaskMapper implements TaskMapper {
                         forkedTask.getInputData().putAll(forkedTaskInput);
                     } catch (Exception e) {
                         String reason =
-                                String.format(
-                                        "Tasks could not be dynamically forked due to invalid input: %s",
+                                
+                                        "Tasks could not be dynamically forked due to invalid input: %s".formatted(
                                         e.getMessage());
                         throw new TerminateWorkflowException(reason);
                     }
@@ -403,8 +403,8 @@ public class ForkJoinDynamicTaskMapper implements TaskMapper {
         } catch (Exception e) {
             LOGGER.warn("IllegalArgumentException in getDynamicForkTasksAndInput", e);
             throw new TerminateWorkflowException(
-                    String.format(
-                            "Input '%s' is invalid. Cannot deserialize a list of Workflow Tasks from '%s'",
+                    
+                            "Input '%s' is invalid. Cannot deserialize a list of Workflow Tasks from '%s'".formatted(
                             dynamicForkTaskParam, dynamicForkTasksJson));
         }
     }
@@ -486,8 +486,8 @@ public class ForkJoinDynamicTaskMapper implements TaskMapper {
         forkTask.setType(forkTaskType);
         Map<String, Object> inputParameters = new HashMap<>();
 
-        if (forkTaskInput instanceof Map) {
-            inputParameters.putAll((Map<? extends String, ?>) forkTaskInput);
+        if (forkTaskInput instanceof Map map) {
+            inputParameters.putAll(map);
         } else {
             inputParameters.put("input", forkTaskInput);
         }
@@ -513,9 +513,8 @@ public class ForkJoinDynamicTaskMapper implements TaskMapper {
         subWorkflowParams.setVersion(version);
         forkTask.setSubWorkflowParam(subWorkflowParams);
 
-        if (forkTaskInput instanceof Map) {
-            inputParameters.putAll((Map<? extends String, ?>) forkTaskInput);
-            Map<? extends String, ?> forkTaskInputMap = (Map<? extends String, ?>) forkTaskInput;
+        if (forkTaskInput instanceof Map forkTaskInputMap) {
+            inputParameters.putAll(forkTaskInputMap);
             subWorkflowParams.setTaskToDomain(
                     (Map<String, String>) forkTaskInputMap.get("taskToDomain"));
         } else {
@@ -552,8 +551,8 @@ public class ForkJoinDynamicTaskMapper implements TaskMapper {
 
         if (dynamicForkJoinTaskList == null) {
             String reason =
-                    String.format(
-                            "Dynamic tasks could not be created. The value of %s from task's input %s has no dynamic tasks to be scheduled",
+                    
+                            "Dynamic tasks could not be created. The value of %s from task's input %s has no dynamic tasks to be scheduled".formatted(
                             dynamicForkJoinTaskParam, input);
             LOGGER.error(reason);
             throw new TerminateWorkflowException(reason);

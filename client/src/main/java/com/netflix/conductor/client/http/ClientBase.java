@@ -262,8 +262,8 @@ public abstract class ClientBase {
             return objectMapper.readValue(inputStream, Map.class);
         } catch (IOException e) {
             String errorMsg =
-                    String.format(
-                            "Unable to download payload from external storage location: %s", path);
+                    
+                            "Unable to download payload from external storage location: %s".formatted(path);
             LOGGER.error(errorMsg, e);
             throw new ConductorClientException(errorMsg, e);
         }
@@ -279,8 +279,8 @@ public abstract class ClientBase {
                 String param = queryParams[i].toString();
                 Object value = queryParams[i + 1];
                 if (value != null) {
-                    if (value instanceof Collection) {
-                        Object[] values = ((Collection<?>) value).toArray();
+                    if (value instanceof Collection collection) {
+                        Object[] values = collection.toArray();
                         builder.queryParam(param, values);
                     } else {
                         builder.queryParam(param, value);
@@ -298,8 +298,8 @@ public abstract class ClientBase {
 
     private void handleClientHandlerException(ClientHandlerException exception, URI uri) {
         String errorMessage =
-                String.format(
-                        "Unable to invoke Conductor API with uri: %s, failure to process request or response",
+                
+                        "Unable to invoke Conductor API with uri: %s, failure to process request or response".formatted(
                         uri);
         LOGGER.error(errorMessage, exception);
         throw new ConductorClientException(errorMessage, exception);
@@ -307,8 +307,8 @@ public abstract class ClientBase {
 
     private void handleRuntimeException(RuntimeException exception, URI uri) {
         String errorMessage =
-                String.format(
-                        "Unable to invoke Conductor API with uri: %s, runtime exception occurred",
+                
+                        "Unable to invoke Conductor API with uri: %s, runtime exception occurred".formatted(
                         uri);
         LOGGER.error(errorMessage, exception);
         throw new ConductorClientException(errorMessage, exception);
@@ -318,7 +318,7 @@ public abstract class ClientBase {
         ClientResponse clientResponse = exception.getResponse();
         if (clientResponse == null) {
             throw new ConductorClientException(
-                    String.format("Unable to invoke Conductor API with uri: %s", uri));
+                    "Unable to invoke Conductor API with uri: %s".formatted(uri));
         }
         try {
             if (clientResponse.getStatus() < 300) {
@@ -349,10 +349,10 @@ public abstract class ClientBase {
     }
 
     private void handleException(URI uri, RuntimeException e) {
-        if (e instanceof UniformInterfaceException) {
-            handleUniformInterfaceException(((UniformInterfaceException) e), uri);
-        } else if (e instanceof ClientHandlerException) {
-            handleClientHandlerException((ClientHandlerException) e, uri);
+        if (e instanceof UniformInterfaceException exception) {
+            handleUniformInterfaceException(exception, uri);
+        } else if (e instanceof ClientHandlerException exception) {
+            handleClientHandlerException(exception, uri);
         } else {
             handleRuntimeException(e, uri);
         }

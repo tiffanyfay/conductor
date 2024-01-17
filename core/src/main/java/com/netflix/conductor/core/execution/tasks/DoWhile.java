@@ -147,8 +147,8 @@ public class DoWhile extends WorkflowSystemTask {
             }
         } catch (ScriptException e) {
             String message =
-                    String.format(
-                            "Unable to evaluate condition %s, exception %s",
+                    
+                            "Unable to evaluate condition %s, exception %s".formatted(
                             doWhileTaskModel.getWorkflowTask().getLoopCondition(), e.getMessage());
             LOGGER.error(message);
             return markTaskFailure(

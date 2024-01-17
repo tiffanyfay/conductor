@@ -168,8 +168,10 @@ public class TaskResource {
     @Operation(
             summary = "Search for tasks based in payload and other parameters",
             description =
-                    "use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC."
-                            + " If order is not specified, defaults to ASC")
+                    """
+                    use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC.\
+                     If order is not specified, defaults to ASC\
+                    """)
     @GetMapping(value = "/search")
     public SearchResult<TaskSummary> search(
             @RequestParam(value = "start", defaultValue = "0", required = false) int start,
@@ -183,8 +185,10 @@ public class TaskResource {
     @Operation(
             summary = "Search for tasks based in payload and other parameters",
             description =
-                    "use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC."
-                            + " If order is not specified, defaults to ASC")
+                    """
+                    use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC.\
+                     If order is not specified, defaults to ASC\
+                    """)
     @GetMapping(value = "/search-v2")
     public SearchResult<Task> searchV2(
             @RequestParam(value = "start", defaultValue = "0", required = false) int start,

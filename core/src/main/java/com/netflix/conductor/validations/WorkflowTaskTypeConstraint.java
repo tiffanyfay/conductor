@@ -126,8 +126,8 @@ public @interface WorkflowTaskTypeConstraint {
             boolean valid = true;
             if (workflowTask.getSink() == null) {
                 String message =
-                        String.format(
-                                PARAM_REQUIRED_STRING_FORMAT,
+                        
+                                PARAM_REQUIRED_STRING_FORMAT.formatted(
                                 "sink",
                                 TaskType.TASK_TYPE_EVENT,
                                 workflowTask.getName());
@@ -143,8 +143,8 @@ public @interface WorkflowTaskTypeConstraint {
             if (workflowTask.getCaseValueParam() == null
                     && workflowTask.getCaseExpression() == null) {
                 String message =
-                        String.format(
-                                PARAM_REQUIRED_STRING_FORMAT,
+                        
+                                PARAM_REQUIRED_STRING_FORMAT.formatted(
                                 "caseValueParam or caseExpression",
                                 TaskType.DECISION,
                                 workflowTask.getName());
@@ -153,8 +153,8 @@ public @interface WorkflowTaskTypeConstraint {
             }
             if (workflowTask.getDecisionCases() == null) {
                 String message =
-                        String.format(
-                                PARAM_REQUIRED_STRING_FORMAT,
+                        
+                                PARAM_REQUIRED_STRING_FORMAT.formatted(
                                 "decisionCases",
                                 TaskType.DECISION,
                                 workflowTask.getName());
@@ -164,8 +164,8 @@ public @interface WorkflowTaskTypeConstraint {
                             || workflowTask.getCaseExpression() != null)
                     && (workflowTask.getDecisionCases().size() == 0)) {
                 String message =
-                        String.format(
-                                "decisionCases should have atleast one task for taskType: %s taskName: %s",
+                        
+                                "decisionCases should have atleast one task for taskType: %s taskName: %s".formatted(
                                 TaskType.DECISION, workflowTask.getName());
                 context.buildConstraintViolationWithTemplate(message).addConstraintViolation();
                 valid = false;
@@ -177,8 +177,8 @@ public @interface WorkflowTaskTypeConstraint {
                             workflowTask.getCaseExpression(), workflowTask.getInputParameters());
                 } catch (Exception ee) {
                     String message =
-                            String.format(
-                                    ee.getMessage() + ", taskType: DECISION taskName %s",
+                            (
+                                    ee.getMessage() + ", taskType: DECISION taskName %s").formatted(
                                     workflowTask.getName());
                     context.buildConstraintViolationWithTemplate(message).addConstraintViolation();
                     valid = false;
@@ -194,7 +194,7 @@ public @interface WorkflowTaskTypeConstraint {
                 Object returnValue = ScriptEvaluator.eval(expression, inputParameters);
             } catch (ScriptException e) {
                 throw new IllegalArgumentException(
-                        String.format("Expression is not well formatted: %s", e.getMessage()));
+                        "Expression is not well formatted: %s".formatted(e.getMessage()));
             }
         }
 
@@ -203,8 +203,8 @@ public @interface WorkflowTaskTypeConstraint {
             boolean valid = true;
             if (workflowTask.getEvaluatorType() == null) {
                 String message =
-                        String.format(
-                                PARAM_REQUIRED_STRING_FORMAT,
+                        
+                                PARAM_REQUIRED_STRING_FORMAT.formatted(
                                 "evaluatorType",
                                 TaskType.SWITCH,
                                 workflowTask.getName());
@@ -212,8 +212,8 @@ public @interface WorkflowTaskTypeConstraint {
                 valid = false;
             } else if (workflowTask.getExpression() == null) {
                 String message =
-                        String.format(
-                                PARAM_REQUIRED_STRING_FORMAT,
+                        
+                                PARAM_REQUIRED_STRING_FORMAT.formatted(
                                 "expression",
                                 TaskType.SWITCH,
                                 workflowTask.getName());
@@ -222,8 +222,8 @@ public @interface WorkflowTaskTypeConstraint {
             }
             if (workflowTask.getDecisionCases() == null) {
                 String message =
-                        String.format(
-                                PARAM_REQUIRED_STRING_FORMAT,
+                        
+                                PARAM_REQUIRED_STRING_FORMAT.formatted(
                                 "decisionCases",
                                 TaskType.SWITCH,
                                 workflowTask.getName());
@@ -232,8 +232,8 @@ public @interface WorkflowTaskTypeConstraint {
             } else if (workflowTask.getDecisionCases() != null
                     && workflowTask.getDecisionCases().size() == 0) {
                 String message =
-                        String.format(
-                                "decisionCases should have atleast one task for taskType: %s taskName: %s",
+                        
+                                "decisionCases should have atleast one task for taskType: %s taskName: %s".formatted(
                                 TaskType.SWITCH, workflowTask.getName());
                 context.buildConstraintViolationWithTemplate(message).addConstraintViolation();
                 valid = false;
@@ -246,8 +246,8 @@ public @interface WorkflowTaskTypeConstraint {
                             workflowTask.getExpression(), workflowTask.getInputParameters());
                 } catch (Exception ee) {
                     String message =
-                            String.format(
-                                    ee.getMessage() + ", taskType: SWITCH taskName %s",
+                            (
+                                    ee.getMessage() + ", taskType: SWITCH taskName %s").formatted(
                                     workflowTask.getName());
                     context.buildConstraintViolationWithTemplate(message).addConstraintViolation();
                     valid = false;
@@ -261,8 +261,8 @@ public @interface WorkflowTaskTypeConstraint {
             boolean valid = true;
             if (workflowTask.getLoopCondition() == null) {
                 String message =
-                        String.format(
-                                PARAM_REQUIRED_STRING_FORMAT,
+                        
+                                PARAM_REQUIRED_STRING_FORMAT.formatted(
                                 "loopCondition",
                                 TaskType.DO_WHILE,
                                 workflowTask.getName());
@@ -271,8 +271,8 @@ public @interface WorkflowTaskTypeConstraint {
             }
             if (workflowTask.getLoopOver() == null || workflowTask.getLoopOver().size() == 0) {
                 String message =
-                        String.format(
-                                PARAM_REQUIRED_STRING_FORMAT,
+                        
+                                PARAM_REQUIRED_STRING_FORMAT.formatted(
                                 "loopOver",
                                 TaskType.DO_WHILE,
                                 workflowTask.getName());
@@ -287,8 +287,8 @@ public @interface WorkflowTaskTypeConstraint {
             boolean valid = true;
             if (workflowTask.getDynamicTaskNameParam() == null) {
                 String message =
-                        String.format(
-                                PARAM_REQUIRED_STRING_FORMAT,
+                        
+                                PARAM_REQUIRED_STRING_FORMAT.formatted(
                                 "dynamicTaskNameParam",
                                 TaskType.DYNAMIC,
                                 workflowTask.getName());
@@ -356,8 +356,8 @@ public @interface WorkflowTaskTypeConstraint {
                     && (workflowTask.getDynamicForkTasksParam() != null
                             || workflowTask.getDynamicForkTasksInputParamName() != null)) {
                 String message =
-                        String.format(
-                                "dynamicForkJoinTasksParam or combination of dynamicForkTasksInputParamName and dynamicForkTasksParam cam be used for taskType: %s taskName: %s",
+                        
+                                "dynamicForkJoinTasksParam or combination of dynamicForkTasksInputParamName and dynamicForkTasksParam cam be used for taskType: %s taskName: %s".formatted(
                                 TaskType.FORK_JOIN_DYNAMIC, workflowTask.getName());
                 context.buildConstraintViolationWithTemplate(message).addConstraintViolation();
                 return false;
@@ -368,8 +368,8 @@ public @interface WorkflowTaskTypeConstraint {
             } else {
                 if (workflowTask.getDynamicForkTasksParam() == null) {
                     String message =
-                            String.format(
-                                    PARAM_REQUIRED_STRING_FORMAT,
+                            
+                                    PARAM_REQUIRED_STRING_FORMAT.formatted(
                                     "dynamicForkTasksParam",
                                     TaskType.FORK_JOIN_DYNAMIC,
                                     workflowTask.getName());
@@ -378,8 +378,8 @@ public @interface WorkflowTaskTypeConstraint {
                 }
                 if (workflowTask.getDynamicForkTasksInputParamName() == null) {
                     String message =
-                            String.format(
-                                    PARAM_REQUIRED_STRING_FORMAT,
+                            
+                                    PARAM_REQUIRED_STRING_FORMAT.formatted(
                                     "dynamicForkTasksInputParamName",
                                     TaskType.FORK_JOIN_DYNAMIC,
                                     workflowTask.getName());
@@ -418,8 +418,8 @@ public @interface WorkflowTaskTypeConstraint {
 
             if (!(isInputParameterSet || isInputTemplateSet)) {
                 String message =
-                        String.format(
-                                PARAM_REQUIRED_STRING_FORMAT,
+                        
+                                PARAM_REQUIRED_STRING_FORMAT.formatted(
                                 "inputParameters.http_request",
                                 TaskType.HTTP,
                                 workflowTask.getName());
@@ -436,8 +436,8 @@ public @interface WorkflowTaskTypeConstraint {
 
             if (workflowTask.getForkTasks() != null && (workflowTask.getForkTasks().size() == 0)) {
                 String message =
-                        String.format(
-                                "forkTasks should have atleast one task for taskType: %s taskName: %s",
+                        
+                                "forkTasks should have atleast one task for taskType: %s taskName: %s".formatted(
                                 TaskType.FORK_JOIN, workflowTask.getName());
                 context.buildConstraintViolationWithTemplate(message).addConstraintViolation();
                 valid = false;
@@ -453,16 +453,16 @@ public @interface WorkflowTaskTypeConstraint {
                     workflowTask.getInputParameters().get(getTerminationStatusParameter());
             if (workflowTask.isOptional()) {
                 String message =
-                        String.format(
-                                "terminate task cannot be optional, taskName: %s",
+                        
+                                "terminate task cannot be optional, taskName: %s".formatted(
                                 workflowTask.getName());
                 context.buildConstraintViolationWithTemplate(message).addConstraintViolation();
                 valid = false;
             }
             if (inputStatusParam == null || !validateInputStatus(inputStatusParam.toString())) {
                 String message =
-                        String.format(
-                                "terminate task must have an %s parameter and must be set to COMPLETED or FAILED, taskName: %s",
+                        
+                                "terminate task must have an %s parameter and must be set to COMPLETED or FAILED, taskName: %s".formatted(
                                 getTerminationStatusParameter(), workflowTask.getName());
                 context.buildConstraintViolationWithTemplate(message).addConstraintViolation();
                 valid = false;
@@ -497,8 +497,8 @@ public @interface WorkflowTaskTypeConstraint {
 
             if (!(isInputParameterSet || isInputTemplateSet)) {
                 String message =
-                        String.format(
-                                PARAM_REQUIRED_STRING_FORMAT,
+                        
+                                PARAM_REQUIRED_STRING_FORMAT.formatted(
                                 "inputParameters.kafka_request",
                                 TaskType.KAFKA_PUBLISH,
                                 workflowTask.getName());
@@ -514,8 +514,8 @@ public @interface WorkflowTaskTypeConstraint {
             boolean valid = true;
             if (workflowTask.getSubWorkflowParam() == null) {
                 String message =
-                        String.format(
-                                PARAM_REQUIRED_STRING_FORMAT,
+                        
+                                PARAM_REQUIRED_STRING_FORMAT.formatted(
                                 "subWorkflowParam",
                                 TaskType.SUB_WORKFLOW,
                                 workflowTask.getName());
@@ -552,8 +552,8 @@ public @interface WorkflowTaskTypeConstraint {
 
             if (!(isInputParameterSet || isInputTemplateSet)) {
                 String message =
-                        String.format(
-                                PARAM_REQUIRED_STRING_FORMAT,
+                        
+                                PARAM_REQUIRED_STRING_FORMAT.formatted(
                                 "inputParameters.queryExpression",
                                 TaskType.JSON_JQ_TRANSFORM,
                                 workflowTask.getName());

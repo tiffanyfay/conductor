@@ -107,7 +107,7 @@ public class AMQPSettings {
 
     public String getExchangeBoundQueueName() {
         if (StringUtils.isEmpty(exchangeBoundQueueName)) {
-            return String.format("bound_to_%s", queueOrExchangeName);
+            return "bound_to_%s".formatted(queueOrExchangeName);
         }
         return exchangeBoundQueueName;
     }

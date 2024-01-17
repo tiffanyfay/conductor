@@ -28,11 +28,13 @@ public class DateTimeUtils {
     public static Duration parseDuration(String text) {
         Matcher m =
                 Pattern.compile(
-                                "\\s*(?:(\\d+)\\s*(?:days?|d))?"
-                                        + "\\s*(?:(\\d+)\\s*(?:hours?|hrs?|h))?"
-                                        + "\\s*(?:(\\d+)\\s*(?:minutes?|mins?|m))?"
-                                        + "\\s*(?:(\\d+)\\s*(?:seconds?|secs?|s))?"
-                                        + "\\s*",
+                                """
+                                \\s*(?:(\\d+)\\s*(?:days?|d))?\
+                                \\s*(?:(\\d+)\\s*(?:hours?|hrs?|h))?\
+                                \\s*(?:(\\d+)\\s*(?:minutes?|mins?|m))?\
+                                \\s*(?:(\\d+)\\s*(?:seconds?|secs?|s))?\
+                                \\s*\
+                                """,
                                 Pattern.CASE_INSENSITIVE)
                         .matcher(text);
         if (!m.matches()) throw new IllegalArgumentException("Not valid duration: " + text);

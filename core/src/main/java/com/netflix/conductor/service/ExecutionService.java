@@ -615,8 +615,8 @@ public class ExecutionService {
             return externalPayloadStorage.getLocation(payloadOperation, payloadType, path);
         } catch (Exception e) {
             String errorMsg =
-                    String.format(
-                            "Invalid input - Operation: %s, PayloadType: %s", operation, type);
+                    
+                            "Invalid input - Operation: %s, PayloadType: %s".formatted(operation, type);
             LOGGER.error(errorMsg);
             throw new IllegalArgumentException(errorMsg);
         }

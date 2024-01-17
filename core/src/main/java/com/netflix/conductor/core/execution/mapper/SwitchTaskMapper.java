@@ -82,7 +82,7 @@ public class SwitchTaskMapper implements TaskMapper {
         String evaluatorType = workflowTask.getEvaluatorType();
         Evaluator evaluator = evaluators.get(evaluatorType);
         if (evaluator == null) {
-            String errorMsg = String.format("No evaluator registered for type: %s", evaluatorType);
+            String errorMsg = "No evaluator registered for type: %s".formatted(evaluatorType);
             LOGGER.error(errorMsg);
             throw new TerminateWorkflowException(errorMsg);
         }

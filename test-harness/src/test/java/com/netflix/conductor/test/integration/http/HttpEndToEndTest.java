@@ -23,7 +23,7 @@ public class HttpEndToEndTest extends AbstractHttpEndToEndTest {
 
     @Before
     public void init() {
-        apiRoot = String.format("http://localhost:%d/api/", port);
+        apiRoot = "http://localhost:%d/api/".formatted(port);
 
         taskClient = new TaskClient();
         taskClient.setRootURI(apiRoot);

@@ -63,8 +63,8 @@ public class Message extends AbstractMessage {
                 "$T to = $T.newBuilder()", javaProtoType.nestedClass("Builder"), javaProtoType);
 
         for (Field field : this.fields) {
-            if (field instanceof MessageField) {
-                AbstractType fieldType = ((MessageField) field).getAbstractType();
+            if (field instanceof MessageField messageField) {
+                AbstractType fieldType = messageField.getAbstractType();
                 fieldType.mapToProto(field.getName(), method);
             }
         }
@@ -85,8 +85,8 @@ public class Message extends AbstractMessage {
         method.addStatement("$T to = new $T()", this.clazz, this.clazz);
 
         for (Field field : this.fields) {
-            if (field instanceof MessageField) {
-                AbstractType fieldType = ((MessageField) field).getAbstractType();
+            if (field instanceof MessageField messageField) {
+                AbstractType fieldType = messageField.getAbstractType();
                 fieldType.mapFromProto(field.getName(), method);
             }
         }
@@ -123,8 +123,8 @@ public class Message extends AbstractMessage {
 
         @Override
         public String getProtoTypeDeclaration() {
-            return String.format(
-                    "%s %s = %d",
+            return 
+                    "%s %s = %d".formatted(
                     getAbstractType().getProtoType(), toUnderscoreCase(getName()), getProtoIndex());
         }
 

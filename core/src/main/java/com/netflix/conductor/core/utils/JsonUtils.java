@@ -37,14 +37,14 @@ public class JsonUtils {
      * @return the expanded object containing java types like {@link Map} and {@link List}
      */
     public Object expand(Object input) {
-        if (input instanceof List) {
-            expandList((List<Object>) input);
+        if (input instanceof List list) {
+            expandList(list);
             return input;
         } else if (input instanceof Map) {
             expandMap((Map<String, Object>) input);
             return input;
-        } else if (input instanceof String) {
-            return getJson((String) input);
+        } else if (input instanceof String string) {
+            return getJson(string);
         } else {
             return input;
         }
@@ -58,8 +58,8 @@ public class JsonUtils {
                 }
             } else if (value instanceof Map) {
                 expandMap((Map<String, Object>) value);
-            } else if (value instanceof List) {
-                expandList((List<Object>) value);
+            } else if (value instanceof List list) {
+                expandList(list);
             }
         }
     }
@@ -73,8 +73,8 @@ public class JsonUtils {
                 }
             } else if (value instanceof Map) {
                 expandMap((Map<String, Object>) value);
-            } else if (value instanceof List) {
-                expandList((List<Object>) value);
+            } else if (value instanceof List list) {
+                expandList(list);
             }
         }
     }

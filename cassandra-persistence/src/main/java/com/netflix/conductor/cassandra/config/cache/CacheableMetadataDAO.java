@@ -93,8 +93,7 @@ public class CacheableMetadataDAO implements MetadataDAO {
     @Override
     public List<TaskDef> getAllTaskDefs() {
         Object nativeCache = cacheManager.getCache(TASK_DEF_CACHE).getNativeCache();
-        if (nativeCache != null && nativeCache instanceof ConcurrentHashMap) {
-            ConcurrentHashMap cacheMap = (ConcurrentHashMap) nativeCache;
+        if (nativeCache != null && nativeCache instanceof ConcurrentHashMap cacheMap) {
             if (!cacheMap.isEmpty()) {
                 List<TaskDef> taskDefs = new ArrayList<>();
                 cacheMap.values().stream()

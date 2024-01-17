@@ -154,7 +154,7 @@ public class CassandraMetadataDAO extends CassandraBaseDAO implements MetadataDA
             session.execute(deleteTaskDefStatement.bind(name));
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "removeTaskDef");
-            String errorMsg = String.format("Failed to remove task definition: %s", name);
+            String errorMsg = "Failed to remove task definition: %s".formatted(name);
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);
         }
@@ -185,8 +185,8 @@ public class CassandraMetadataDAO extends CassandraBaseDAO implements MetadataDA
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "createWorkflowDef");
             String errorMsg =
-                    String.format(
-                            "Error creating workflow definition: %s/%d",
+                    
+                            "Error creating workflow definition: %s/%d".formatted(
                             workflowDef.getName(), workflowDef.getVersion());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);
@@ -211,8 +211,8 @@ public class CassandraMetadataDAO extends CassandraBaseDAO implements MetadataDA
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "updateWorkflowDef");
             String errorMsg =
-                    String.format(
-                            "Error updating workflow definition: %s/%d",
+                    
+                            "Error updating workflow definition: %s/%d".formatted(
                             workflowDef.getName(), workflowDef.getVersion());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);
@@ -245,7 +245,7 @@ public class CassandraMetadataDAO extends CassandraBaseDAO implements MetadataDA
             return Optional.ofNullable(workflowDef);
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "getTaskDef");
-            String errorMsg = String.format("Error fetching workflow def: %s/%d", name, version);
+            String errorMsg = "Error fetching workflow def: %s/%d".formatted(name, version);
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);
         }
@@ -261,7 +261,7 @@ public class CassandraMetadataDAO extends CassandraBaseDAO implements MetadataDA
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "removeWorkflowDef");
             String errorMsg =
-                    String.format("Failed to remove workflow definition: %s/%d", name, version);
+                    "Failed to remove workflow definition: %s/%d".formatted(name, version);
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);
         }
@@ -346,7 +346,7 @@ public class CassandraMetadataDAO extends CassandraBaseDAO implements MetadataDA
             return Optional.ofNullable(resultSet.one()).map(this::setDefaults).orElse(null);
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "getTaskDef");
-            String errorMsg = String.format("Failed to get task def: %s", name);
+            String errorMsg = "Failed to get task def: %s".formatted(name);
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);
         }
@@ -389,7 +389,7 @@ public class CassandraMetadataDAO extends CassandraBaseDAO implements MetadataDA
                     .collect(Collectors.toList());
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "getAllWorkflowDefVersions");
-            String errorMsg = String.format("Failed to get workflows defs for : %s", name);
+            String errorMsg = "Failed to get workflows defs for : %s".formatted(name);
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);
         }
@@ -405,7 +405,7 @@ public class CassandraMetadataDAO extends CassandraBaseDAO implements MetadataDA
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "insertOrUpdateTaskDef");
             String errorMsg =
-                    String.format("Error creating/updating task definition: %s", taskDef.getName());
+                    "Error creating/updating task definition: %s".formatted(taskDef.getName());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);
         }

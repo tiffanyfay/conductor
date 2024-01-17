@@ -112,9 +112,11 @@ public class DynamicTaskMapperTest {
 
         expectedException.expect(TerminateWorkflowException.class);
         expectedException.expectMessage(
-                String.format(
-                        "Cannot map a dynamic task based on the parameter and input. "
-                                + "Parameter= %s, input= %s",
+                (
+                        """
+                        Cannot map a dynamic task based on the parameter and input. \
+                        Parameter= %s, input= %s\
+                        """).formatted(
                         "dynamicTaskName", taskInput));
 
         dynamicTaskMapper.getDynamicTaskName(taskInput, "dynamicTaskName");
@@ -146,8 +148,8 @@ public class DynamicTaskMapperTest {
 
         expectedException.expect(TerminateWorkflowException.class);
         expectedException.expectMessage(
-                String.format(
-                        "Invalid task specified.  Cannot find task by name %s in the task definitions",
+                
+                        "Invalid task specified.  Cannot find task by name %s in the task definitions".formatted(
                         workflowTask.getName()));
 
         dynamicTaskMapper.getDynamicTaskDefinition(workflowTask);

@@ -159,7 +159,7 @@ public class ExecutionDAOFacade {
             LOGGER.debug("Workflow {} not found in executionDAO, checking indexDAO", workflowId);
             String json = indexDAO.get(workflowId, RAW_JSON_FIELD);
             if (json == null) {
-                String errorMsg = String.format("No such workflow found by id: %s", workflowId);
+                String errorMsg = "No such workflow found by id: %s".formatted(workflowId);
                 LOGGER.error(errorMsg);
                 throw new NotFoundException(errorMsg);
             }
@@ -170,7 +170,7 @@ public class ExecutionDAOFacade {
                     workflow.getTasks().clear();
                 }
             } catch (IOException e) {
-                String errorMsg = String.format("Error reading workflow: %s", workflowId);
+                String errorMsg = "Error reading workflow: %s".formatted(workflowId);
                 LOGGER.error(errorMsg);
                 throw new TransientException(errorMsg, e);
             }
@@ -352,8 +352,8 @@ public class ExecutionDAOFacade {
                                 removeTaskIndex(workflow, task, archiveWorkflow);
                             } catch (JsonProcessingException e) {
                                 throw new TransientException(
-                                        String.format(
-                                                "Task %s of workflow %s can not be serialized to json",
+                                        
+                                                "Task %s of workflow %s can not be serialized to json".formatted(
                                                 task.getTaskId(), workflow.getWorkflowId()),
                                         e);
                             }
@@ -389,8 +389,8 @@ public class ExecutionDAOFacade {
                         new Object[] {objectMapper.writeValueAsString(workflow), true});
             } else {
                 throw new IllegalArgumentException(
-                        String.format(
-                                "Cannot archive workflow: %s with status: %s",
+                        
+                                "Cannot archive workflow: %s with status: %s".formatted(
                                 workflow.getWorkflowId(), workflow.getStatus()));
             }
         } else {
@@ -521,8 +521,8 @@ public class ExecutionDAOFacade {
             throw e;
         } catch (Exception e) {
             String errorMsg =
-                    String.format(
-                            "Error updating task: %s in workflow: %s",
+                    
+                            "Error updating task: %s in workflow: %s".formatted(
                             taskModel.getTaskId(), taskModel.getWorkflowInstanceId());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);
@@ -550,8 +550,8 @@ public class ExecutionDAOFacade {
                         new Object[] {true});
             } else {
                 throw new IllegalArgumentException(
-                        String.format(
-                                "Cannot archive task: %s of workflow: %s with status: %s",
+                        
+                                "Cannot archive task: %s of workflow: %s with status: %s".formatted(
                                 task.getTaskId(), workflow.getWorkflowId(), task.getStatus()));
             }
         } else {

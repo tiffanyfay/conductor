@@ -19,7 +19,7 @@ public class ConflictException extends RuntimeException {
     }
 
     public ConflictException(String message, Object... args) {
-        super(String.format(message, args));
+        super(message.formatted(args));
     }
 
     public ConflictException(String message, Throwable cause) {

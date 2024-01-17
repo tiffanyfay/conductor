@@ -210,8 +210,10 @@ public class WorkflowResource {
     @Operation(
             summary = "Search for workflows based on payload and other parameters",
             description =
-                    "use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC."
-                            + " If order is not specified, defaults to ASC.")
+                    """
+                    use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC.\
+                     If order is not specified, defaults to ASC.\
+                    """)
     @GetMapping(value = "/search")
     public SearchResult<WorkflowSummary> search(
             @RequestParam(value = "start", defaultValue = "0", required = false) int start,
@@ -225,8 +227,10 @@ public class WorkflowResource {
     @Operation(
             summary = "Search for workflows based on payload and other parameters",
             description =
-                    "use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC."
-                            + " If order is not specified, defaults to ASC.")
+                    """
+                    use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC.\
+                     If order is not specified, defaults to ASC.\
+                    """)
     @GetMapping(value = "/search-v2")
     public SearchResult<Workflow> searchV2(
             @RequestParam(value = "start", defaultValue = "0", required = false) int start,
@@ -240,8 +244,10 @@ public class WorkflowResource {
     @Operation(
             summary = "Search for workflows based on task parameters",
             description =
-                    "use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC."
-                            + " If order is not specified, defaults to ASC")
+                    """
+                    use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC.\
+                     If order is not specified, defaults to ASC\
+                    """)
     @GetMapping(value = "/search-by-tasks")
     public SearchResult<WorkflowSummary> searchWorkflowsByTasks(
             @RequestParam(value = "start", defaultValue = "0", required = false) int start,
@@ -255,8 +261,10 @@ public class WorkflowResource {
     @Operation(
             summary = "Search for workflows based on task parameters",
             description =
-                    "use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC."
-                            + " If order is not specified, defaults to ASC")
+                    """
+                    use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC.\
+                     If order is not specified, defaults to ASC\
+                    """)
     @GetMapping(value = "/search-by-tasks-v2")
     public SearchResult<Workflow> searchWorkflowsByTasksV2(
             @RequestParam(value = "start", defaultValue = "0", required = false) int start,

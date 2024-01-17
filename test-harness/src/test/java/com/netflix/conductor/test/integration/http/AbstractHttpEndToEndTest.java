@@ -308,7 +308,7 @@ public abstract class AbstractHttpEndToEndTest extends AbstractEndToEndTest {
     @Test(expected = ConductorClientException.class)
     public void testInvalidResource() {
         MetadataClient metadataClient = new MetadataClient();
-        metadataClient.setRootURI(String.format("%sinvalid", apiRoot));
+        metadataClient.setRootURI("%sinvalid".formatted(apiRoot));
         WorkflowDef def = new WorkflowDef();
         def.setName("testWorkflowDel");
         def.setVersion(1);

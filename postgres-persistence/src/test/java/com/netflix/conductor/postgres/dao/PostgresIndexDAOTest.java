@@ -114,8 +114,8 @@ public class PostgresIndexDAOTest {
     private void compareWorkflowSummary(WorkflowSummary wfs) throws SQLException {
         List<Map<String, Object>> result =
                 queryDb(
-                        String.format(
-                                "SELECT * FROM workflow_index WHERE workflow_id = '%s'",
+                        
+                                "SELECT * FROM workflow_index WHERE workflow_id = '%s'".formatted(
                                 wfs.getWorkflowId()));
         assertEquals("Wrong number of rows returned", 1, result.size());
         assertEquals(
@@ -148,8 +148,8 @@ public class PostgresIndexDAOTest {
     private void compareTaskSummary(TaskSummary ts) throws SQLException {
         List<Map<String, Object>> result =
                 queryDb(
-                        String.format(
-                                "SELECT * FROM task_index WHERE task_id = '%s'", ts.getTaskId()));
+                        
+                                "SELECT * FROM task_index WHERE task_id = '%s'".formatted(ts.getTaskId()));
         assertEquals("Wrong number of rows returned", 1, result.size());
         assertEquals("Task id does not match", ts.getTaskId(), result.get(0).get("task_id"));
         assertEquals("Task type does not match", ts.getTaskType(), result.get(0).get("task_type"));
@@ -243,7 +243,7 @@ public class PostgresIndexDAOTest {
 
         indexDAO.indexWorkflow(wfs);
 
-        String query = String.format("workflowId=\"%s\"", wfs.getWorkflowId());
+        String query = "workflowId=\"%s\"".formatted(wfs.getWorkflowId());
         SearchResult<WorkflowSummary> results =
                 indexDAO.searchWorkflowSummary(query, "*", 0, 15, new ArrayList());
         assertEquals("No results returned", 1, results.getResults().size());
@@ -340,7 +340,7 @@ public class PostgresIndexDAOTest {
 
         indexDAO.indexTask(ts);
 
-        String query = String.format("taskId=\"%s\"", ts.getTaskId());
+        String query = "taskId=\"%s\"".formatted(ts.getTaskId());
         SearchResult<TaskSummary> results =
                 indexDAO.searchTaskSummary(query, "*", 0, 15, new ArrayList());
         assertEquals("No results returned", 1, results.getResults().size());

@@ -52,8 +52,10 @@ public class InlineTaskMapperTest {
         workflowTask.setTaskDefinition(new TaskDef("inline_task"));
         workflowTask.setEvaluatorType(JavascriptEvaluator.NAME);
         workflowTask.setExpression(
-                "function scriptFun() {if ($.input.a==1){return {testValue: true}} else{return "
-                        + "{testValue: false} }}; scriptFun();");
+                """
+                function scriptFun() {if ($.input.a==1){return {testValue: true}} else{return \
+                {testValue: false} }}; scriptFun();\
+                """);
 
         String taskId = new IDGenerator().generate();
 
@@ -86,8 +88,10 @@ public class InlineTaskMapperTest {
         workflowTask.setType(TaskType.INLINE.name());
         workflowTask.setEvaluatorType(JavascriptEvaluator.NAME);
         workflowTask.setExpression(
-                "function scriptFun() {if ($.input.a==1){return {testValue: true}} else{return "
-                        + "{testValue: false} }}; scriptFun();");
+                """
+                function scriptFun() {if ($.input.a==1){return {testValue: true}} else{return \
+                {testValue: false} }}; scriptFun();\
+                """);
 
         String taskId = new IDGenerator().generate();
 

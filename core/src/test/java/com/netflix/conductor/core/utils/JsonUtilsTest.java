@@ -109,8 +109,10 @@ public class JsonUtilsTest {
     @Test
     public void testTypes() throws Exception {
         String map =
-                "{\"requestId\":\"1375128656908832001\",\"workflowId\":\"fc147e1d-5408-4d41-b066-53cb2e551d0e\","
-                        + "\"inner\":{\"num\":42,\"status\":\"READY\"}}";
+                """
+                {"requestId":"1375128656908832001","workflowId":"fc147e1d-5408-4d41-b066-53cb2e551d0e",\
+                "inner":{"num":42,"status":"READY"}}\
+                """;
         jsonUtils.expand(map);
 
         Object jsonObject = jsonUtils.expand(map);

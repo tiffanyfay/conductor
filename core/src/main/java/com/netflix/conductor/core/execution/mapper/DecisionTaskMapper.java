@@ -140,7 +140,7 @@ public class DecisionTaskMapper implements TaskMapper {
                 Object returnValue = ScriptEvaluator.eval(expression, taskInput);
                 caseValue = (returnValue == null) ? "null" : returnValue.toString();
             } catch (ScriptException e) {
-                String errorMsg = String.format("Error while evaluating script: %s", expression);
+                String errorMsg = "Error while evaluating script: %s".formatted(expression);
                 LOGGER.error(errorMsg, e);
                 throw new TerminateWorkflowException(errorMsg);
             }

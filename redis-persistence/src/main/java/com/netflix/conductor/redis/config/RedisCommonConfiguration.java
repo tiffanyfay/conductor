@@ -52,8 +52,10 @@ public class RedisCommonConfiguration {
     public ShardSupplier shardSupplier(HostSupplier hostSupplier, RedisProperties properties) {
         if (properties.getAvailabilityZone() == null) {
             throw new ProvisionException(
-                    "Availability zone is not defined.  Ensure Configuration.getAvailabilityZone() returns a non-null "
-                            + "and non-empty value.");
+                    """
+                    Availability zone is not defined.  Ensure Configuration.getAvailabilityZone() returns a non-null \
+                    and non-empty value.\
+                    """);
         }
         String localDC =
                 properties.getAvailabilityZone().replaceAll(properties.getDataCenterRegion(), "");

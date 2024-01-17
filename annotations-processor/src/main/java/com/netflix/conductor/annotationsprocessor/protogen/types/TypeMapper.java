@@ -69,8 +69,8 @@ public class TypeMapper {
 
     public AbstractType get(Type t) {
         if (!types.containsKey(t)) {
-            if (t instanceof ParameterizedType) {
-                Type raw = ((ParameterizedType) t).getRawType();
+            if (t instanceof ParameterizedType type) {
+                Type raw = type.getRawType();
                 if (PROTO_LIST_TYPES.containsKey(raw)) {
                     types.put(t, new ListType(t));
                 } else if (raw.equals(Map.class)) {
@@ -87,9 +87,9 @@ public class TypeMapper {
     public MessageType get(String className) {
         for (Map.Entry<Type, AbstractType> pair : types.entrySet()) {
             AbstractType t = pair.getValue();
-            if (t instanceof MessageType) {
+            if (t instanceof MessageType type) {
                 if (((Class) t.getJavaType()).getSimpleName().equals(className))
-                    return (MessageType) t;
+                    return type;
             }
         }
         return null;

@@ -82,7 +82,7 @@ public class CassandraEventHandlerDAO extends CassandraBaseDAO implements EventH
             session.execute(deleteEventHandlerStatement.bind(name));
         } catch (Exception e) {
             Monitors.error(CLASS_NAME, "removeEventHandler");
-            String errorMsg = String.format("Failed to remove event handler: %s", name);
+            String errorMsg = "Failed to remove event handler: %s".formatted(name);
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);
         }
@@ -138,8 +138,8 @@ public class CassandraEventHandlerDAO extends CassandraBaseDAO implements EventH
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "insertOrUpdateEventHandler");
             String errorMsg =
-                    String.format(
-                            "Error creating/updating event handler: %s/%s",
+                    
+                            "Error creating/updating event handler: %s/%s".formatted(
                             eventHandler.getName(), eventHandler.getEvent());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);

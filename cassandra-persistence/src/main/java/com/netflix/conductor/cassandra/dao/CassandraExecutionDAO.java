@@ -232,8 +232,8 @@ public class CassandraExecutionDAO extends CassandraBaseDAO
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "createTasks");
             String errorMsg =
-                    String.format(
-                            "Error creating %d tasks for workflow: %s", tasks.size(), workflowId);
+                    
+                            "Error creating %d tasks for workflow: %s".formatted(tasks.size(), workflowId);
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);
         }
@@ -264,8 +264,8 @@ public class CassandraExecutionDAO extends CassandraBaseDAO
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "updateTask");
             String errorMsg =
-                    String.format(
-                            "Error updating task: %s in workflow: %s",
+                    
+                            "Error updating task: %s in workflow: %s".formatted(
                             task.getTaskId(), task.getWorkflowInstanceId());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);
@@ -312,8 +312,8 @@ public class CassandraExecutionDAO extends CassandraBaseDAO
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "exceedsLimit");
             String errorMsg =
-                    String.format(
-                            "Failed to get in progress limit - %s:%s in workflow :%s",
+                    
+                            "Failed to get in progress limit - %s:%s in workflow :%s".formatted(
                             task.getTaskDefName(), task.getTaskId(), task.getWorkflowInstanceId());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg);
@@ -361,7 +361,7 @@ public class CassandraExecutionDAO extends CassandraBaseDAO
                     .orElse(null);
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "getTask");
-            String errorMsg = String.format("Error getting task by id: %s", taskId);
+            String errorMsg = "Error getting task by id: %s".formatted(taskId);
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg);
         }
@@ -414,7 +414,7 @@ public class CassandraExecutionDAO extends CassandraBaseDAO
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "createWorkflow");
             String errorMsg =
-                    String.format("Error creating workflow: %s", workflow.getWorkflowId());
+                    "Error creating workflow: %s".formatted(workflow.getWorkflowId());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);
         }
@@ -437,7 +437,7 @@ public class CassandraExecutionDAO extends CassandraBaseDAO
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "updateWorkflow");
             String errorMsg =
-                    String.format("Failed to update workflow: %s", workflow.getWorkflowId());
+                    "Failed to update workflow: %s".formatted(workflow.getWorkflowId());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg);
         }
@@ -458,7 +458,7 @@ public class CassandraExecutionDAO extends CassandraBaseDAO
                 removed = resultSet.wasApplied();
             } catch (DriverException e) {
                 Monitors.error(CLASS_NAME, "removeWorkflow");
-                String errorMsg = String.format("Failed to remove workflow: %s", workflowId);
+                String errorMsg = "Failed to remove workflow: %s".formatted(workflowId);
                 LOGGER.error(errorMsg, e);
                 throw new TransientException(errorMsg);
             }
@@ -519,8 +519,8 @@ public class CassandraExecutionDAO extends CassandraBaseDAO
                         tasks.add(task);
                     } else {
                         throw new NonTransientException(
-                                String.format(
-                                        "Invalid row with entityKey: %s found in datastore for workflow: %s",
+                                
+                                        "Invalid row with entityKey: %s found in datastore for workflow: %s".formatted(
                                         entityKey, workflowId));
                     }
                 }
@@ -549,7 +549,7 @@ public class CassandraExecutionDAO extends CassandraBaseDAO
             return workflow;
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "getWorkflow");
-            String errorMsg = String.format("Failed to get workflow: %s", workflowId);
+            String errorMsg = "Failed to get workflow: %s".formatted(workflowId);
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg);
         }
@@ -639,8 +639,8 @@ public class CassandraExecutionDAO extends CassandraBaseDAO
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "addEventExecution");
             String errorMsg =
-                    String.format(
-                            "Failed to add event execution for event: %s, handler: %s",
+                    
+                            "Failed to add event execution for event: %s, handler: %s".formatted(
                             eventExecution.getEvent(), eventExecution.getName());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg);
@@ -664,8 +664,8 @@ public class CassandraExecutionDAO extends CassandraBaseDAO
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "updateEventExecution");
             String errorMsg =
-                    String.format(
-                            "Failed to update event execution for event: %s, handler: %s",
+                    
+                            "Failed to update event execution for event: %s, handler: %s".formatted(
                             eventExecution.getEvent(), eventExecution.getName());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg);
@@ -684,8 +684,8 @@ public class CassandraExecutionDAO extends CassandraBaseDAO
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "removeEventExecution");
             String errorMsg =
-                    String.format(
-                            "Failed to remove event execution for event: %s, handler: %s",
+                    
+                            "Failed to remove event execution for event: %s, handler: %s".formatted(
                             eventExecution.getEvent(), eventExecution.getName());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg);
@@ -705,8 +705,8 @@ public class CassandraExecutionDAO extends CassandraBaseDAO
                     .collect(Collectors.toList());
         } catch (DriverException e) {
             String errorMsg =
-                    String.format(
-                            "Failed to fetch event executions for event: %s, handler: %s",
+                    
+                            "Failed to fetch event executions for event: %s, handler: %s".formatted(
                             eventName, eventHandlerName);
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg);
@@ -726,8 +726,8 @@ public class CassandraExecutionDAO extends CassandraBaseDAO
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "addTaskToLimit");
             String errorMsg =
-                    String.format(
-                            "Error updating taskDefLimit for task - %s:%s in workflow: %s",
+                    
+                            "Error updating taskDefLimit for task - %s:%s in workflow: %s".formatted(
                             task.getTaskDefName(), task.getTaskId(), task.getWorkflowInstanceId());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);
@@ -745,8 +745,8 @@ public class CassandraExecutionDAO extends CassandraBaseDAO
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "removeTaskFromLimit");
             String errorMsg =
-                    String.format(
-                            "Error updating taskDefLimit for task - %s:%s in workflow: %s",
+                    
+                            "Error updating taskDefLimit for task - %s:%s in workflow: %s".formatted(
                             task.getTaskDefName(), task.getTaskId(), task.getWorkflowInstanceId());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);
@@ -784,7 +784,7 @@ public class CassandraExecutionDAO extends CassandraBaseDAO
             return resultSet.wasApplied();
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "removeTask");
-            String errorMsg = String.format("Failed to remove task: %s", task.getTaskId());
+            String errorMsg = "Failed to remove task: %s".formatted(task.getTaskId());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg);
         }
@@ -801,7 +801,7 @@ public class CassandraExecutionDAO extends CassandraBaseDAO
             session.execute(deleteTaskLookupStatement.bind(UUID.fromString(task.getTaskId())));
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "removeTaskLookup");
-            String errorMsg = String.format("Failed to remove task lookup: %s", task.getTaskId());
+            String errorMsg = "Failed to remove task lookup: %s".formatted(task.getTaskId());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg);
         }
@@ -862,7 +862,7 @@ public class CassandraExecutionDAO extends CassandraBaseDAO
                     .orElse(null);
         } catch (DriverException e) {
             Monitors.error(CLASS_NAME, "lookupWorkflowIdFromTaskId");
-            String errorMsg = String.format("Failed to lookup workflowId from taskId: %s", taskId);
+            String errorMsg = "Failed to lookup workflowId from taskId: %s".formatted(taskId);
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);
         }

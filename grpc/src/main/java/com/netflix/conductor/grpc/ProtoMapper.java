@@ -63,12 +63,12 @@ public final class ProtoMapper extends AbstractProtoMapper {
 
         if (val == null) {
             builder.setNullValue(NullValue.NULL_VALUE);
-        } else if (val instanceof Boolean) {
-            builder.setBoolValue((Boolean) val);
-        } else if (val instanceof Double) {
-            builder.setNumberValue((Double) val);
-        } else if (val instanceof String) {
-            builder.setStringValue((String) val);
+        } else if (val instanceof Boolean boolean1) {
+            builder.setBoolValue(boolean1);
+        } else if (val instanceof Double double1) {
+            builder.setNumberValue(double1);
+        } else if (val instanceof String string) {
+            builder.setStringValue(string);
         } else if (val instanceof Map) {
             Map<String, Object> map = (Map<String, Object>) val;
             Struct.Builder struct = Struct.newBuilder();
@@ -76,9 +76,9 @@ public final class ProtoMapper extends AbstractProtoMapper {
                 struct.putFields(pair.getKey(), toProto(pair.getValue()));
             }
             builder.setStructValue(struct.build());
-        } else if (val instanceof List) {
+        } else if (val instanceof List list1) {
             ListValue.Builder list = ListValue.newBuilder();
-            for (Object obj : (List<Object>)val) {
+            for (Object obj : list1) {
                 list.addValues(toProto(obj));
             }
             builder.setListValue(list.build());

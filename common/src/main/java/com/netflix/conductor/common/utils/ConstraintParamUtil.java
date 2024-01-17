@@ -48,9 +48,9 @@ public class ConstraintParamUtil {
                 // recursive call
                 errorList.addAll(
                         validateInputParam((Map<String, Object>) value, taskName, workflow));
-            } else if (value instanceof List) {
+            } else if (value instanceof List list) {
                 errorList.addAll(
-                        extractListInputParam(e.getKey(), (List<?>) value, taskName, workflow));
+                        extractListInputParam(e.getKey(), list, taskName, workflow));
             } else {
                 e.setValue(value);
             }
@@ -69,8 +69,8 @@ public class ConstraintParamUtil {
             } else if (listVal instanceof Map) {
                 errorList.addAll(
                         validateInputParam((Map<String, Object>) listVal, taskName, workflow));
-            } else if (listVal instanceof List) {
-                errorList.addAll(extractListInputParam(key, (List<?>) listVal, taskName, workflow));
+            } else if (listVal instanceof List list) {
+                errorList.addAll(extractListInputParam(key, list, taskName, workflow));
             }
         }
         return errorList;
@@ -81,7 +81,7 @@ public class ConstraintParamUtil {
         ArrayList<String> errorList = new ArrayList<>();
 
         if (value == null) {
-            String message = String.format("key: %s input parameter value: is null", key);
+            String message = "key: %s input parameter value: is null".formatted(key);
             errorList.add(message);
             return errorList;
         }
@@ -94,8 +94,8 @@ public class ConstraintParamUtil {
 
                 if (StringUtils.containsWhitespace(paramPath)) {
                     String message =
-                            String.format(
-                                    "key: %s input parameter value: %s is not valid",
+                            
+                                    "key: %s input parameter value: %s is not valid".formatted(
                                     key, paramPath);
                     errorList.add(message);
                 } else if (EnvUtils.isEnvironmentVariable(paramPath)) {
@@ -113,10 +113,12 @@ public class ConstraintParamUtil {
                         String sysValue = EnvUtils.getSystemParametersValue(paramPath, "");
                         if (sysValue == null) {
                             String errorMessage =
-                                    String.format(
-                                            "environment variable: %s for given task: %s"
-                                                    + " input value: %s"
-                                                    + " of input parameter: %s is not valid",
+                                    (
+                                            """
+                                            environment variable: %s for given task: %s\
+                                             input value: %s\
+                                             of input parameter: %s is not valid\
+                                            """).formatted(
                                             paramPath, taskName, key, value);
                             errorList.add(errorMessage);
                         }
@@ -128,10 +130,12 @@ public class ConstraintParamUtil {
                         WorkflowTask task = workflow.getTaskByRefName(components[0]);
                         if (task == null) {
                             String message =
-                                    String.format(
-                                            "taskReferenceName: %s for given task: %s input value: %s of input"
-                                                    + " parameter: %s"
-                                                    + " is not defined in workflow definition.",
+                                    (
+                                            """
+                                            taskReferenceName: %s for given task: %s input value: %s of input\
+                                             parameter: %s\
+                                             is not defined in workflow definition.\
+                                            """).formatted(
                                             components[0], taskName, key, value);
                             errorList.add(message);
                         }

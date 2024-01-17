@@ -198,8 +198,8 @@ public class SubWorkflow extends WorkflowSystemTask {
             }
             if (!status.isSuccessful()) {
                 task.setReasonForIncompletion(
-                        String.format(
-                                "Sub workflow %s failure reason: %s",
+                        
+                                "Sub workflow %s failure reason: %s".formatted(
                                 subworkflow.toShortString(),
                                 subworkflow.getReasonForIncompletion()));
             }

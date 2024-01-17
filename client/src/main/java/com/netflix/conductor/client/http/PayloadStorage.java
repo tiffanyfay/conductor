@@ -62,12 +62,12 @@ class PayloadStorage implements ExternalPayloadStorage {
                 break;
             default:
                 throw new ConductorClientException(
-                        String.format(
-                                "Invalid payload type: %s for operation: %s",
+                        
+                                "Invalid payload type: %s for operation: %s".formatted(
                                 payloadType.toString(), operation.toString()));
         }
         return clientBase.getForEntity(
-                String.format("%s/externalstoragelocation", uri),
+                "%s/externalstoragelocation".formatted(uri),
                 new Object[] {
                     "path",
                     path,
@@ -107,7 +107,7 @@ class PayloadStorage implements ExternalPayloadStorage {
                 if (Response.Status.fromStatusCode(responseCode).getFamily()
                         != Response.Status.Family.SUCCESSFUL) {
                     String errorMsg =
-                            String.format("Unable to upload. Response code: %d", responseCode);
+                            "Unable to upload. Response code: %d".formatted(responseCode);
                     LOGGER.error(errorMsg);
                     throw new ConductorClientException(errorMsg);
                 }
@@ -118,11 +118,11 @@ class PayloadStorage implements ExternalPayloadStorage {
                         responseCode);
             }
         } catch (URISyntaxException | MalformedURLException e) {
-            String errorMsg = String.format("Invalid path specified: %s", uri);
+            String errorMsg = "Invalid path specified: %s".formatted(uri);
             LOGGER.error(errorMsg, e);
             throw new ConductorClientException(errorMsg, e);
         } catch (IOException e) {
-            String errorMsg = String.format("Error uploading to path: %s", uri);
+            String errorMsg = "Error uploading to path: %s".formatted(uri);
             LOGGER.error(errorMsg, e);
             throw new ConductorClientException(errorMsg, e);
         } finally {
@@ -165,15 +165,15 @@ class PayloadStorage implements ExternalPayloadStorage {
                 return org.apache.commons.io.IOUtils.toBufferedInputStream(
                         connection.getInputStream());
             }
-            errorMsg = String.format("Unable to download. Response code: %d", responseCode);
+            errorMsg = "Unable to download. Response code: %d".formatted(responseCode);
             LOGGER.error(errorMsg);
             throw new ConductorClientException(errorMsg);
         } catch (URISyntaxException | MalformedURLException e) {
-            errorMsg = String.format("Invalid uri specified: %s", uri);
+            errorMsg = "Invalid uri specified: %s".formatted(uri);
             LOGGER.error(errorMsg, e);
             throw new ConductorClientException(errorMsg, e);
         } catch (IOException e) {
-            errorMsg = String.format("Error downloading from uri: %s", uri);
+            errorMsg = "Error downloading from uri: %s".formatted(uri);
             LOGGER.error(errorMsg, e);
             throw new ConductorClientException(errorMsg, e);
         } finally {

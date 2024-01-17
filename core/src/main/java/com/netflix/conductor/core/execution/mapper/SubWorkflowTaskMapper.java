@@ -70,8 +70,8 @@ public class SubWorkflowTaskMapper implements TaskMapper {
 
         Map subWorkflowTaskToDomain = null;
         Object uncheckedTaskToDomain = resolvedParams.get("taskToDomain");
-        if (uncheckedTaskToDomain instanceof Map) {
-            subWorkflowTaskToDomain = (Map) uncheckedTaskToDomain;
+        if (uncheckedTaskToDomain instanceof Map map) {
+            subWorkflowTaskToDomain = map;
         }
 
         TaskModel subWorkflowTask = taskMapperContext.createTaskModel();
@@ -93,9 +93,11 @@ public class SubWorkflowTaskMapper implements TaskMapper {
                 .orElseThrow(
                         () -> {
                             String reason =
-                                    String.format(
-                                            "Task %s is defined as sub-workflow and is missing subWorkflowParams. "
-                                                    + "Please check the workflow definition",
+                                    (
+                                            """
+                                            Task %s is defined as sub-workflow and is missing subWorkflowParams. \
+                                            Please check the workflow definition\
+                                            """).formatted(
                                             workflowTask.getName());
                             LOGGER.error(reason);
                             return new TerminateWorkflowException(reason);
@@ -140,8 +142,8 @@ public class SubWorkflowTaskMapper implements TaskMapper {
                                         .orElseThrow(
                                                 () -> {
                                                     String reason =
-                                                            String.format(
-                                                                    "The Task %s defined as a sub-workflow has no workflow definition available ",
+                                                            
+                                                                    "The Task %s defined as a sub-workflow has no workflow definition available ".formatted(
                                                                     subWorkflowName);
                                                     LOGGER.error(reason);
                                                     return new TerminateWorkflowException(reason);

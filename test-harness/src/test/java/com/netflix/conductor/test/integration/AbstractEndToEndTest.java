@@ -101,7 +101,7 @@ public abstract class AbstractEndToEndTest {
         String line;
         while ((line = bufferedReader.readLine()) != null) {
             String[] fields = line.split("\\s");
-            String endpoint = String.format("/%s", fields[2]);
+            String endpoint = "/%s".formatted(fields[2]);
 
             restClient.performRequest(new Request("DELETE", endpoint));
         }

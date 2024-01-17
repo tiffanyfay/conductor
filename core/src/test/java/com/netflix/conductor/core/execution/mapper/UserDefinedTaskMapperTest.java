@@ -109,8 +109,8 @@ public class UserDefinedTaskMapperTest {
         // then
         expectedException.expect(TerminateWorkflowException.class);
         expectedException.expectMessage(
-                String.format(
-                        "Invalid task specified. Cannot find task by name %s in the task definitions",
+                
+                        "Invalid task specified. Cannot find task by name %s in the task definitions".formatted(
                         workflowTask.getName()));
         // when
         userDefinedTaskMapper.getMappedTasks(taskMapperContext);

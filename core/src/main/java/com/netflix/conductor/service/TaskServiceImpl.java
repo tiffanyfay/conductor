@@ -186,7 +186,7 @@ public class TaskServiceImpl implements TaskService {
         } catch (Exception e) {
             // Fail the task and let decide reevaluate the workflow, thereby preventing workflow
             // being stuck from transient ack errors.
-            String errorMsg = String.format("Error when trying to ack task %s", taskId);
+            String errorMsg = "Error when trying to ack task %s".formatted(taskId);
             LOGGER.error(errorMsg, e);
             Task task = executionService.getTask(taskId);
             Monitors.recordAckTaskError(task.getTaskType());

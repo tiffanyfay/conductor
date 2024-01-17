@@ -54,8 +54,10 @@ public class PostgresPayloadStorageTest {
     public PostgreSQLContainer<?> postgreSQLContainer;
 
     private final String inputString =
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-                    + " Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.";
+            """
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry.\
+             Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.\
+            """;
     private final String errorMessage = "{\"Error\": \"Data does not exist.\"}";
     private final InputStream inputData;
     private final String key = "dummyKey.json";

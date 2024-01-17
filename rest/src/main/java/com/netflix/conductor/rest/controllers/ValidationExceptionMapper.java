@@ -64,8 +64,8 @@ public class ValidationExceptionMapper {
     }
 
     private ErrorResponse toErrorResponse(ValidationException ve) {
-        if (ve instanceof ConstraintViolationException) {
-            return constraintViolationExceptionToErrorResponse((ConstraintViolationException) ve);
+        if (ve instanceof ConstraintViolationException exception) {
+            return constraintViolationExceptionToErrorResponse(exception);
         } else {
             ErrorResponse result = new ErrorResponse();
             result.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -111,22 +111,22 @@ public class ValidationExceptionMapper {
             if (invalidValue instanceof Object[]) {
                 // not helpful to return object array, skip it.
                 return null;
-            } else if (invalidValue instanceof boolean[]) {
-                return Arrays.toString((boolean[]) invalidValue);
-            } else if (invalidValue instanceof byte[]) {
-                return Arrays.toString((byte[]) invalidValue);
-            } else if (invalidValue instanceof char[]) {
-                return Arrays.toString((char[]) invalidValue);
-            } else if (invalidValue instanceof double[]) {
-                return Arrays.toString((double[]) invalidValue);
-            } else if (invalidValue instanceof float[]) {
-                return Arrays.toString((float[]) invalidValue);
-            } else if (invalidValue instanceof int[]) {
-                return Arrays.toString((int[]) invalidValue);
-            } else if (invalidValue instanceof long[]) {
-                return Arrays.toString((long[]) invalidValue);
-            } else if (invalidValue instanceof short[]) {
-                return Arrays.toString((short[]) invalidValue);
+            } else if (invalidValue instanceof boolean[] booleans) {
+                return Arrays.toString(booleans);
+            } else if (invalidValue instanceof byte[] bytes) {
+                return Arrays.toString(bytes);
+            } else if (invalidValue instanceof char[] chars) {
+                return Arrays.toString(chars);
+            } else if (invalidValue instanceof double[] doubles) {
+                return Arrays.toString(doubles);
+            } else if (invalidValue instanceof float[] floats) {
+                return Arrays.toString(floats);
+            } else if (invalidValue instanceof int[] ints) {
+                return Arrays.toString(ints);
+            } else if (invalidValue instanceof long[] longs) {
+                return Arrays.toString(longs);
+            } else if (invalidValue instanceof short[] shorts) {
+                return Arrays.toString(shorts);
             }
         }
 
