@@ -95,8 +95,10 @@ public class DefaultEventProcessor {
 
         if (properties.getEventProcessorThreadCount() <= 0) {
             throw new IllegalStateException(
-                    "Cannot set event processor thread count to <=0. To disable event "
-                            + "processing, set conductor.default-event-processor.enabled=false.");
+                    """
+                    Cannot set event processor thread count to <=0. To disable event \
+                    processing, set conductor.default-event-processor.enabled=false.\
+                    """);
         }
         ThreadFactory threadFactory =
                 new BasicThreadFactory.Builder()

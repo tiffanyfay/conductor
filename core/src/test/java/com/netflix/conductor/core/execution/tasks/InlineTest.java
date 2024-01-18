@@ -15,9 +15,9 @@ package com.netflix.conductor.core.execution.tasks;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
-
 import com.netflix.conductor.core.execution.WorkflowExecutor;
+
+import org.junit.jupiter.api.Test;
 import com.netflix.conductor.core.execution.evaluators.Evaluator;
 import com.netflix.conductor.core.execution.evaluators.JavascriptEvaluator;
 import com.netflix.conductor.core.execution.evaluators.ValueParamEvaluator;

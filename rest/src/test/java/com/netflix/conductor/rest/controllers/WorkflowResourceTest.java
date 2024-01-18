@@ -17,8 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
@@ -27,7 +27,6 @@ import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.service.WorkflowService;
 import com.netflix.conductor.service.WorkflowTestService;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -41,6 +40,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class WorkflowResourceTest {
 
     @Mock private WorkflowService mockWorkflowService;
@@ -49,7 +50,7 @@ public class WorkflowResourceTest {
 
     private WorkflowResource workflowResource;
 
-    @Before
+    @BeforeEach
     public void before() {
         this.mockWorkflowService = mock(WorkflowService.class);
         this.mockWorkflowTestService = mock(WorkflowTestService.class);

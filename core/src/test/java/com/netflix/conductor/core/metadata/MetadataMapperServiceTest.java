@@ -16,15 +16,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
@@ -39,11 +39,8 @@ import jakarta.validation.ConstraintViolationException;
 
 import static com.netflix.conductor.TestUtils.getConstraintViolationMessages;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -52,7 +49,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("SpringJavaAutowiredMembersInspection")
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @EnableAutoConfiguration
 public class MetadataMapperServiceTest {
 
@@ -74,7 +71,7 @@ public class MetadataMapperServiceTest {
 
     @Autowired private MetadataMapperService metadataMapperService;
 
-    @After
+    @AfterEach
     public void cleanUp() {
         reset(metadataDAO);
     }
@@ -135,7 +132,7 @@ public class MetadataMapperServiceTest {
 
         assertEquals(2, workflowDefinition.getTasks().size());
         List<WorkflowTask> workflowTasks = workflowDefinition.getTasks();
-        assertNotNull(workflowTasks.get(0).getTaskDefinition());
+        assertNotNull(workflowTasks.getFirst().getTaskDefinition());
         assertNotNull(workflowTasks.get(1).getTaskDefinition());
 
         verify(metadataDAO).getTaskDef(nameTaskDefinition2);
@@ -190,7 +187,7 @@ public class MetadataMapperServiceTest {
 
         assertEquals(1, workflowDefinition.getTasks().size());
         List<WorkflowTask> workflowTasks = workflowDefinition.getTasks();
-        SubWorkflowParams params = workflowTasks.get(0).getSubWorkflowParam();
+        SubWorkflowParams params = workflowTasks.getFirst().getSubWorkflowParam();
 
         assertEquals(workflowDefinitionName, params.getName());
         assertEquals(version, params.getVersion().intValue());
@@ -220,7 +217,7 @@ public class MetadataMapperServiceTest {
 
         assertEquals(1, workflowDefinition.getTasks().size());
         List<WorkflowTask> workflowTasks = workflowDefinition.getTasks();
-        SubWorkflowParams params = workflowTasks.get(0).getSubWorkflowParam();
+        SubWorkflowParams params = workflowTasks.getFirst().getSubWorkflowParam();
 
         assertEquals(workflowDefinitionName, params.getName());
         assertEquals(version, params.getVersion());
@@ -229,54 +226,60 @@ public class MetadataMapperServiceTest {
         verifyNoMoreInteractions(metadataDAO);
     }
 
-    @Test(expected = TerminateWorkflowException.class)
+    @Test
     public void testExceptionWhenWorkflowDefinitionNotAvailable() {
-        String nameTaskDefinition = "taskSubworkflow8";
-        String workflowDefinitionName = "subworkflow";
+        assertThrows(TerminateWorkflowException.class, () -> {
+            String nameTaskDefinition = "taskSubworkflow8";
+            String workflowDefinitionName = "subworkflow";
 
-        WorkflowTask workflowTask = createWorkflowTask(nameTaskDefinition);
-        workflowTask.setWorkflowTaskType(TaskType.SUB_WORKFLOW);
-        SubWorkflowParams subWorkflowParams = new SubWorkflowParams();
-        subWorkflowParams.setName(workflowDefinitionName);
-        workflowTask.setSubWorkflowParam(subWorkflowParams);
+            WorkflowTask workflowTask = createWorkflowTask(nameTaskDefinition);
+            workflowTask.setWorkflowTaskType(TaskType.SUB_WORKFLOW);
+            SubWorkflowParams subWorkflowParams = new SubWorkflowParams();
+            subWorkflowParams.setName(workflowDefinitionName);
+            workflowTask.setSubWorkflowParam(subWorkflowParams);
 
-        WorkflowDef workflowDefinition = createWorkflowDefinition("testMetadataPopulation");
-        workflowDefinition.setTasks(List.of(workflowTask));
+            WorkflowDef workflowDefinition = createWorkflowDefinition("testMetadataPopulation");
+            workflowDefinition.setTasks(List.of(workflowTask));
 
-        when(metadataDAO.getLatestWorkflowDef(workflowDefinitionName)).thenReturn(Optional.empty());
+            when(metadataDAO.getLatestWorkflowDef(workflowDefinitionName)).thenReturn(Optional.empty());
 
-        metadataMapperService.populateTaskDefinitions(workflowDefinition);
+            metadataMapperService.populateTaskDefinitions(workflowDefinition);
 
-        verify(metadataDAO).getLatestWorkflowDef(workflowDefinitionName);
+            verify(metadataDAO).getLatestWorkflowDef(workflowDefinitionName);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testLookupWorkflowDefinition() {
-        try {
+        assertThrows(IllegalArgumentException.class, () -> {
+            try {
+                String workflowName = "test";
+                when(metadataDAO.getWorkflowDef(workflowName, 0))
+                        .thenReturn(Optional.of(new WorkflowDef()));
+                Optional<WorkflowDef> optionalWorkflowDef =
+                        metadataMapperService.lookupWorkflowDefinition(workflowName, 0);
+                assertTrue(optionalWorkflowDef.isPresent());
+                metadataMapperService.lookupWorkflowDefinition(null, 0);
+            } catch (ConstraintViolationException ex) {
+                Assertions.assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("WorkflowIds list cannot be null."));
+            }
+        });
+    }
+
+    @Test
+    public void testLookupLatestWorkflowDefinition() {
+        assertThrows(IllegalArgumentException.class, () -> {
             String workflowName = "test";
-            when(metadataDAO.getWorkflowDef(workflowName, 0))
+            when(metadataDAO.getLatestWorkflowDef(workflowName))
                     .thenReturn(Optional.of(new WorkflowDef()));
             Optional<WorkflowDef> optionalWorkflowDef =
-                    metadataMapperService.lookupWorkflowDefinition(workflowName, 0);
+                    metadataMapperService.lookupLatestWorkflowDefinition(workflowName);
             assertTrue(optionalWorkflowDef.isPresent());
-            metadataMapperService.lookupWorkflowDefinition(null, 0);
-        } catch (ConstraintViolationException ex) {
-            Assert.assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("WorkflowIds list cannot be null."));
-        }
-    }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testLookupLatestWorkflowDefinition() {
-        String workflowName = "test";
-        when(metadataDAO.getLatestWorkflowDef(workflowName))
-                .thenReturn(Optional.of(new WorkflowDef()));
-        Optional<WorkflowDef> optionalWorkflowDef =
-                metadataMapperService.lookupLatestWorkflowDefinition(workflowName);
-        assertTrue(optionalWorkflowDef.isPresent());
-
-        metadataMapperService.lookupLatestWorkflowDefinition(null);
+            metadataMapperService.lookupLatestWorkflowDefinition(null);
+        });
     }
 
     @Test

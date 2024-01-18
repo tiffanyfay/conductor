@@ -15,7 +15,7 @@ package com.netflix.conductor.es7.dao.index;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.context.TestPropertySource;
 
 import com.netflix.conductor.common.metadata.tasks.Task.Status;
@@ -25,8 +25,9 @@ import com.netflix.conductor.common.run.TaskSummary;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import static org.awaitility.Awaitility.await;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestPropertySource(properties = "conductor.elasticsearch.indexBatchSize=2")
 public class TestElasticSearchRestDAOV7Batch extends ElasticSearchRestDaoBaseTest {
@@ -70,12 +71,12 @@ public class TestElasticSearchRestDAOV7Batch extends ElasticSearchRestDaoBaseTes
                                             null);
 
                             assertTrue(
-                                    "should return 1 or more search results",
-                                    result.getResults().size() > 0);
+                                    result.getResults().size() > 0,
+                                    "should return 1 or more search results");
                             assertEquals(
-                                    "taskId should match the indexed task",
                                     "some-task-id",
-                                    result.getResults().get(0));
+                                    result.getResults().get(0),
+                                    "taskId should match the indexed task");
                         });
     }
 }

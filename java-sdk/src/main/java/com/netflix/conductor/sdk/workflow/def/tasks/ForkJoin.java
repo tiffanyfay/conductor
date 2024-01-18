@@ -90,7 +90,7 @@ public class ForkJoin extends Task<ForkJoin> {
         WorkflowTask joinWorkflowTask = null;
         if (this.join != null) {
             List<WorkflowTask> joinTasks = this.join.getWorkflowDefTasks();
-            joinWorkflowTask = joinTasks.get(0);
+            joinWorkflowTask = joinTasks.getFirst();
         } else {
             joinWorkflowTask = new WorkflowTask();
             joinWorkflowTask.setWorkflowTaskType(TaskType.JOIN);
@@ -113,7 +113,7 @@ public class ForkJoin extends Task<ForkJoin> {
             }
             forkTasks.add(forkedWorkflowTasks);
             joinOnTaskRefNames.add(
-                    forkedWorkflowTasks.get(forkedWorkflowTasks.size() - 1).getTaskReferenceName());
+                    forkedWorkflowTasks.getLast().getTaskReferenceName());
         }
         if (this.join != null) {
             fork.setJoinOn(List.of(this.join.getJoinOn()));

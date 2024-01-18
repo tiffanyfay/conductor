@@ -281,8 +281,8 @@ public class DeciderService {
                         permissiveTasksTerminalNonSuccessful.stream()
                                 .map(
                                         t ->
-                                                String.format(
-                                                        "Task %s failed with status: %s and reason: '%s'",
+                                                
+                                                        "Task %s failed with status: %s and reason: '%s'".formatted(
                                                         t.getTaskId(),
                                                         t.getStatus(),
                                                         t.getReasonForIncompletion()))
@@ -367,8 +367,8 @@ public class DeciderService {
                         .orElseThrow(
                                 () -> {
                                     String reason =
-                                            String.format(
-                                                    "The workflow %s is marked for re-run from %s but could not find the starting task",
+                                            
+                                                    "The workflow %s is marked for re-run from %s but could not find the starting task".formatted(
                                                     workflow.getWorkflowId(),
                                                     workflow.getReRunFromWorkflowId());
                                     return new TerminateWorkflowException(reason);
@@ -415,7 +415,7 @@ public class DeciderService {
                 output = terminateTask.getOutputData();
             }
         } else {
-            TaskModel last = Optional.ofNullable(task).orElse(allTasks.get(allTasks.size() - 1));
+            TaskModel last = Optional.ofNullable(task).orElse(allTasks.getLast());
             WorkflowDef workflowDef = workflow.getWorkflowDefinition();
             if (workflowDef.getOutputParameters() != null
                     && !workflowDef.getOutputParameters().isEmpty()) {
@@ -577,8 +577,8 @@ public class DeciderService {
             }
             updateWorkflowOutput(workflow, task);
             final String errMsg =
-                    String.format(
-                            "Task %s failed with status: %s and reason: '%s'",
+                    
+                            "Task %s failed with status: %s and reason: '%s'".formatted(
                             task.getTaskId(), status, task.getReasonForIncompletion());
             throw new TerminateWorkflowException(errMsg, status, task);
         }
@@ -672,9 +672,11 @@ public class DeciderService {
         }
 
         String reason =
-                String.format(
-                        "Workflow timed out after %d seconds. Timeout configured as %d seconds. "
-                                + "Timeout policy configured to %s",
+                (
+                        """
+                        Workflow timed out after %d seconds. Timeout configured as %d seconds. \
+                        Timeout policy configured to %s\
+                        """).formatted(
                         elapsedTime / 1000L,
                         workflowDef.getTimeoutSeconds(),
                         workflowDef.getTimeoutPolicy().name());
@@ -719,9 +721,11 @@ public class DeciderService {
         }
 
         String reason =
-                String.format(
-                        "Task timed out after %d seconds. Timeout configured as %d seconds. "
-                                + "Timeout policy configured to %s",
+                (
+                        """
+                        Task timed out after %d seconds. Timeout configured as %d seconds. \
+                        Timeout policy configured to %s\
+                        """).formatted(
                         elapsedTime / 1000L,
                         taskDef.getTimeoutSeconds(),
                         taskDef.getTimeoutPolicy().name());
@@ -755,8 +759,8 @@ public class DeciderService {
         }
 
         String reason =
-                String.format(
-                        "Task poll timed out after %d seconds. Poll timeout configured as %d seconds. Timeout policy configured to %s",
+                
+                        "Task poll timed out after %d seconds. Poll timeout configured as %d seconds. Timeout policy configured to %s".formatted(
                         pollElapsedTime / 1000L,
                         pollTimeout / 1000L,
                         taskDef.getTimeoutPolicy().name());

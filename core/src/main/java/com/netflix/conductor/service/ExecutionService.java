@@ -86,7 +86,7 @@ public class ExecutionService {
         if (tasks.isEmpty()) {
             return null;
         }
-        return tasks.get(0);
+        return tasks.getFirst();
     }
 
     public List<Task> poll(String taskType, String workerId, int count, int timeoutInMilliSecond) {
@@ -197,7 +197,7 @@ public class ExecutionService {
                     domain);
             return null;
         }
-        Task task = tasks.get(0);
+        Task task = tasks.getFirst();
         ackTaskReceived(task);
         LOGGER.debug(
                 "The Task {} being returned for /tasks/poll/{}?{}&{}",
@@ -615,8 +615,8 @@ public class ExecutionService {
             return externalPayloadStorage.getLocation(payloadOperation, payloadType, path);
         } catch (Exception e) {
             String errorMsg =
-                    String.format(
-                            "Invalid input - Operation: %s, PayloadType: %s", operation, type);
+                    
+                            "Invalid input - Operation: %s, PayloadType: %s".formatted(operation, type);
             LOGGER.error(errorMsg);
             throw new IllegalArgumentException(errorMsg);
         }

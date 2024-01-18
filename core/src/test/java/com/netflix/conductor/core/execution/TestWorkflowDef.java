@@ -20,17 +20,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-
 import com.netflix.conductor.common.metadata.tasks.TaskType;
+
+import org.junit.jupiter.api.Test;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestWorkflowDef {
 
@@ -165,7 +161,7 @@ public class TestWorkflowDef {
         caseTask.setName("case");
         caseTask.setTaskReferenceName("case");
         Map<String, List<WorkflowTask>> dc = new HashMap<>();
-        dc.put("c1", Arrays.asList(workflowTasks.get(0), subCaseTask, workflowTasks.get(1)));
+        dc.put("c1", Arrays.asList(workflowTasks.getFirst(), subCaseTask, workflowTasks.get(1)));
         dc.put("c2", Collections.singletonList(workflowTasks.get(3)));
         caseTask.setDecisionCases(dc);
 

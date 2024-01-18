@@ -53,9 +53,9 @@ public class QueueAdminResource {
     @Operation(summary = "Publish a message in queue to mark a wait task as completed.")
     @PostMapping(value = "/update/{workflowId}/{taskRefName}/{status}")
     public void update(
-            @PathVariable("workflowId") String workflowId,
-            @PathVariable("taskRefName") String taskRefName,
-            @PathVariable("status") Status status,
+            @PathVariable String workflowId,
+            @PathVariable String taskRefName,
+            @PathVariable Status status,
             @RequestBody Map<String, Object> output)
             throws Exception {
         defaultEventQueueProcessor.updateByTaskRefName(workflowId, taskRefName, output, status);
@@ -64,9 +64,9 @@ public class QueueAdminResource {
     @Operation(summary = "Publish a message in queue to mark a wait task (by taskId) as completed.")
     @PostMapping("/update/{workflowId}/task/{taskId}/{status}")
     public void updateByTaskId(
-            @PathVariable("workflowId") String workflowId,
-            @PathVariable("taskId") String taskId,
-            @PathVariable("status") Status status,
+            @PathVariable String workflowId,
+            @PathVariable String taskId,
+            @PathVariable Status status,
             @RequestBody Map<String, Object> output)
             throws Exception {
         defaultEventQueueProcessor.updateByTaskId(workflowId, taskId, output, status);

@@ -760,8 +760,8 @@ public class ElasticSearchDAOV6 extends ElasticSearchBaseDAO implements IndexDAO
 
             SearchResult<String> taskSearchResult =
                     searchTasks(
-                            String.format(
-                                    "(taskId='%s') AND (workflowId='%s')", taskId, workflowId),
+                            
+                                    "(taskId='%s') AND (workflowId='%s')".formatted(taskId, workflowId),
                             "*",
                             0,
                             1,

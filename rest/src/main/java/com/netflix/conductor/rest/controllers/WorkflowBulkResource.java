@@ -77,7 +77,7 @@ public class WorkflowBulkResource {
     @Operation(summary = "Restart the list of completed workflow")
     public BulkResponse restart(
             @RequestBody List<String> workflowIds,
-            @RequestParam(value = "useLatestDefinitions", defaultValue = "false", required = false)
+            @RequestParam(defaultValue = "false", required = false)
                     boolean useLatestDefinitions) {
         return workflowBulkService.restart(workflowIds, useLatestDefinitions);
     }
@@ -108,7 +108,7 @@ public class WorkflowBulkResource {
     @Operation(summary = "Terminate workflows execution")
     public BulkResponse terminate(
             @RequestBody List<String> workflowIds,
-            @RequestParam(value = "reason", required = false) String reason) {
+            @RequestParam(required = false) String reason) {
         return workflowBulkService.terminate(workflowIds, reason);
     }
 }

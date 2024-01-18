@@ -255,7 +255,10 @@ public class RedisMetadataDAO extends BaseDynoDAO implements MetadataDAO {
         Long result = jedisProxy.hdel(nsKey(WORKFLOW_DEF, name), String.valueOf(version));
         if (!result.equals(1L)) {
             throw new NotFoundException(
-                    "Cannot remove the workflow - no such workflow" + " definition: %s version: %d",
+                    """
+                    Cannot remove the workflow - no such workflow\
+                     definition: %s version: %d\
+                    """,
                     name, version);
         }
 

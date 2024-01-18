@@ -20,11 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
@@ -40,8 +36,9 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import jakarta.validation.executable.ExecutableValidator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -51,18 +48,18 @@ public class WorkflowTaskTypeConstraintTest {
     private static ValidatorFactory validatorFactory;
     private MetadataDAO mockMetadataDao;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
     }
 
-    @AfterClass
+    @AfterAll
     public static void close() {
         validatorFactory.close();
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mockMetadataDao = Mockito.mock(MetadataDAO.class);
         ValidationContext.initialize(mockMetadataDao);
@@ -431,10 +428,10 @@ public class WorkflowTaskTypeConstraintTest {
                         Terminate.getTerminationWorkflowOutputParameter(), "blah"));
         List<String> validationErrors = getErrorMessages(workflowTask);
 
-        Assert.assertEquals(1, validationErrors.size());
-        Assert.assertEquals(
+        Assertions.assertEquals(1, validationErrors.size());
+        Assertions.assertEquals(
                 "terminate task must have an terminationStatus parameter and must be set to COMPLETED or FAILED, taskName: terminate_task",
-                validationErrors.get(0));
+                validationErrors.getFirst());
     }
 
     @Test
@@ -448,10 +445,10 @@ public class WorkflowTaskTypeConstraintTest {
 
         List<String> validationErrors = getErrorMessages(workflowTask);
 
-        Assert.assertEquals(1, validationErrors.size());
-        Assert.assertEquals(
+        Assertions.assertEquals(1, validationErrors.size());
+        Assertions.assertEquals(
                 "terminate task must have an terminationStatus parameter and must be set to COMPLETED or FAILED, taskName: terminate_task",
-                validationErrors.get(0));
+                validationErrors.getFirst());
     }
 
     @Test
@@ -466,10 +463,10 @@ public class WorkflowTaskTypeConstraintTest {
 
         List<String> validationErrors = getErrorMessages(workflowTask);
 
-        Assert.assertEquals(1, validationErrors.size());
-        Assert.assertEquals(
+        Assertions.assertEquals(1, validationErrors.size());
+        Assertions.assertEquals(
                 "terminate task cannot be optional, taskName: terminate_task",
-                validationErrors.get(0));
+                validationErrors.getFirst());
     }
 
     @Test
@@ -483,7 +480,7 @@ public class WorkflowTaskTypeConstraintTest {
 
         List<String> validationErrors = getErrorMessages(workflowTask);
 
-        Assert.assertEquals(0, validationErrors.size());
+        Assertions.assertEquals(0, validationErrors.size());
     }
 
     @Test

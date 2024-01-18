@@ -66,8 +66,8 @@ public class MetadataResource {
     @Operation(summary = "Retrieves workflow definition along with blueprint")
     @GetMapping("/workflow/{name}")
     public WorkflowDef get(
-            @PathVariable("name") String name,
-            @RequestParam(value = "version", required = false) Integer version) {
+            @PathVariable String name,
+            @RequestParam(required = false) Integer version) {
         return metadataService.getWorkflowDef(name, version);
     }
 
@@ -94,7 +94,7 @@ public class MetadataResource {
             summary =
                     "Removes workflow definition. It does not remove workflows associated with the definition.")
     public void unregisterWorkflowDef(
-            @PathVariable("name") String name, @PathVariable("version") Integer version) {
+            @PathVariable String name, @PathVariable Integer version) {
         metadataService.unregisterWorkflowDef(name, version);
     }
 

@@ -20,8 +20,8 @@ import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.netflix.conductor.client.exception.ConductorClientException;
@@ -32,8 +32,8 @@ import com.netflix.conductor.common.metadata.tasks.TaskResult;
 
 import static com.netflix.conductor.common.metadata.tasks.TaskResult.Status.COMPLETED;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doAnswer;
@@ -46,27 +46,31 @@ public class TaskRunnerConfigurerTest {
 
     private TaskClient client;
 
-    @Before
+    @BeforeEach
     public void setup() {
         client = Mockito.mock(TaskClient.class);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testNoWorkersException() {
-        new TaskRunnerConfigurer.Builder(null, null).build();
+        assertThrows(NullPointerException.class, () -> {
+            new TaskRunnerConfigurer.Builder(null, null).build();
+        });
     }
 
-    @Test(expected = ConductorClientException.class)
+    @Test
     public void testInvalidThreadConfig() {
-        Worker worker1 = Worker.create("task1", TaskResult::new);
-        Worker worker2 = Worker.create("task2", TaskResult::new);
-        Map<String, Integer> taskThreadCount = new HashMap<>();
-        taskThreadCount.put(worker1.getTaskDefName(), 2);
-        taskThreadCount.put(worker2.getTaskDefName(), 3);
-        new TaskRunnerConfigurer.Builder(client, Arrays.asList(worker1, worker2))
-                .withThreadCount(10)
-                .withTaskThreadCount(taskThreadCount)
-                .build();
+        assertThrows(ConductorClientException.class, () -> {
+            Worker worker1 = Worker.create("task1", TaskResult::new);
+            Worker worker2 = Worker.create("task2", TaskResult::new);
+            Map<String, Integer> taskThreadCount = new HashMap<>();
+            taskThreadCount.put(worker1.getTaskDefName(), 2);
+            taskThreadCount.put(worker2.getTaskDefName(), 3);
+            new TaskRunnerConfigurer.Builder(client, Arrays.asList(worker1, worker2))
+                    .withThreadCount(10)
+                    .withTaskThreadCount(taskThreadCount)
+                    .build();
+        });
     }
 
     @Test

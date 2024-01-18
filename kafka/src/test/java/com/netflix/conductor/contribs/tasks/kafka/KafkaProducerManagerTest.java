@@ -18,10 +18,10 @@ import java.util.Properties;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.LongSerializer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -69,17 +69,19 @@ public class KafkaProducerManagerTest {
     }
 
     @SuppressWarnings("rawtypes")
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testExecutionException() {
-        KafkaProducerManager manager =
-                new KafkaProducerManager(
-                        Duration.ofMillis(150),
-                        Duration.ofMillis(500),
-                        10,
-                        Duration.ofMillis(120000));
-        KafkaPublishTask.Input input = getInput();
-        Producer producer = manager.getProducer(input);
-        assertNotNull(producer);
+        assertThrows(RuntimeException.class, () -> {
+            KafkaProducerManager manager =
+                    new KafkaProducerManager(
+                            Duration.ofMillis(150),
+                            Duration.ofMillis(500),
+                            10,
+                            Duration.ofMillis(120000));
+            KafkaPublishTask.Input input = getInput();
+            Producer producer = manager.getProducer(input);
+            assertNotNull(producer);
+        });
     }
 
     @SuppressWarnings("rawtypes")

@@ -17,15 +17,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 
 import com.netflix.conductor.postgres.storage.PostgresPayloadStorage;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -35,7 +36,7 @@ public class ExternalPostgresPayloadResourceTest {
     private PostgresPayloadStorage mockPayloadStorage;
     private ExternalPostgresPayloadResource postgresResource;
 
-    @Before
+    @BeforeEach
     public void before() {
         this.mockPayloadStorage = mock(PostgresPayloadStorage.class);
         this.postgresResource = new ExternalPostgresPayloadResource(this.mockPayloadStorage);

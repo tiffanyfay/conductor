@@ -53,7 +53,7 @@ public class MessageType extends AbstractType {
 
     private boolean isEnum() {
         Type clazz = getJavaType();
-        return (clazz instanceof Class<?>) && ((Class) clazz).isEnum();
+        return (clazz instanceof Class<?> c) && c.isEnum();
     }
 
     @Override

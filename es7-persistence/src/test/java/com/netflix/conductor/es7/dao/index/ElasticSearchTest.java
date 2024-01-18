@@ -12,15 +12,13 @@
  */
 package com.netflix.conductor.es7.dao.index;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -29,9 +27,8 @@ import com.netflix.conductor.es7.config.ElasticSearchProperties;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@ContextConfiguration(
+@SpringJUnitConfig(
         classes = {TestObjectMapperConfiguration.class, ElasticSearchTest.TestConfiguration.class})
-@RunWith(SpringRunner.class)
 @TestPropertySource(
         properties = {"conductor.indexing.enabled=true", "conductor.elasticsearch.version=7"})
 public abstract class ElasticSearchTest {
@@ -54,12 +51,12 @@ public abstract class ElasticSearchTest {
 
     @Autowired protected ElasticSearchProperties properties;
 
-    @BeforeClass
+    @BeforeAll
     public static void startServer() {
         container.start();
     }
 
-    @AfterClass
+    @AfterAll
     public static void stopServer() {
         container.stop();
     }

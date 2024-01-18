@@ -74,8 +74,8 @@ public class SimpleTaskMapper implements TaskMapper {
                         .orElseThrow(
                                 () -> {
                                     String reason =
-                                            String.format(
-                                                    "Invalid task. Task %s does not have a definition",
+                                            
+                                                    "Invalid task. Task %s does not have a definition".formatted(
                                                     workflowTask.getName());
                                     return new TerminateWorkflowException(reason);
                                 });

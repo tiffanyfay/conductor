@@ -14,14 +14,11 @@ package com.netflix.conductor.dao;
 
 import java.util.List;
 
-import org.junit.Test;
-
 import com.netflix.conductor.common.metadata.tasks.PollData;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class PollDataDAOTest {
 

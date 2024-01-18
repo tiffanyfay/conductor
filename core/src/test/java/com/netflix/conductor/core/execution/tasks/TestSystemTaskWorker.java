@@ -17,9 +17,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.netflix.conductor.core.config.ConductorProperties;
@@ -27,7 +27,6 @@ import com.netflix.conductor.core.execution.AsyncSystemTaskExecutor;
 import com.netflix.conductor.dao.QueueDAO;
 import com.netflix.conductor.service.ExecutionService;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -36,6 +35,8 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestSystemTaskWorker {
 
@@ -49,7 +50,7 @@ public class TestSystemTaskWorker {
 
     private SystemTaskWorker systemTaskWorker;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         asyncSystemTaskExecutor = mock(AsyncSystemTaskExecutor.class);
         executionService = mock(ExecutionService.class);
@@ -67,7 +68,7 @@ public class TestSystemTaskWorker {
         systemTaskWorker.start();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         systemTaskWorker.queueExecutionConfigMap.clear();
         systemTaskWorker.stop();

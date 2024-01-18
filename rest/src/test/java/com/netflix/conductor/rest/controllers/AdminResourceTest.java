@@ -17,14 +17,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.service.AdminService;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -33,13 +32,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class AdminResourceTest {
 
     @Mock private AdminService mockAdminService;
 
     @Mock private AdminResource adminResource;
 
-    @Before
+    @BeforeEach
     public void before() {
         this.mockAdminService = mock(AdminService.class);
         this.adminResource = new AdminResource(mockAdminService);

@@ -12,7 +12,7 @@
  */
 package com.netflix.conductor.es7.dao.query.parser;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Viren

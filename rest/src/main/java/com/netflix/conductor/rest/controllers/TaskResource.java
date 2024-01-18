@@ -55,7 +55,7 @@ public class TaskResource {
     public ResponseEntity<Task> poll(
             @PathVariable("tasktype") String taskType,
             @RequestParam(value = "workerid", required = false) String workerId,
-            @RequestParam(value = "domain", required = false) String domain) {
+            @RequestParam(required = false) String domain) {
         // for backwards compatibility with 2.x client which expects a 204 when no Task is found
         return Optional.ofNullable(taskService.poll(taskType, workerId, domain))
                 .map(ResponseEntity::ok)
@@ -67,9 +67,9 @@ public class TaskResource {
     public ResponseEntity<List<Task>> batchPoll(
             @PathVariable("tasktype") String taskType,
             @RequestParam(value = "workerid", required = false) String workerId,
-            @RequestParam(value = "domain", required = false) String domain,
-            @RequestParam(value = "count", defaultValue = "1") int count,
-            @RequestParam(value = "timeout", defaultValue = "100") int timeout) {
+            @RequestParam(required = false) String domain,
+            @RequestParam(defaultValue = "1") int count,
+            @RequestParam(defaultValue = "100") int timeout) {
         // for backwards compatibility with 2.x client which expects a 204 when no Task is found
         return Optional.ofNullable(
                         taskService.batchPoll(taskType, workerId, domain, count, timeout))
@@ -86,9 +86,9 @@ public class TaskResource {
     @PostMapping(value = "/{workflowId}/{taskRefName}/{status}", produces = TEXT_PLAIN_VALUE)
     @Operation(summary = "Update a task By Ref Name")
     public String updateTask(
-            @PathVariable("workflowId") String workflowId,
-            @PathVariable("taskRefName") String taskRefName,
-            @PathVariable("status") TaskResult.Status status,
+            @PathVariable String workflowId,
+            @PathVariable String taskRefName,
+            @PathVariable TaskResult.Status status,
             @RequestParam(value = "workerid", required = false) String workerId,
             @RequestBody Map<String, Object> output) {
 
@@ -97,19 +97,19 @@ public class TaskResource {
 
     @PostMapping("/{taskId}/log")
     @Operation(summary = "Log Task Execution Details")
-    public void log(@PathVariable("taskId") String taskId, @RequestBody String log) {
+    public void log(@PathVariable String taskId, @RequestBody String log) {
         taskService.log(taskId, log);
     }
 
     @GetMapping("/{taskId}/log")
     @Operation(summary = "Get Task Execution Logs")
-    public List<TaskExecLog> getTaskLogs(@PathVariable("taskId") String taskId) {
+    public List<TaskExecLog> getTaskLogs(@PathVariable String taskId) {
         return taskService.getTaskLogs(taskId);
     }
 
     @GetMapping("/{taskId}")
     @Operation(summary = "Get task by Id")
-    public ResponseEntity<Task> getTask(@PathVariable("taskId") String taskId) {
+    public ResponseEntity<Task> getTask(@PathVariable String taskId) {
         // for backwards compatibility with 2.x client which expects a 204 when no Task is found
         return Optional.ofNullable(taskService.getTask(taskId))
                 .map(ResponseEntity::ok)
@@ -127,10 +127,10 @@ public class TaskResource {
     @GetMapping("/queue/size")
     @Operation(summary = "Get queue size for a task type.")
     public Integer taskDepth(
-            @RequestParam("taskType") String taskType,
-            @RequestParam(value = "domain", required = false) String domain,
-            @RequestParam(value = "isolationGroupId", required = false) String isolationGroupId,
-            @RequestParam(value = "executionNamespace", required = false)
+            @RequestParam String taskType,
+            @RequestParam(required = false) String domain,
+            @RequestParam(required = false) String isolationGroupId,
+            @RequestParam(required = false)
                     String executionNamespace) {
         return taskService.getTaskQueueSize(taskType, domain, executionNamespace, isolationGroupId);
     }
@@ -149,7 +149,7 @@ public class TaskResource {
 
     @GetMapping("/queue/polldata")
     @Operation(summary = "Get the last poll data for a given task type")
-    public List<PollData> getPollData(@RequestParam("taskType") String taskType) {
+    public List<PollData> getPollData(@RequestParam String taskType) {
         return taskService.getPollData(taskType);
     }
 
@@ -161,46 +161,50 @@ public class TaskResource {
 
     @PostMapping(value = "/queue/requeue/{taskType}", produces = TEXT_PLAIN_VALUE)
     @Operation(summary = "Requeue pending tasks")
-    public String requeuePendingTask(@PathVariable("taskType") String taskType) {
+    public String requeuePendingTask(@PathVariable String taskType) {
         return taskService.requeuePendingTask(taskType);
     }
 
     @Operation(
             summary = "Search for tasks based in payload and other parameters",
             description =
-                    "use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC."
-                            + " If order is not specified, defaults to ASC")
+                    """
+                    use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC.\
+                     If order is not specified, defaults to ASC\
+                    """)
     @GetMapping(value = "/search")
     public SearchResult<TaskSummary> search(
-            @RequestParam(value = "start", defaultValue = "0", required = false) int start,
-            @RequestParam(value = "size", defaultValue = "100", required = false) int size,
-            @RequestParam(value = "sort", required = false) String sort,
-            @RequestParam(value = "freeText", defaultValue = "*", required = false) String freeText,
-            @RequestParam(value = "query", required = false) String query) {
+            @RequestParam(defaultValue = "0", required = false) int start,
+            @RequestParam(defaultValue = "100", required = false) int size,
+            @RequestParam(required = false) String sort,
+            @RequestParam(defaultValue = "*", required = false) String freeText,
+            @RequestParam(required = false) String query) {
         return taskService.search(start, size, sort, freeText, query);
     }
 
     @Operation(
             summary = "Search for tasks based in payload and other parameters",
             description =
-                    "use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC."
-                            + " If order is not specified, defaults to ASC")
+                    """
+                    use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC.\
+                     If order is not specified, defaults to ASC\
+                    """)
     @GetMapping(value = "/search-v2")
     public SearchResult<Task> searchV2(
-            @RequestParam(value = "start", defaultValue = "0", required = false) int start,
-            @RequestParam(value = "size", defaultValue = "100", required = false) int size,
-            @RequestParam(value = "sort", required = false) String sort,
-            @RequestParam(value = "freeText", defaultValue = "*", required = false) String freeText,
-            @RequestParam(value = "query", required = false) String query) {
+            @RequestParam(defaultValue = "0", required = false) int start,
+            @RequestParam(defaultValue = "100", required = false) int size,
+            @RequestParam(required = false) String sort,
+            @RequestParam(defaultValue = "*", required = false) String freeText,
+            @RequestParam(required = false) String query) {
         return taskService.searchV2(start, size, sort, freeText, query);
     }
 
     @Operation(summary = "Get the external uri where the task payload is to be stored")
     @GetMapping({"/externalstoragelocation", "external-storage-location"})
     public ExternalStorageLocation getExternalStorageLocation(
-            @RequestParam("path") String path,
-            @RequestParam("operation") String operation,
-            @RequestParam("payloadType") String payloadType) {
+            @RequestParam String path,
+            @RequestParam String operation,
+            @RequestParam String payloadType) {
         return taskService.getExternalStorageLocation(path, operation, payloadType);
     }
 }

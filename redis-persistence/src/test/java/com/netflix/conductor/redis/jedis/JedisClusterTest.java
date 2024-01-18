@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import redis.clients.jedis.GeoUnit;
@@ -31,9 +31,11 @@ import redis.clients.jedis.params.SetParams;
 import redis.clients.jedis.params.ZAddParams;
 import redis.clients.jedis.params.ZIncrByParams;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class JedisClusterTest {
 
@@ -501,9 +503,11 @@ public class JedisClusterTest {
         jedisCluster.echo("string");
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testMove() {
-        jedisCluster.move("key", 1337);
+        assertThrows(UnsupportedOperationException.class, () -> {
+            jedisCluster.move("key", 1337);
+        });
     }
 
     @Test
@@ -512,9 +516,11 @@ public class JedisClusterTest {
         jedisCluster.bitcount("key", 1337, 1338);
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testBitpos() {
-        jedisCluster.bitpos("key", true);
+        assertThrows(UnsupportedOperationException.class, () -> {
+            jedisCluster.bitpos("key", true);
+        });
     }
 
     @Test

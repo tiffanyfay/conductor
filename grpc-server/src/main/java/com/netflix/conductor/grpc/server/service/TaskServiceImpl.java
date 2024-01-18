@@ -71,7 +71,7 @@ public class TaskServiceImpl extends TaskServiceGrpc.TaskServiceImplBase {
                             1,
                             POLL_TIMEOUT_MS);
             if (!tasks.isEmpty()) {
-                TaskPb.Task t = PROTO_MAPPER.toProto(tasks.get(0));
+                TaskPb.Task t = PROTO_MAPPER.toProto(tasks.getFirst());
                 response.onNext(TaskServicePb.PollResponse.newBuilder().setTask(t).build());
             }
             response.onCompleted();

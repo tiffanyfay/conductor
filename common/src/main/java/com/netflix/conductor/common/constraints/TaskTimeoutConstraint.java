@@ -57,8 +57,8 @@ public @interface TaskTimeoutConstraint {
                 if (taskDef.getResponseTimeoutSeconds() > taskDef.getTimeoutSeconds()) {
                     valid = false;
                     String message =
-                            String.format(
-                                    "TaskDef: %s responseTimeoutSeconds: %d must be less than timeoutSeconds: %d",
+                            
+                                    "TaskDef: %s responseTimeoutSeconds: %d must be less than timeoutSeconds: %d".formatted(
                                     taskDef.getName(),
                                     taskDef.getResponseTimeoutSeconds(),
                                     taskDef.getTimeoutSeconds());

@@ -14,9 +14,9 @@ package com.netflix.conductor.redis.lock;
 
 import java.util.concurrent.TimeUnit;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -27,8 +27,9 @@ import com.netflix.conductor.redislock.config.RedisLockProperties;
 import com.netflix.conductor.redislock.config.RedisLockProperties.REDIS_SERVER_TYPE;
 import com.netflix.conductor.redislock.lock.RedisLock;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -41,7 +42,7 @@ public class RedisLockTest {
     static GenericContainer redis =
             new GenericContainer("redis:5.0.3-alpine").withExposedPorts(6379);
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws Exception {
         redis.start();
         int port = redis.getFirstMappedPort();
@@ -65,7 +66,7 @@ public class RedisLockTest {
         redisson = Redisson.create(RedisLockTest.config);
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() {
         redis.stop();
     }

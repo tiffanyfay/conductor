@@ -17,11 +17,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
@@ -36,10 +36,11 @@ import com.netflix.conductor.core.execution.WorkflowExecutor;
 import com.netflix.conductor.core.execution.tasks.SystemTaskRegistry;
 import com.netflix.conductor.dao.QueueDAO;
 
-import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@ExtendWith(SpringExtension.class)
 public class ExecutionServiceTest {
 
     @Mock private WorkflowExecutor workflowExecutor;
@@ -57,7 +58,7 @@ public class ExecutionServiceTest {
     private Task taskWorkflow2;
     private final List<String> sort = Collections.singletonList("Sort");
 
-    @Before
+    @BeforeEach
     public void setup() {
         when(conductorProperties.getTaskExecutionPostponeDuration())
                 .thenReturn(Duration.ofSeconds(60));

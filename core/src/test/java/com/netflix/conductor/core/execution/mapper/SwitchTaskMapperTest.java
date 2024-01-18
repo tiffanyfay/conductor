@@ -18,16 +18,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.netflix.conductor.common.config.TestObjectMapperConfiguration;
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
@@ -45,16 +41,16 @@ import com.netflix.conductor.model.WorkflowModel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@SpringJUnitConfig(
         classes = {
-            TestObjectMapperConfiguration.class,
-            SwitchTaskMapperTest.TestConfiguration.class
+                TestObjectMapperConfiguration.class,
+                SwitchTaskMapperTest.TestConfiguration.class
         })
-@RunWith(SpringRunner.class)
 public class SwitchTaskMapperTest {
 
     private IDGenerator idGenerator;
@@ -71,14 +67,12 @@ public class SwitchTaskMapperTest {
 
     @Autowired private Map<String, Evaluator> evaluators;
 
-    @Rule public ExpectedException expectedException = ExpectedException.none();
-
     Map<String, Object> ip1;
     WorkflowTask task1;
     WorkflowTask task2;
     WorkflowTask task3;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         parametersUtils = new ParametersUtils(objectMapper);
         idGenerator = new IDGenerator();
@@ -171,7 +165,7 @@ public class SwitchTaskMapperTest {
 
         // Then
         assertEquals(2, mappedTasks.size());
-        assertEquals("switchTask", mappedTasks.get(0).getReferenceTaskName());
+        assertEquals("switchTask", mappedTasks.getFirst().getReferenceTaskName());
         assertEquals("Foo", mappedTasks.get(1).getReferenceTaskName());
     }
 
@@ -239,7 +233,7 @@ public class SwitchTaskMapperTest {
 
         // Then
         assertEquals(2, mappedTasks.size());
-        assertEquals("switchTask", mappedTasks.get(0).getReferenceTaskName());
+        assertEquals("switchTask", mappedTasks.getFirst().getReferenceTaskName());
         assertEquals("Foo", mappedTasks.get(1).getReferenceTaskName());
     }
 
@@ -301,7 +295,7 @@ public class SwitchTaskMapperTest {
 
         // Then
         assertEquals(1, mappedTasks.size());
-        assertEquals("switchTask", mappedTasks.get(0).getReferenceTaskName());
-        assertEquals(TaskModel.Status.FAILED, mappedTasks.get(0).getStatus());
+        assertEquals("switchTask", mappedTasks.getFirst().getReferenceTaskName());
+        assertEquals(TaskModel.Status.FAILED, mappedTasks.getFirst().getStatus());
     }
 }

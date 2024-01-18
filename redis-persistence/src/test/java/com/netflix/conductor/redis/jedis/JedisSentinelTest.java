@@ -14,9 +14,8 @@ package com.netflix.conductor.redis.jedis;
 
 import java.util.HashMap;
 
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import redis.clients.jedis.GeoUnit;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisSentinelPool;
@@ -37,7 +36,7 @@ public class JedisSentinelTest {
     private final JedisSentinelPool jedisPool = mock(JedisSentinelPool.class);
     private final JedisSentinel jedisSentinel = new JedisSentinel(jedisPool);
 
-    @Before
+    @BeforeEach
     public void init() {
         when(this.jedisPool.getResource()).thenReturn(this.jedis);
     }

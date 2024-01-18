@@ -122,7 +122,7 @@ public class AnnotatedWorkerTests {
         List<Car> result = (List<Car>) outputData.get("result");
         assertEquals(1, result.size());
 
-        Car car = result.get(0);
+        Car car = result.getFirst();
         assertEquals("BMW", car.getBrand());
     }
 
@@ -279,7 +279,7 @@ public class AnnotatedWorkerTests {
         List<Worker> workers = annotatedWorkerExecutor.getExecutors();
         assertNotNull(workers);
         assertEquals(1, workers.size());
-        Worker taskWorker = workers.get(0);
+        Worker taskWorker = workers.getFirst();
         assertEquals(333, taskWorker.getPollingInterval());
 
         var worker2 = new AnotherAnnotationInput();
@@ -289,7 +289,7 @@ public class AnnotatedWorkerTests {
         workers = annotatedWorkerExecutor.getExecutors();
         assertNotNull(workers);
         assertEquals(1, workers.size());
-        taskWorker = workers.get(0);
+        taskWorker = workers.getFirst();
         assertEquals(100, taskWorker.getPollingInterval());
 
         config.setPollingInterval("test_2", 123);
@@ -299,7 +299,7 @@ public class AnnotatedWorkerTests {
         workers = annotatedWorkerExecutor.getExecutors();
         assertNotNull(workers);
         assertEquals(1, workers.size());
-        taskWorker = workers.get(0);
+        taskWorker = workers.getFirst();
         assertEquals(123, taskWorker.getPollingInterval());
     }
 

@@ -14,7 +14,7 @@ package com.netflix.conductor.client.http;
 
 import java.net.URI;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import com.netflix.conductor.common.config.ObjectMapperProvider;
 import com.netflix.conductor.common.model.BulkResponse;

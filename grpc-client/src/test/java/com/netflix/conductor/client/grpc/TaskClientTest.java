@@ -12,11 +12,11 @@
  */
 package com.netflix.conductor.client.grpc;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.netflix.conductor.common.metadata.tasks.Task;
@@ -31,11 +31,12 @@ import com.netflix.conductor.proto.TaskSummaryPb;
 
 import io.grpc.ManagedChannelBuilder;
 
-import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@ExtendWith(SpringExtension.class)
 public class TaskClientTest {
 
     @Mock ProtoMapper mockedProtoMapper;
@@ -44,7 +45,7 @@ public class TaskClientTest {
 
     TaskClient taskClient;
 
-    @Before
+    @BeforeEach
     public void init() {
         taskClient = new TaskClient("test", 0);
         ReflectionTestUtils.setField(taskClient, "stub", mockedStub);

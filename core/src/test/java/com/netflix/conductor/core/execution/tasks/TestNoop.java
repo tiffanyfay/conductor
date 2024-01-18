@@ -12,14 +12,15 @@
  */
 package com.netflix.conductor.core.execution.tasks;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.core.execution.WorkflowExecutor;
 import com.netflix.conductor.model.TaskModel;
 import com.netflix.conductor.model.WorkflowModel;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import static org.mockito.Mockito.mock;
 
 public class TestNoop {
 

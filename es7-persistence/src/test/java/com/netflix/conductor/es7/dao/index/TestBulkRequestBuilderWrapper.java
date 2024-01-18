@@ -15,21 +15,27 @@ package com.netflix.conductor.es7.dao.index;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.update.UpdateRequest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TestBulkRequestBuilderWrapper {
     BulkRequestBuilder builder = Mockito.mock(BulkRequestBuilder.class);
     BulkRequestBuilderWrapper wrapper = new BulkRequestBuilderWrapper(builder);
 
-    @Test(expected = Exception.class)
+    @Test
     public void testAddNullUpdateRequest() {
-        wrapper.add((UpdateRequest) null);
+        assertThrows(Exception.class, () -> {
+            wrapper.add((UpdateRequest) null);
+        });
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testAddNullIndexRequest() {
-        wrapper.add((IndexRequest) null);
+        assertThrows(Exception.class, () -> {
+            wrapper.add((IndexRequest) null);
+        });
     }
 
     @Test

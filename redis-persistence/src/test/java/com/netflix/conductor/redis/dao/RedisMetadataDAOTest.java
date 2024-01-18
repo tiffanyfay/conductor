@@ -22,12 +22,10 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.netflix.conductor.common.config.TestObjectMapperConfiguration;
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
@@ -44,21 +42,19 @@ import com.netflix.conductor.redis.jedis.JedisProxy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import redis.clients.jedis.commands.JedisCommands;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
-@RunWith(SpringRunner.class)
+@SpringJUnitConfig(classes = {TestObjectMapperConfiguration.class})
 public class RedisMetadataDAOTest {
 
     private RedisMetadataDAO redisMetadataDAO;
 
     @Autowired private ObjectMapper objectMapper;
 
-    @Before
+    @BeforeEach
     public void init() {
         ConductorProperties conductorProperties = mock(ConductorProperties.class);
         RedisProperties properties = mock(RedisProperties.class);
@@ -70,14 +66,16 @@ public class RedisMetadataDAOTest {
                 new RedisMetadataDAO(jedisProxy, objectMapper, conductorProperties, properties);
     }
 
-    @Test(expected = ConflictException.class)
+    @Test
     public void testDup() {
-        WorkflowDef def = new WorkflowDef();
-        def.setName("testDup");
-        def.setVersion(1);
+        assertThrows(ConflictException.class, () -> {
+            WorkflowDef def = new WorkflowDef();
+            def.setName("testDup");
+            def.setVersion(1);
 
-        redisMetadataDAO.createWorkflowDef(def);
-        redisMetadataDAO.createWorkflowDef(def);
+            redisMetadataDAO.createWorkflowDef(def);
+            redisMetadataDAO.createWorkflowDef(def);
+        });
     }
 
     @Test
@@ -98,8 +96,8 @@ public class RedisMetadataDAOTest {
         List<WorkflowDef> all = redisMetadataDAO.getAllWorkflowDefs();
         assertNotNull(all);
         assertEquals(1, all.size());
-        assertEquals("test", all.get(0).getName());
-        assertEquals(1, all.get(0).getVersion());
+        assertEquals("test", all.getFirst().getName());
+        assertEquals(1, all.getFirst().getVersion());
 
         WorkflowDef found = redisMetadataDAO.getWorkflowDef("test", 1).get();
         assertEquals(def, found);
@@ -110,8 +108,8 @@ public class RedisMetadataDAOTest {
         all = redisMetadataDAO.getAllWorkflowDefs();
         assertNotNull(all);
         assertEquals(2, all.size());
-        assertEquals("test", all.get(0).getName());
-        assertEquals(1, all.get(0).getVersion());
+        assertEquals("test", all.getFirst().getName());
+        assertEquals(1, all.getFirst().getVersion());
 
         found = redisMetadataDAO.getLatestWorkflowDef(def.getName()).get();
         assertEquals(def.getName(), found.getName());
@@ -121,9 +119,9 @@ public class RedisMetadataDAOTest {
         all = redisMetadataDAO.getAllVersions(def.getName());
         assertNotNull(all);
         assertEquals(2, all.size());
-        assertEquals("test", all.get(0).getName());
+        assertEquals("test", all.getFirst().getName());
         assertEquals("test", all.get(1).getName());
-        assertEquals(1, all.get(0).getVersion());
+        assertEquals(1, all.getFirst().getVersion());
         assertEquals(2, all.get(1).getVersion());
 
         def.setDescription("updated");
@@ -134,7 +132,7 @@ public class RedisMetadataDAOTest {
         List<String> allnames = redisMetadataDAO.findAll();
         assertNotNull(allnames);
         assertEquals(1, allnames.size());
-        assertEquals(def.getName(), allnames.get(0));
+        assertEquals(def.getName(), allnames.getFirst());
 
         redisMetadataDAO.removeWorkflowDef("test", 1);
         Optional<WorkflowDef> deleted = redisMetadataDAO.getWorkflowDef("test", 1);
@@ -201,9 +199,11 @@ public class RedisMetadataDAOTest {
         assertEquals(3, allMap.get("test3").getVersion());
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void removeInvalidWorkflowDef() {
-        redisMetadataDAO.removeWorkflowDef("hello", 1);
+        assertThrows(NotFoundException.class, () -> {
+            redisMetadataDAO.removeWorkflowDef("hello", 1);
+        });
     }
 
     @Test
@@ -247,7 +247,7 @@ public class RedisMetadataDAOTest {
         Set<String> allnames = all.stream().map(TaskDef::getName).collect(Collectors.toSet());
         assertEquals(10, allnames.size());
         List<String> sorted = allnames.stream().sorted().collect(Collectors.toList());
-        assertEquals(def.getName(), sorted.get(0));
+        assertEquals(def.getName(), sorted.getFirst());
 
         for (int i = 0; i < 9; i++) {
             assertEquals(def.getName() + i, sorted.get(i + 1));
@@ -259,12 +259,14 @@ public class RedisMetadataDAOTest {
         all = redisMetadataDAO.getAllTaskDefs();
         assertNotNull(all);
         assertEquals(1, all.size());
-        assertEquals(def.getName(), all.get(0).getName());
+        assertEquals(def.getName(), all.getFirst().getName());
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void testRemoveTaskDef() {
-        redisMetadataDAO.removeTaskDef("test" + UUID.randomUUID());
+        assertThrows(NotFoundException.class, () -> {
+            redisMetadataDAO.removeTaskDef("test" + UUID.randomUUID());
+        });
     }
 
     @Test

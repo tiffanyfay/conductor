@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.sql.init.dependency.DependsOnDatabaseInitialization;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -48,6 +49,7 @@ public class MySQLConfiguration {
 
     @Bean
     @DependsOn({"flyway", "flywayInitializer"})
+    @DependsOnDatabaseInitialization
     public MySQLMetadataDAO mySqlMetadataDAO(
             @Qualifier("mysqlRetryTemplate") RetryTemplate retryTemplate,
             ObjectMapper objectMapper,
@@ -58,6 +60,7 @@ public class MySQLConfiguration {
 
     @Bean
     @DependsOn({"flyway", "flywayInitializer"})
+    @DependsOnDatabaseInitialization
     public MySQLExecutionDAO mySqlExecutionDAO(
             @Qualifier("mysqlRetryTemplate") RetryTemplate retryTemplate,
             ObjectMapper objectMapper,
@@ -67,6 +70,7 @@ public class MySQLConfiguration {
 
     @Bean
     @DependsOn({"flyway", "flywayInitializer"})
+    @DependsOnDatabaseInitialization
     public MySQLQueueDAO mySqlQueueDAO(
             @Qualifier("mysqlRetryTemplate") RetryTemplate retryTemplate,
             ObjectMapper objectMapper,

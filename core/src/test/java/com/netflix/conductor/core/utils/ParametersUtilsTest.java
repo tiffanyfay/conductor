@@ -23,12 +23,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.netflix.conductor.common.config.TestObjectMapperConfiguration;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
@@ -36,12 +34,9 @@ import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-@ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
-@RunWith(SpringRunner.class)
+@SpringJUnitConfig(classes = {TestObjectMapperConfiguration.class})
 @SuppressWarnings("rawtypes")
 public class ParametersUtilsTest {
 
@@ -50,7 +45,7 @@ public class ParametersUtilsTest {
 
     @Autowired private ObjectMapper objectMapper;
 
-    @Before
+    @BeforeEach
     public void setup() {
         parametersUtils = new ParametersUtils(objectMapper);
         jsonUtils = new JsonUtils(objectMapper);
@@ -215,7 +210,7 @@ public class ParametersUtilsTest {
 
         List replacedList = (List) replaced.get("list");
         assertEquals(2, replacedList.size());
-        assertEquals("conductor", replacedList.get(0));
+        assertEquals("conductor", replacedList.getFirst());
         assertEquals(2, replacedList.get(1));
 
         // Verify that input map is not mutated
@@ -229,7 +224,7 @@ public class ParametersUtilsTest {
 
         List inputList = (List) input.get("list");
         assertEquals(2, inputList.size());
-        assertEquals("${name}", inputList.get(0));
+        assertEquals("${name}", inputList.getFirst());
         assertEquals("${version}", inputList.get(1));
     }
 
@@ -327,7 +322,7 @@ public class ParametersUtilsTest {
 
         List replacedList = (List) replaced.get("list");
         assertEquals(3, replacedList.size());
-        assertEquals("conductor", replacedList.get(0));
+        assertEquals("conductor", replacedList.getFirst());
         assertEquals(2, replacedList.get(1));
         assertEquals("conductor ${someNumber}", replacedList.get(2));
 
@@ -340,7 +335,7 @@ public class ParametersUtilsTest {
         // Verify that input list is not mutated
         List inputList = (List) input.get("list");
         assertEquals(3, inputList.size());
-        assertEquals("${someString}", inputList.get(0));
+        assertEquals("${someString}", inputList.getFirst());
         assertEquals("${someNumber}", inputList.get(1));
         assertEquals("${someString} $${someNumber}", inputList.get(2));
     }

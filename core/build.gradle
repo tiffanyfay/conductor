@@ -10,6 +10,10 @@
  *  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  *  specific language governing permissions and limitations under the License.
  */
+plugins {
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
 apply plugin: 'groovy'
 
 dependencies {
@@ -58,5 +62,4 @@ dependencies {
     testImplementation "org.apache.groovy:groovy-all:${revGroovy}"
     testImplementation "org.spockframework:spock-core:${revSpock}"
     testImplementation "org.spockframework:spock-spring:${revSpock}"
-    testImplementation "org.junit.vintage:junit-vintage-engine"
 }

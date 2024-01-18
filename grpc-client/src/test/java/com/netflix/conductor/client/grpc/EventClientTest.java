@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.netflix.conductor.common.metadata.events.EventHandler;
@@ -29,13 +29,14 @@ import com.netflix.conductor.grpc.EventServicePb;
 import com.netflix.conductor.grpc.ProtoMapper;
 import com.netflix.conductor.proto.EventHandlerPb;
 
-import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@ExtendWith(SpringExtension.class)
 public class EventClientTest {
 
     @Mock ProtoMapper mockedProtoMapper;
@@ -44,7 +45,7 @@ public class EventClientTest {
 
     EventClient eventClient;
 
-    @Before
+    @BeforeEach
     public void init() {
         eventClient = new EventClient("test", 0);
         ReflectionTestUtils.setField(eventClient, "stub", mockedStub);

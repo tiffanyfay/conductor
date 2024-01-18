@@ -16,16 +16,12 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.junit.Test;
-
 import com.netflix.conductor.es7.dao.query.parser.internal.AbstractParserTest;
+
+import org.junit.jupiter.api.Test;
 import com.netflix.conductor.es7.dao.query.parser.internal.ConstValue;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Viren

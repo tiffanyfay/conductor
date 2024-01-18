@@ -14,9 +14,9 @@ package com.netflix.conductor.core.execution.mapper;
 
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.mock;
 public class TerminateTaskMapperTest {
     private ParametersUtils parametersUtils;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         parametersUtils = mock(ParametersUtils.class);
     }
@@ -61,8 +61,8 @@ public class TerminateTaskMapperTest {
         List<TaskModel> mappedTasks =
                 new TerminateTaskMapper(parametersUtils).getMappedTasks(taskMapperContext);
 
-        Assert.assertNotNull(mappedTasks);
-        Assert.assertEquals(1, mappedTasks.size());
-        Assert.assertEquals(TaskType.TASK_TYPE_TERMINATE, mappedTasks.get(0).getTaskType());
+        Assertions.assertNotNull(mappedTasks);
+        Assertions.assertEquals(1, mappedTasks.size());
+        Assertions.assertEquals(TaskType.TASK_TYPE_TERMINATE, mappedTasks.getFirst().getTaskType());
     }
 }

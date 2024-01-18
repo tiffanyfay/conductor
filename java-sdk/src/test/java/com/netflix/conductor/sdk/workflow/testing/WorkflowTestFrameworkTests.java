@@ -92,7 +92,7 @@ public class WorkflowTestFrameworkTests {
         assertEquals(2, task2Executions.size());
 
         // First instance would have failed and second succeeded.
-        assertEquals(Task.Status.FAILED, task2Executions.get(0).getStatus());
+        assertEquals(Task.Status.FAILED, task2Executions.getFirst().getStatus());
         assertEquals(Task.Status.COMPLETED, task2Executions.get(1).getStatus());
 
         // task10's output

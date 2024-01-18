@@ -14,8 +14,8 @@ package com.netflix.conductor.core.execution.mapper;
 
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
@@ -50,8 +50,8 @@ public class NoopTaskMapperTest {
 
         List<TaskModel> mappedTasks = new NoopTaskMapper().getMappedTasks(taskMapperContext);
 
-        Assert.assertNotNull(mappedTasks);
-        Assert.assertEquals(1, mappedTasks.size());
-        Assert.assertEquals(TaskType.TASK_TYPE_NOOP, mappedTasks.get(0).getTaskType());
+        Assertions.assertNotNull(mappedTasks);
+        Assertions.assertEquals(1, mappedTasks.size());
+        Assertions.assertEquals(TaskType.TASK_TYPE_NOOP, mappedTasks.getFirst().getTaskType());
     }
 }

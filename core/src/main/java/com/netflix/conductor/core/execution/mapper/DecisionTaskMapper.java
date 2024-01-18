@@ -103,7 +103,7 @@ public class DecisionTaskMapper implements TaskMapper {
         // next task to be scheduled by using the decider service
         if (selectedTasks != null && !selectedTasks.isEmpty()) {
             WorkflowTask selectedTask =
-                    selectedTasks.get(0); // Schedule the first task to be executed...
+                    selectedTasks.getFirst(); // Schedule the first task to be executed...
             // TODO break out this recursive call using function composition of what needs to be
             // done and then walk back the condition tree
             List<TaskModel> caseTasks =
@@ -140,7 +140,7 @@ public class DecisionTaskMapper implements TaskMapper {
                 Object returnValue = ScriptEvaluator.eval(expression, taskInput);
                 caseValue = (returnValue == null) ? "null" : returnValue.toString();
             } catch (ScriptException e) {
-                String errorMsg = String.format("Error while evaluating script: %s", expression);
+                String errorMsg = "Error while evaluating script: %s".formatted(expression);
                 LOGGER.error(errorMsg, e);
                 throw new TerminateWorkflowException(errorMsg);
             }

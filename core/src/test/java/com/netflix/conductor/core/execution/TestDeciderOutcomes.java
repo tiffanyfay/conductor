@@ -23,16 +23,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.util.unit.DataSize;
 
 import com.netflix.conductor.common.config.TestObjectMapperConfiguration;
@@ -87,21 +85,17 @@ import static com.netflix.conductor.common.metadata.tasks.TaskType.TASK_TYPE_SWI
 import static com.netflix.conductor.common.metadata.tasks.TaskType.USER_DEFINED;
 import static com.netflix.conductor.common.metadata.tasks.TaskType.WAIT;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(
+@SpringJUnitConfig(
         classes = {
-            TestObjectMapperConfiguration.class,
-            TestDeciderOutcomes.TestConfiguration.class
+                TestObjectMapperConfiguration.class,
+                TestDeciderOutcomes.TestConfiguration.class
         })
-@RunWith(SpringRunner.class)
 public class TestDeciderOutcomes {
 
     private DeciderService deciderService;
@@ -137,7 +131,7 @@ public class TestDeciderOutcomes {
         }
     }
 
-    @Before
+    @BeforeEach
     public void init() {
         MetadataDAO metadataDAO = mock(MetadataDAO.class);
         systemTaskRegistry = mock(SystemTaskRegistry.class);
@@ -211,7 +205,7 @@ public class TestDeciderOutcomes {
         workflow.getTasks().addAll(outcome.tasksToBeScheduled);
         outcome = deciderService.decide(workflow);
         assertFalse(outcome.isComplete);
-        assertEquals(outcome.tasksToBeUpdated.toString(), 3, outcome.tasksToBeUpdated.size());
+        assertEquals(3, outcome.tasksToBeUpdated.size(), outcome.tasksToBeUpdated.toString());
         assertEquals(2, outcome.tasksToBeScheduled.size());
         assertEquals("DECISION", outcome.tasksToBeScheduled.get(0).getTaskDefName());
     }
@@ -239,7 +233,7 @@ public class TestDeciderOutcomes {
         workflow.getTasks().addAll(outcome.tasksToBeScheduled);
         outcome = deciderService.decide(workflow);
         assertFalse(outcome.isComplete);
-        assertEquals(outcome.tasksToBeUpdated.toString(), 3, outcome.tasksToBeUpdated.size());
+        assertEquals(3, outcome.tasksToBeUpdated.size(), outcome.tasksToBeUpdated.toString());
         assertEquals(2, outcome.tasksToBeScheduled.size());
         assertEquals("SWITCH", outcome.tasksToBeScheduled.get(0).getTaskDefName());
     }

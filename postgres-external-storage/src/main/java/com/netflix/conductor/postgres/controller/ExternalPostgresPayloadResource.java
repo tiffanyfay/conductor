@@ -49,7 +49,7 @@ public class ExternalPostgresPayloadResource {
             summary =
                     "Get task or workflow by externalPayloadPath from External PostgreSQL Storage")
     public ResponseEntity<InputStreamResource> getExternalStorageData(
-            @PathVariable("externalPayloadPath") String externalPayloadPath) {
+            @PathVariable String externalPayloadPath) {
         InputStream inputStream = postgresService.download(externalPayloadPath);
         InputStreamResource outputStreamBody = new InputStreamResource(inputStream);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(outputStreamBody);

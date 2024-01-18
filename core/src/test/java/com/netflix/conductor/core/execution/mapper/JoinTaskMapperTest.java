@@ -15,9 +15,9 @@ package com.netflix.conductor.core.execution.mapper;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
-
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
+
+import org.junit.jupiter.api.Test;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
@@ -27,8 +27,8 @@ import com.netflix.conductor.model.WorkflowModel;
 
 import static com.netflix.conductor.common.metadata.tasks.TaskType.TASK_TYPE_JOIN;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class JoinTaskMapperTest {
 
@@ -57,6 +57,6 @@ public class JoinTaskMapperTest {
         List<TaskModel> mappedTasks = new JoinTaskMapper().getMappedTasks(taskMapperContext);
 
         assertNotNull(mappedTasks);
-        assertEquals(TASK_TYPE_JOIN, mappedTasks.get(0).getTaskType());
+        assertEquals(TASK_TYPE_JOIN, mappedTasks.getFirst().getTaskType());
     }
 }

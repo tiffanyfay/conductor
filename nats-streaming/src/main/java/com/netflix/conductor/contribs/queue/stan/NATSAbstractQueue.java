@@ -69,14 +69,14 @@ public abstract class NATSAbstractQueue implements ObservableQueue {
             queue = null;
         }
         LOGGER.info(
-                String.format(
-                        "Initialized with queueURI=%s, subject=%s, queue=%s",
+                
+                        "Initialized with queueURI=%s, subject=%s, queue=%s".formatted(
                         queueURI, subject, queue));
     }
 
     void onMessage(String subject, byte[] data) {
         String payload = new String(data);
-        LOGGER.info(String.format("Received message for %s: %s", subject, payload));
+        LOGGER.info("Received message for %s: %s".formatted(subject, payload));
 
         Message dstMsg = new Message();
         dstMsg.setId(NUID.nextGlobal());
@@ -126,8 +126,8 @@ public abstract class NATSAbstractQueue implements ObservableQueue {
                                                             }
                                                         });
                                                 LOGGER.info(
-                                                        String.format(
-                                                                "Batch from %s to conductor is %s",
+                                                        
+                                                                "Batch from %s to conductor is %s".formatted(
                                                                 subject, buffer.toString()));
                                             }
 
@@ -174,7 +174,7 @@ public abstract class NATSAbstractQueue implements ObservableQueue {
                     try {
                         String payload = message.getPayload();
                         publish(subject, payload.getBytes());
-                        LOGGER.info(String.format("Published message to %s: %s", subject, payload));
+                        LOGGER.info("Published message to %s: %s".formatted(subject, payload));
                     } catch (Exception ex) {
                         LOGGER.error(
                                 "Failed to publish message "

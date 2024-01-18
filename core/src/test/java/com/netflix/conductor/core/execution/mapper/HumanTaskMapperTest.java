@@ -15,9 +15,9 @@ package com.netflix.conductor.core.execution.mapper;
 import java.util.HashMap;
 import java.util.List;
 
-import org.junit.Test;
-
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
+
+import org.junit.jupiter.api.Test;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
@@ -28,8 +28,9 @@ import com.netflix.conductor.model.WorkflowModel;
 
 import static com.netflix.conductor.common.metadata.tasks.TaskType.TASK_TYPE_HUMAN;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HumanTaskMapperTest {
 
@@ -63,6 +64,6 @@ public class HumanTaskMapperTest {
 
         // Then
         assertEquals(1, mappedTasks.size());
-        assertEquals(TASK_TYPE_HUMAN, mappedTasks.get(0).getTaskType());
+        assertEquals(TASK_TYPE_HUMAN, mappedTasks.getFirst().getTaskType());
     }
 }

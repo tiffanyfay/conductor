@@ -16,10 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.workflow.SubWorkflowParams;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
@@ -34,8 +32,8 @@ import com.netflix.conductor.model.WorkflowModel;
 
 import static com.netflix.conductor.common.metadata.tasks.TaskType.TASK_TYPE_SUB_WORKFLOW;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.mock;
@@ -48,9 +46,7 @@ public class SubWorkflowTaskMapperTest {
     private DeciderService deciderService;
     private IDGenerator idGenerator;
 
-    @Rule public ExpectedException expectedException = ExpectedException.none();
-
-    @Before
+    @BeforeEach
     public void setUp() {
         parametersUtils = mock(ParametersUtils.class);
         MetadataDAO metadataDAO = mock(MetadataDAO.class);
@@ -103,7 +99,7 @@ public class SubWorkflowTaskMapperTest {
         assertFalse(mappedTasks.isEmpty());
         assertEquals(1, mappedTasks.size());
 
-        TaskModel subWorkFlowTask = mappedTasks.get(0);
+        TaskModel subWorkFlowTask = mappedTasks.getFirst();
         assertEquals(TaskModel.Status.SCHEDULED, subWorkFlowTask.getStatus());
         assertEquals(TASK_TYPE_SUB_WORKFLOW, subWorkFlowTask.getTaskType());
         assertEquals(30, subWorkFlowTask.getCallbackAfterSeconds());
@@ -154,7 +150,7 @@ public class SubWorkflowTaskMapperTest {
         assertFalse(mappedTasks.isEmpty());
         assertEquals(1, mappedTasks.size());
 
-        TaskModel subWorkFlowTask = mappedTasks.get(0);
+        TaskModel subWorkFlowTask = mappedTasks.getFirst();
         assertEquals(TaskModel.Status.SCHEDULED, subWorkFlowTask.getStatus());
         assertEquals(TASK_TYPE_SUB_WORKFLOW, subWorkFlowTask.getTaskType());
     }
@@ -172,16 +168,17 @@ public class SubWorkflowTaskMapperTest {
 
     @Test
     public void getExceptionWhenNoSubWorkflowParamsPassed() {
-        WorkflowTask workflowTask = new WorkflowTask();
-        workflowTask.setName("FooWorkFLow");
+        Throwable exception = assertThrows(TerminateWorkflowException.class, () -> {
+            WorkflowTask workflowTask = new WorkflowTask();
+            workflowTask.setName("FooWorkFLow");
 
-        expectedException.expect(TerminateWorkflowException.class);
-        expectedException.expectMessage(
-                String.format(
-                        "Task %s is defined as sub-workflow and is missing subWorkflowParams. "
-                                + "Please check the workflow definition",
-                        workflowTask.getName()));
-
-        subWorkflowTaskMapper.getSubWorkflowParams(workflowTask);
+            subWorkflowTaskMapper.getSubWorkflowParams(workflowTask);
+        });
+        assertTrue(exception.getMessage().contains((
+                """
+                        Task %s is defined as sub-workflow and is missing subWorkflowParams. \
+                        Please check the workflow definition\
+                        """).formatted(
+                workflowTask.getName())));
     }
 }

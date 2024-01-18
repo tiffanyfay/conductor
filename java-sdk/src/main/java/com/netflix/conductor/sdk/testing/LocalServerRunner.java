@@ -15,6 +15,7 @@ package com.netflix.conductor.sdk.testing;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -151,7 +152,7 @@ public class LocalServerRunner {
         String tempDir = System.getProperty("java.io.tmpdir");
         Path serverFile = Paths.get(tempDir, "conductor-server.jar");
         if (!Files.exists(serverFile)) {
-            Files.copy(new URL(repositoryURL).openStream(), serverFile);
+            Files.copy(URI.create(repositoryURL).toURL().openStream(), serverFile);
         }
 
         String command =
@@ -163,7 +164,7 @@ public class LocalServerRunner {
                         + serverFile;
         LOGGER.info("Running command {}", command);
 
-        serverProcess = Runtime.getRuntime().exec(command);
+        serverProcess = Runtime.getRuntime().exec(command.split(" "));
         BufferedReader error =
                 new BufferedReader(new InputStreamReader(serverProcess.getErrorStream()));
         BufferedReader op =

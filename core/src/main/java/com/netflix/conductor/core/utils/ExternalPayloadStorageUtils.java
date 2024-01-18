@@ -129,19 +129,19 @@ public class ExternalPayloadStorageUtils {
 
             final long maxThresholdInBytes = maxThreshold * 1024;
             if (payloadSize > maxThresholdInBytes) {
-                if (entity instanceof TaskModel) {
+                if (entity instanceof TaskModel model) {
                     String errorMsg =
-                            String.format(
-                                    "The payload size: %d of task: %s in workflow: %s  is greater than the permissible limit: %d bytes",
+                            
+                                    "The payload size: %d of task: %s in workflow: %s  is greater than the permissible limit: %d bytes".formatted(
                                     payloadSize,
-                                    ((TaskModel) entity).getTaskId(),
-                                    ((TaskModel) entity).getWorkflowInstanceId(),
+                                    model.getTaskId(),
+                                    model.getWorkflowInstanceId(),
                                     maxThresholdInBytes);
-                    failTask(((TaskModel) entity), payloadType, errorMsg);
+                    failTask(model, payloadType, errorMsg);
                 } else {
                     String errorMsg =
-                            String.format(
-                                    "The payload size: %d of workflow: %s is greater than the permissible limit: %d bytes",
+                            
+                                    "The payload size: %d of workflow: %s is greater than the permissible limit: %d bytes".formatted(
                                     payloadSize,
                                     ((WorkflowModel) entity).getWorkflowId(),
                                     maxThresholdInBytes);
@@ -236,8 +236,7 @@ public class ExternalPayloadStorageUtils {
 
     @VisibleForTesting
     <T> boolean shouldUpload(T entity, PayloadType payloadType) {
-        if (entity instanceof TaskModel) {
-            TaskModel taskModel = (TaskModel) entity;
+        if (entity instanceof TaskModel taskModel) {
             if (payloadType == PayloadType.TASK_INPUT) {
                 return !taskModel.getRawInputData().isEmpty();
             } else {

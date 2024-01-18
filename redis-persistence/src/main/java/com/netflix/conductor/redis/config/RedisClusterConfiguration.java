@@ -72,6 +72,6 @@ public class RedisClusterConfiguration extends JedisCommandsConfigurer {
     }
 
     private String getPassword(List<Host> hosts) {
-        return hosts.isEmpty() ? null : hosts.get(0).getPassword();
+        return hosts.isEmpty() ? null : hosts.getFirst().getPassword();
     }
 }

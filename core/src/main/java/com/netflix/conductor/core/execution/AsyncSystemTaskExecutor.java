@@ -128,8 +128,8 @@ public class AsyncSystemTaskExecutor {
                 if (!task.getStatus().isTerminal()) {
                     task.setStatus(TaskModel.Status.CANCELED);
                     task.setReasonForIncompletion(
-                            String.format(
-                                    "Workflow is in %s state", workflow.getStatus().toString()));
+                            
+                                    "Workflow is in %s state".formatted(workflow.getStatus().toString()));
                 }
                 shouldRemoveTaskFromQueue = true;
                 return;

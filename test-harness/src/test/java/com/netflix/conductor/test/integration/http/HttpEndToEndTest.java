@@ -12,7 +12,7 @@
  */
 package com.netflix.conductor.test.integration.http;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 import com.netflix.conductor.client.http.EventClient;
 import com.netflix.conductor.client.http.MetadataClient;
@@ -21,9 +21,9 @@ import com.netflix.conductor.client.http.WorkflowClient;
 
 public class HttpEndToEndTest extends AbstractHttpEndToEndTest {
 
-    @Before
+    @BeforeEach
     public void init() {
-        apiRoot = String.format("http://localhost:%d/api/", port);
+        apiRoot = "http://localhost:%d/api/".formatted(port);
 
         taskClient = new TaskClient();
         taskClient.setRootURI(apiRoot);

@@ -55,7 +55,7 @@ public class EventResource {
 
     @DeleteMapping("/{name}")
     @Operation(summary = "Remove an event handler")
-    public void removeEventHandlerStatus(@PathVariable("name") String name) {
+    public void removeEventHandlerStatus(@PathVariable String name) {
         eventService.removeEventHandlerStatus(name);
     }
 
@@ -68,8 +68,8 @@ public class EventResource {
     @GetMapping("/{event}")
     @Operation(summary = "Get event handlers for a given event")
     public List<EventHandler> getEventHandlersForEvent(
-            @PathVariable("event") String event,
-            @RequestParam(value = "activeOnly", defaultValue = "true", required = false)
+            @PathVariable String event,
+            @RequestParam(defaultValue = "true", required = false)
                     boolean activeOnly) {
         return eventService.getEventHandlersForEvent(event, activeOnly);
     }

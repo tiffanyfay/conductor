@@ -65,8 +65,8 @@ public class SetVariable extends WorkflowSystemTask {
 
             if (payloadSize > maxThreshold * 1024) {
                 String errorMsg =
-                        String.format(
-                                "The variables payload size: %d of workflow: %s is greater than the permissible limit: %d kilobytes",
+                        
+                                "The variables payload size: %d of workflow: %s is greater than the permissible limit: %d kilobytes".formatted(
                                 payloadSize, workflowId, maxThreshold);
                 LOGGER.error(errorMsg);
                 task.setReasonForIncompletion(errorMsg);

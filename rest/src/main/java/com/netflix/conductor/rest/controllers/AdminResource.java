@@ -51,28 +51,28 @@ public class AdminResource {
     @Operation(summary = "Get the list of pending tasks for a given task type")
     public List<Task> view(
             @PathVariable("tasktype") String taskType,
-            @RequestParam(value = "start", defaultValue = "0", required = false) int start,
-            @RequestParam(value = "count", defaultValue = "100", required = false) int count) {
+            @RequestParam(defaultValue = "0", required = false) int start,
+            @RequestParam(defaultValue = "100", required = false) int count) {
         return adminService.getListOfPendingTask(taskType, start, count);
     }
 
     @PostMapping(value = "/sweep/requeue/{workflowId}", produces = TEXT_PLAIN_VALUE)
     @Operation(summary = "Queue up all the running workflows for sweep")
-    public String requeueSweep(@PathVariable("workflowId") String workflowId) {
+    public String requeueSweep(@PathVariable String workflowId) {
         return adminService.requeueSweep(workflowId);
     }
 
     @PostMapping(value = "/consistency/verifyAndRepair/{workflowId}", produces = TEXT_PLAIN_VALUE)
     @Operation(summary = "Verify and repair workflow consistency")
     public String verifyAndRepairWorkflowConsistency(
-            @PathVariable("workflowId") String workflowId) {
+            @PathVariable String workflowId) {
         return String.valueOf(adminService.verifyAndRepairWorkflowConsistency(workflowId));
     }
 
     @GetMapping("/queues")
     @Operation(summary = "Get registered queues")
     public Map<String, ?> getEventQueues(
-            @RequestParam(value = "verbose", defaultValue = "false", required = false)
+            @RequestParam(defaultValue = "false", required = false)
                     boolean verbose) {
         return adminService.getEventQueues(verbose);
     }

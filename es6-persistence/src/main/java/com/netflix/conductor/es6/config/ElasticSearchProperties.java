@@ -13,6 +13,7 @@
 package com.netflix.conductor.es6.config;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -222,7 +223,7 @@ public class ElasticSearchProperties {
 
     private URL toURL(String url) {
         try {
-            return new URL(url);
+            return URI.create(url).toURL();
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException(url + "can not be converted to java.net.URL");
         }

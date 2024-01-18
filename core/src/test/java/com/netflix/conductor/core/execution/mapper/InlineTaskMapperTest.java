@@ -14,8 +14,8 @@ package com.netflix.conductor.core.execution.mapper;
 
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
@@ -28,8 +28,9 @@ import com.netflix.conductor.dao.MetadataDAO;
 import com.netflix.conductor.model.TaskModel;
 import com.netflix.conductor.model.WorkflowModel;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import static org.mockito.Mockito.mock;
 
 public class InlineTaskMapperTest {
@@ -37,7 +38,7 @@ public class InlineTaskMapperTest {
     private ParametersUtils parametersUtils;
     private MetadataDAO metadataDAO;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         parametersUtils = mock(ParametersUtils.class);
         metadataDAO = mock(MetadataDAO.class);
@@ -52,8 +53,10 @@ public class InlineTaskMapperTest {
         workflowTask.setTaskDefinition(new TaskDef("inline_task"));
         workflowTask.setEvaluatorType(JavascriptEvaluator.NAME);
         workflowTask.setExpression(
-                "function scriptFun() {if ($.input.a==1){return {testValue: true}} else{return "
-                        + "{testValue: false} }}; scriptFun();");
+                """
+                function scriptFun() {if ($.input.a==1){return {testValue: true}} else{return \
+                {testValue: false} }}; scriptFun();\
+                """);
 
         String taskId = new IDGenerator().generate();
 
@@ -76,7 +79,7 @@ public class InlineTaskMapperTest {
 
         assertEquals(1, mappedTasks.size());
         assertNotNull(mappedTasks);
-        assertEquals(TaskType.INLINE.name(), mappedTasks.get(0).getTaskType());
+        assertEquals(TaskType.INLINE.name(), mappedTasks.getFirst().getTaskType());
     }
 
     @Test
@@ -86,8 +89,10 @@ public class InlineTaskMapperTest {
         workflowTask.setType(TaskType.INLINE.name());
         workflowTask.setEvaluatorType(JavascriptEvaluator.NAME);
         workflowTask.setExpression(
-                "function scriptFun() {if ($.input.a==1){return {testValue: true}} else{return "
-                        + "{testValue: false} }}; scriptFun();");
+                """
+                function scriptFun() {if ($.input.a==1){return {testValue: true}} else{return \
+                {testValue: false} }}; scriptFun();\
+                """);
 
         String taskId = new IDGenerator().generate();
 
@@ -110,6 +115,6 @@ public class InlineTaskMapperTest {
 
         assertEquals(1, mappedTasks.size());
         assertNotNull(mappedTasks);
-        assertEquals(TaskType.INLINE.name(), mappedTasks.get(0).getTaskType());
+        assertEquals(TaskType.INLINE.name(), mappedTasks.getFirst().getTaskType());
     }
 }

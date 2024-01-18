@@ -195,8 +195,8 @@ public class ParametersUtils {
             } else if (value instanceof Map) {
                 // recursive call
                 newValue = replace((Map<String, Object>) value, documentContext, taskId);
-            } else if (value instanceof List) {
-                newValue = replaceList((List<?>) value, taskId, documentContext);
+            } else if (value instanceof List list) {
+                newValue = replaceList(list, taskId, documentContext);
             } else {
                 newValue = value;
             }
@@ -215,8 +215,8 @@ public class ParametersUtils {
             } else if (listVal instanceof Map) {
                 Object replaced = replace((Map<String, Object>) listVal, io, taskId);
                 replacedList.add(replaced);
-            } else if (listVal instanceof List) {
-                Object replaced = replaceList((List<?>) listVal, taskId, io);
+            } else if (listVal instanceof List list) {
+                Object replaced = replaceList(list, taskId, io);
                 replacedList.add(replaced);
             } else {
                 replacedList.add(listVal);
@@ -267,7 +267,7 @@ public class ParametersUtils {
                 && replacements.getFirst().getStartIndex() == 0
                 && replacements.getFirst().getEndIndex() == paramString.length()
                 && depth == 0) {
-            return replacements.get(0).getReplacement();
+            return replacements.getFirst().getReplacement();
         }
         Collections.sort(replacements);
         var builder = new StringBuilder(paramString);

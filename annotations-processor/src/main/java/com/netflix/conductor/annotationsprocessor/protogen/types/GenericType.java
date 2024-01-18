@@ -35,8 +35,8 @@ abstract class GenericType extends AbstractType {
         Type[] types = tt.getActualTypeArguments();
 
         AbstractType abstractType = TypeMapper.INSTANCE.get(types[idx]);
-        if (abstractType instanceof GenericType) {
-            return WrappedType.wrap((GenericType) abstractType);
+        if (abstractType instanceof GenericType type) {
+            return WrappedType.wrap(type);
         }
         return abstractType;
     }

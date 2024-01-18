@@ -132,8 +132,10 @@ public class MySQLMetadataDAO extends MySQLBaseDAO implements MetadataDAO, Event
     @Override
     public Optional<WorkflowDef> getLatestWorkflowDef(String name) {
         final String GET_LATEST_WORKFLOW_DEF_QUERY =
-                "SELECT json_data FROM meta_workflow_def WHERE NAME = ? AND "
-                        + "version = latest_version";
+                """
+                SELECT json_data FROM meta_workflow_def WHERE NAME = ? AND \
+                version = latest_version\
+                """;
 
         return Optional.ofNullable(
                 queryWithTransaction(
@@ -168,8 +170,8 @@ public class MySQLMetadataDAO extends MySQLBaseDAO implements MetadataDAO, Event
                             q -> {
                                 if (!q.addParameter(name).addParameter(version).executeDelete()) {
                                     throw new NotFoundException(
-                                            String.format(
-                                                    "No such workflow definition: %s version: %d",
+                                            
+                                                    "No such workflow definition: %s version: %d".formatted(
                                                     name, version));
                                 }
                             });
@@ -205,7 +207,10 @@ public class MySQLMetadataDAO extends MySQLBaseDAO implements MetadataDAO, Event
 
     public List<WorkflowDef> getAllLatest() {
         final String GET_ALL_LATEST_WORKFLOW_DEF_QUERY =
-                "SELECT json_data FROM meta_workflow_def WHERE version = " + "latest_version";
+                """
+                SELECT json_data FROM meta_workflow_def WHERE version = \
+                latest_version\
+                """;
 
         return queryWithTransaction(
                 GET_ALL_LATEST_WORKFLOW_DEF_QUERY, q -> q.executeAndFetch(WorkflowDef.class));
@@ -213,7 +218,10 @@ public class MySQLMetadataDAO extends MySQLBaseDAO implements MetadataDAO, Event
 
     public List<WorkflowDef> getAllVersions(String name) {
         final String GET_ALL_VERSIONS_WORKFLOW_DEF_QUERY =
-                "SELECT json_data FROM meta_workflow_def WHERE name = ? " + "ORDER BY version";
+                """
+                SELECT json_data FROM meta_workflow_def WHERE name = ? \
+                ORDER BY version\
+                """;
 
         return queryWithTransaction(
                 GET_ALL_VERSIONS_WORKFLOW_DEF_QUERY,
@@ -225,8 +233,10 @@ public class MySQLMetadataDAO extends MySQLBaseDAO implements MetadataDAO, Event
         Preconditions.checkNotNull(eventHandler.getName(), "EventHandler name cannot be null");
 
         final String INSERT_EVENT_HANDLER_QUERY =
-                "INSERT INTO meta_event_handler (name, event, active, json_data) "
-                        + "VALUES (?, ?, ?, ?)";
+                """
+                INSERT INTO meta_event_handler (name, event, active, json_data) \
+                VALUES (?, ?, ?, ?)\
+                """;
 
         withTransaction(
                 tx -> {
@@ -255,9 +265,11 @@ public class MySQLMetadataDAO extends MySQLBaseDAO implements MetadataDAO, Event
 
         // @formatter:off
         final String UPDATE_EVENT_HANDLER_QUERY =
-                "UPDATE meta_event_handler SET "
-                        + "event = ?, active = ?, json_data = ?, "
-                        + "modified_on = CURRENT_TIMESTAMP WHERE name = ?";
+                """
+                UPDATE meta_event_handler SET \
+                event = ?, active = ?, json_data = ?, \
+                modified_on = CURRENT_TIMESTAMP WHERE name = ?\
+                """;
         // @formatter:on
 
         withTransaction(
@@ -378,7 +390,10 @@ public class MySQLMetadataDAO extends MySQLBaseDAO implements MetadataDAO, Event
      */
     private Boolean workflowExists(Connection connection, WorkflowDef def) {
         final String CHECK_WORKFLOW_DEF_EXISTS_QUERY =
-                "SELECT COUNT(*) FROM meta_workflow_def WHERE name = ? AND " + "version = ?";
+                """
+                SELECT COUNT(*) FROM meta_workflow_def WHERE name = ? AND \
+                version = ?\
+                """;
 
         return query(
                 connection,
@@ -396,7 +411,10 @@ public class MySQLMetadataDAO extends MySQLBaseDAO implements MetadataDAO, Event
      */
     private Optional<Integer> getLatestVersion(Connection tx, String name) {
         final String GET_LATEST_WORKFLOW_DEF_VERSION =
-                "SELECT max(version) AS version FROM meta_workflow_def WHERE " + "name = ?";
+                """
+                SELECT max(version) AS version FROM meta_workflow_def WHERE \
+                name = ?\
+                """;
 
         Integer val =
                 query(
@@ -427,7 +445,10 @@ public class MySQLMetadataDAO extends MySQLBaseDAO implements MetadataDAO, Event
      */
     private void updateLatestVersion(Connection tx, String name, int version) {
         final String UPDATE_WORKFLOW_DEF_LATEST_VERSION_QUERY =
-                "UPDATE meta_workflow_def SET latest_version = ? " + "WHERE name = ?";
+                """
+                UPDATE meta_workflow_def SET latest_version = ? \
+                WHERE name = ?\
+                """;
 
         execute(
                 tx,
@@ -437,7 +458,10 @@ public class MySQLMetadataDAO extends MySQLBaseDAO implements MetadataDAO, Event
 
     private void insertOrUpdateWorkflowDef(Connection tx, WorkflowDef def) {
         final String INSERT_WORKFLOW_DEF_QUERY =
-                "INSERT INTO meta_workflow_def (name, version, json_data) VALUES (?," + " ?, ?)";
+                """
+                INSERT INTO meta_workflow_def (name, version, json_data) VALUES (?,\
+                 ?, ?)\
+                """;
 
         Optional<Integer> version = getLatestVersion(tx, def.getName());
         if (!workflowExists(tx, def)) {
@@ -452,9 +476,11 @@ public class MySQLMetadataDAO extends MySQLBaseDAO implements MetadataDAO, Event
         } else {
             // @formatter:off
             final String UPDATE_WORKFLOW_DEF_QUERY =
-                    "UPDATE meta_workflow_def "
-                            + "SET json_data = ?, modified_on = CURRENT_TIMESTAMP "
-                            + "WHERE name = ? AND version = ?";
+                    """
+                    UPDATE meta_workflow_def \
+                    SET json_data = ?, modified_on = CURRENT_TIMESTAMP \
+                    WHERE name = ? AND version = ?\
+                    """;
             // @formatter:on
 
             execute(

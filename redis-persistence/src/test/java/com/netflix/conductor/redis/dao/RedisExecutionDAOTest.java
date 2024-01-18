@@ -16,12 +16,10 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.netflix.conductor.common.config.TestObjectMapperConfiguration;
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
@@ -36,20 +34,20 @@ import com.netflix.conductor.redis.jedis.JedisProxy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import redis.clients.jedis.commands.JedisCommands;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
-@RunWith(SpringRunner.class)
+@SpringJUnitConfig(classes = {TestObjectMapperConfiguration.class})
 public class RedisExecutionDAOTest extends ExecutionDAOTest {
 
     private RedisExecutionDAO executionDAO;
 
     @Autowired private ObjectMapper objectMapper;
 
-    @Before
+    @BeforeEach
     public void init() {
         ConductorProperties conductorProperties = mock(ConductorProperties.class);
         RedisProperties properties = mock(RedisProperties.class);
@@ -85,8 +83,8 @@ public class RedisExecutionDAOTest extends ExecutionDAOTest {
         executionDAO.correlateTaskToWorkflowInDS(taskId, workflowId);
         tasks = executionDAO.getTasksForWorkflow(workflowId);
         assertNotNull(tasks);
-        assertEquals(workflowId, tasks.get(0).getWorkflowInstanceId());
-        assertEquals(taskId, tasks.get(0).getTaskId());
+        assertEquals(workflowId, tasks.getFirst().getWorkflowInstanceId());
+        assertEquals(taskId, tasks.getFirst().getTaskId());
     }
 
     @Override

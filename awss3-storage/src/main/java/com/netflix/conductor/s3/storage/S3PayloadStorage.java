@@ -99,8 +99,8 @@ public class S3PayloadStorage implements ExternalPayloadStorage {
             return externalStorageLocation;
         } catch (SdkClientException e) {
             String msg =
-                    String.format(
-                            "Error communicating with S3 - operation:%s, payloadType: %s, path: %s",
+                    
+                            "Error communicating with S3 - operation:%s, payloadType: %s, path: %s".formatted(
                             operation, payloadType, path);
             LOGGER.error(msg, e);
             throw new TransientException(msg, e);
@@ -131,8 +131,8 @@ public class S3PayloadStorage implements ExternalPayloadStorage {
             s3Client.putObject(request);
         } catch (SdkClientException e) {
             String msg =
-                    String.format(
-                            "Error uploading to S3 - path:%s, payloadSize: %d", path, payloadSize);
+                    
+                            "Error uploading to S3 - path:%s, payloadSize: %d".formatted(path, payloadSize);
             LOGGER.error(msg, e);
             throw new TransientException(msg, e);
         }
@@ -151,7 +151,7 @@ public class S3PayloadStorage implements ExternalPayloadStorage {
             S3Object s3Object = s3Client.getObject(new GetObjectRequest(bucketName, path));
             return s3Object.getObjectContent();
         } catch (SdkClientException e) {
-            String msg = String.format("Error downloading from S3 - path:%s", path);
+            String msg = "Error downloading from S3 - path:%s".formatted(path);
             LOGGER.error(msg, e);
             throw new TransientException(msg, e);
         }

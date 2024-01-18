@@ -15,12 +15,10 @@ package com.netflix.conductor.core.execution.tasks;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.netflix.conductor.common.config.TestObjectMapperConfiguration;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
@@ -34,17 +32,14 @@ import com.netflix.conductor.model.WorkflowModel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
-@RunWith(SpringRunner.class)
+@SpringJUnitConfig(classes = {TestObjectMapperConfiguration.class})
 public class TestSubWorkflow {
 
     private WorkflowExecutor workflowExecutor;
@@ -53,7 +48,7 @@ public class TestSubWorkflow {
 
     @Autowired private ObjectMapper objectMapper;
 
-    @Before
+    @BeforeEach
     public void setup() {
         workflowExecutor = mock(WorkflowExecutor.class);
         startWorkflowOperation = mock(StartWorkflowOperation.class);
@@ -129,9 +124,9 @@ public class TestSubWorkflow {
                 .thenThrow(new TransientException("QueueDAO failure"));
 
         subWorkflow.start(workflowInstance, task, workflowExecutor);
-        assertNull("subWorkflowId should be null", task.getSubWorkflowId());
+        assertNull(task.getSubWorkflowId(), "subWorkflowId should be null");
         assertEquals(TaskModel.Status.SCHEDULED, task.getStatus());
-        assertTrue("Output data should be empty", task.getOutputData().isEmpty());
+        assertTrue(task.getOutputData().isEmpty(), "Output data should be empty");
     }
 
     @Test
@@ -160,10 +155,10 @@ public class TestSubWorkflow {
                 .thenThrow(new NonTransientException(failureReason));
 
         subWorkflow.start(workflowInstance, task, workflowExecutor);
-        assertNull("subWorkflowId should be null", task.getSubWorkflowId());
+        assertNull(task.getSubWorkflowId(), "subWorkflowId should be null");
         assertEquals(TaskModel.Status.FAILED, task.getStatus());
         assertEquals(failureReason, task.getReasonForIncompletion());
-        assertTrue("Output data should be empty", task.getOutputData().isEmpty());
+        assertTrue(task.getOutputData().isEmpty(), "Output data should be empty");
     }
 
     @Test

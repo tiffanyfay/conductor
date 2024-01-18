@@ -82,7 +82,7 @@ public class ForkJoinTaskMapper implements TaskMapper {
         tasksToBeScheduled.add(forkTask);
         List<List<WorkflowTask>> forkTasks = workflowTask.getForkTasks();
         for (List<WorkflowTask> wfts : forkTasks) {
-            WorkflowTask wft = wfts.get(0);
+            WorkflowTask wft = wfts.getFirst();
             List<TaskModel> tasks2 =
                     taskMapperContext
                             .getDeciderService()

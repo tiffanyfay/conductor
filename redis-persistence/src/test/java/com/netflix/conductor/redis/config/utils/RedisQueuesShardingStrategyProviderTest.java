@@ -14,15 +14,15 @@ package com.netflix.conductor.redis.config.utils;
 
 import java.util.Collections;
 
-import org.junit.Test;
-
 import com.netflix.conductor.redis.config.RedisProperties;
 import com.netflix.conductor.redis.dynoqueue.RedisQueuesShardingStrategyProvider;
 import com.netflix.dyno.queues.Message;
 import com.netflix.dyno.queues.ShardSupplier;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

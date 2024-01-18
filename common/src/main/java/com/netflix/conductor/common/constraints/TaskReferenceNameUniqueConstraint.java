@@ -70,8 +70,8 @@ public @interface TaskReferenceNameUniqueConstraint {
             for (WorkflowTask workflowTask : workflowDef.collectTasks()) {
                 if (taskReferenceMap.containsKey(workflowTask.getTaskReferenceName())) {
                     String message =
-                            String.format(
-                                    "taskReferenceName: %s should be unique across tasks for a given workflowDefinition: %s",
+                            
+                                    "taskReferenceName: %s should be unique across tasks for a given workflowDefinition: %s".formatted(
                                     workflowTask.getTaskReferenceName(), workflowDef.getName());
                     context.buildConstraintViolationWithTemplate(message).addConstraintViolation();
                     valid = false;

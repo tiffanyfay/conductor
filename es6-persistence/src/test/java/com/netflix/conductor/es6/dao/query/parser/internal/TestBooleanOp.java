@@ -12,10 +12,9 @@
  */
 package com.netflix.conductor.es6.dao.query.parser.internal;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestBooleanOp extends TestAbstractParser {
 
@@ -30,12 +29,14 @@ public class TestBooleanOp extends TestAbstractParser {
         }
     }
 
-    @Test(expected = ParserException.class)
+    @Test
     public void testInvalid() throws Exception {
-        String test = "<";
-        BooleanOp name = new BooleanOp(getInputStream(test));
-        String nameVal = name.getOperator();
-        assertNotNull(nameVal);
-        assertEquals(test, nameVal);
+        assertThrows(ParserException.class, () -> {
+            String test = "<";
+            BooleanOp name = new BooleanOp(getInputStream(test));
+            String nameVal = name.getOperator();
+            assertNotNull(nameVal);
+            assertEquals(test, nameVal);
+        });
     }
 }

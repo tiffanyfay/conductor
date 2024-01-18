@@ -17,8 +17,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import com.netflix.conductor.common.run.SearchResult;
@@ -32,9 +32,10 @@ import com.netflix.conductor.service.WorkflowService;
 
 import io.grpc.stub.StreamObserver;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class WorkflowServiceImplTest {
 
@@ -45,7 +46,7 @@ public class WorkflowServiceImplTest {
 
     private WorkflowServiceImpl workflowServiceImpl;
 
-    @Before
+    @BeforeEach
     public void init() {
         initMocks(this);
         workflowServiceImpl = new WorkflowServiceImpl(workflowService, 5000);

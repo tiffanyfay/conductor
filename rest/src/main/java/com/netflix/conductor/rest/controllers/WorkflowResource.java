@@ -68,10 +68,10 @@ public class WorkflowResource {
             summary =
                     "Start a new workflow. Returns the ID of the workflow instance that can be later used for tracking")
     public String startWorkflow(
-            @PathVariable("name") String name,
-            @RequestParam(value = "version", required = false) Integer version,
-            @RequestParam(value = "correlationId", required = false) String correlationId,
-            @RequestParam(value = "priority", defaultValue = "0", required = false) int priority,
+            @PathVariable String name,
+            @RequestParam(required = false) Integer version,
+            @RequestParam(required = false) String correlationId,
+            @RequestParam(defaultValue = "0", required = false) int priority,
             @RequestBody Map<String, Object> input) {
         return workflowService.startWorkflow(name, version, correlationId, priority, input);
     }
@@ -79,11 +79,11 @@ public class WorkflowResource {
     @GetMapping("/{name}/correlated/{correlationId}")
     @Operation(summary = "Lists workflows for the given correlation id")
     public List<Workflow> getWorkflows(
-            @PathVariable("name") String name,
-            @PathVariable("correlationId") String correlationId,
-            @RequestParam(value = "includeClosed", defaultValue = "false", required = false)
+            @PathVariable String name,
+            @PathVariable String correlationId,
+            @RequestParam(defaultValue = "false", required = false)
                     boolean includeClosed,
-            @RequestParam(value = "includeTasks", defaultValue = "false", required = false)
+            @RequestParam(defaultValue = "false", required = false)
                     boolean includeTasks) {
         return workflowService.getWorkflows(name, correlationId, includeClosed, includeTasks);
     }
@@ -91,10 +91,10 @@ public class WorkflowResource {
     @PostMapping(value = "/{name}/correlated")
     @Operation(summary = "Lists workflows for the given correlation id list")
     public Map<String, List<Workflow>> getWorkflows(
-            @PathVariable("name") String name,
-            @RequestParam(value = "includeClosed", defaultValue = "false", required = false)
+            @PathVariable String name,
+            @RequestParam(defaultValue = "false", required = false)
                     boolean includeClosed,
-            @RequestParam(value = "includeTasks", defaultValue = "false", required = false)
+            @RequestParam(defaultValue = "false", required = false)
                     boolean includeTasks,
             @RequestBody List<String> correlationIds) {
         return workflowService.getWorkflows(name, includeClosed, includeTasks, correlationIds);
@@ -103,8 +103,8 @@ public class WorkflowResource {
     @GetMapping("/{workflowId}")
     @Operation(summary = "Gets the workflow by workflow id")
     public Workflow getExecutionStatus(
-            @PathVariable("workflowId") String workflowId,
-            @RequestParam(value = "includeTasks", defaultValue = "true", required = false)
+            @PathVariable String workflowId,
+            @RequestParam(defaultValue = "true", required = false)
                     boolean includeTasks) {
         return workflowService.getExecutionStatus(workflowId, includeTasks);
     }
@@ -112,8 +112,8 @@ public class WorkflowResource {
     @DeleteMapping("/{workflowId}/remove")
     @Operation(summary = "Removes the workflow from the system")
     public void delete(
-            @PathVariable("workflowId") String workflowId,
-            @RequestParam(value = "archiveWorkflow", defaultValue = "true", required = false)
+            @PathVariable String workflowId,
+            @RequestParam(defaultValue = "true", required = false)
                     boolean archiveWorkflow) {
         workflowService.deleteWorkflow(workflowId, archiveWorkflow);
     }
@@ -122,35 +122,35 @@ public class WorkflowResource {
     @Operation(summary = "Retrieve all the running workflows")
     public List<String> getRunningWorkflow(
             @PathVariable("name") String workflowName,
-            @RequestParam(value = "version", defaultValue = "1", required = false) int version,
-            @RequestParam(value = "startTime", required = false) Long startTime,
-            @RequestParam(value = "endTime", required = false) Long endTime) {
+            @RequestParam(defaultValue = "1", required = false) int version,
+            @RequestParam(required = false) Long startTime,
+            @RequestParam(required = false) Long endTime) {
         return workflowService.getRunningWorkflows(workflowName, version, startTime, endTime);
     }
 
     @PutMapping("/decide/{workflowId}")
     @Operation(summary = "Starts the decision task for a workflow")
-    public void decide(@PathVariable("workflowId") String workflowId) {
+    public void decide(@PathVariable String workflowId) {
         workflowService.decideWorkflow(workflowId);
     }
 
     @PutMapping("/{workflowId}/pause")
     @Operation(summary = "Pauses the workflow")
-    public void pauseWorkflow(@PathVariable("workflowId") String workflowId) {
+    public void pauseWorkflow(@PathVariable String workflowId) {
         workflowService.pauseWorkflow(workflowId);
     }
 
     @PutMapping("/{workflowId}/resume")
     @Operation(summary = "Resumes the workflow")
-    public void resumeWorkflow(@PathVariable("workflowId") String workflowId) {
+    public void resumeWorkflow(@PathVariable String workflowId) {
         workflowService.resumeWorkflow(workflowId);
     }
 
     @PutMapping("/{workflowId}/skiptask/{taskReferenceName}")
     @Operation(summary = "Skips a given task from a current running workflow")
     public void skipTaskFromWorkflow(
-            @PathVariable("workflowId") String workflowId,
-            @PathVariable("taskReferenceName") String taskReferenceName,
+            @PathVariable String workflowId,
+            @PathVariable String taskReferenceName,
             SkipTaskRequest skipTaskRequest) {
         workflowService.skipTaskFromWorkflow(workflowId, taskReferenceName, skipTaskRequest);
     }
@@ -158,7 +158,7 @@ public class WorkflowResource {
     @PostMapping(value = "/{workflowId}/rerun", produces = TEXT_PLAIN_VALUE)
     @Operation(summary = "Reruns the workflow from a specific task")
     public String rerun(
-            @PathVariable("workflowId") String workflowId,
+            @PathVariable String workflowId,
             @RequestBody RerunWorkflowRequest request) {
         return workflowService.rerunWorkflow(workflowId, request);
     }
@@ -169,8 +169,8 @@ public class WorkflowResource {
             value = HttpStatus.NO_CONTENT) // for backwards compatibility with 2.x client which
     // expects a 204 for this request
     public void restart(
-            @PathVariable("workflowId") String workflowId,
-            @RequestParam(value = "useLatestDefinitions", defaultValue = "false", required = false)
+            @PathVariable String workflowId,
+            @RequestParam(defaultValue = "false", required = false)
                     boolean useLatestDefinitions) {
         workflowService.restartWorkflow(workflowId, useLatestDefinitions);
     }
@@ -181,9 +181,8 @@ public class WorkflowResource {
             value = HttpStatus.NO_CONTENT) // for backwards compatibility with 2.x client which
     // expects a 204 for this request
     public void retry(
-            @PathVariable("workflowId") String workflowId,
+            @PathVariable String workflowId,
             @RequestParam(
-                            value = "resumeSubworkflowTasks",
                             defaultValue = "false",
                             required = false)
                     boolean resumeSubworkflowTasks) {
@@ -195,75 +194,83 @@ public class WorkflowResource {
     @ResponseStatus(
             value = HttpStatus.NO_CONTENT) // for backwards compatibility with 2.x client which
     // expects a 204 for this request
-    public void resetWorkflow(@PathVariable("workflowId") String workflowId) {
+    public void resetWorkflow(@PathVariable String workflowId) {
         workflowService.resetWorkflow(workflowId);
     }
 
     @DeleteMapping("/{workflowId}")
     @Operation(summary = "Terminate workflow execution")
     public void terminate(
-            @PathVariable("workflowId") String workflowId,
-            @RequestParam(value = "reason", required = false) String reason) {
+            @PathVariable String workflowId,
+            @RequestParam(required = false) String reason) {
         workflowService.terminateWorkflow(workflowId, reason);
     }
 
     @Operation(
             summary = "Search for workflows based on payload and other parameters",
             description =
-                    "use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC."
-                            + " If order is not specified, defaults to ASC.")
+                    """
+                    use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC.\
+                     If order is not specified, defaults to ASC.\
+                    """)
     @GetMapping(value = "/search")
     public SearchResult<WorkflowSummary> search(
-            @RequestParam(value = "start", defaultValue = "0", required = false) int start,
-            @RequestParam(value = "size", defaultValue = "100", required = false) int size,
-            @RequestParam(value = "sort", required = false) String sort,
-            @RequestParam(value = "freeText", defaultValue = "*", required = false) String freeText,
-            @RequestParam(value = "query", required = false) String query) {
+            @RequestParam(defaultValue = "0", required = false) int start,
+            @RequestParam(defaultValue = "100", required = false) int size,
+            @RequestParam(required = false) String sort,
+            @RequestParam(defaultValue = "*", required = false) String freeText,
+            @RequestParam(required = false) String query) {
         return workflowService.searchWorkflows(start, size, sort, freeText, query);
     }
 
     @Operation(
             summary = "Search for workflows based on payload and other parameters",
             description =
-                    "use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC."
-                            + " If order is not specified, defaults to ASC.")
+                    """
+                    use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC.\
+                     If order is not specified, defaults to ASC.\
+                    """)
     @GetMapping(value = "/search-v2")
     public SearchResult<Workflow> searchV2(
-            @RequestParam(value = "start", defaultValue = "0", required = false) int start,
-            @RequestParam(value = "size", defaultValue = "100", required = false) int size,
-            @RequestParam(value = "sort", required = false) String sort,
-            @RequestParam(value = "freeText", defaultValue = "*", required = false) String freeText,
-            @RequestParam(value = "query", required = false) String query) {
+            @RequestParam(defaultValue = "0", required = false) int start,
+            @RequestParam(defaultValue = "100", required = false) int size,
+            @RequestParam(required = false) String sort,
+            @RequestParam(defaultValue = "*", required = false) String freeText,
+            @RequestParam(required = false) String query) {
         return workflowService.searchWorkflowsV2(start, size, sort, freeText, query);
     }
 
     @Operation(
             summary = "Search for workflows based on task parameters",
             description =
-                    "use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC."
-                            + " If order is not specified, defaults to ASC")
+                    """
+                    use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC.\
+                     If order is not specified, defaults to ASC\
+                    """)
     @GetMapping(value = "/search-by-tasks")
     public SearchResult<WorkflowSummary> searchWorkflowsByTasks(
-            @RequestParam(value = "start", defaultValue = "0", required = false) int start,
-            @RequestParam(value = "size", defaultValue = "100", required = false) int size,
-            @RequestParam(value = "sort", required = false) String sort,
-            @RequestParam(value = "freeText", defaultValue = "*", required = false) String freeText,
-            @RequestParam(value = "query", required = false) String query) {
+            @RequestParam(defaultValue = "0", required = false) int start,
+            @RequestParam(defaultValue = "100", required = false) int size,
+            @RequestParam(required = false) String sort,
+            @RequestParam(defaultValue = "*", required = false) String freeText,
+            @RequestParam(required = false) String query) {
         return workflowService.searchWorkflowsByTasks(start, size, sort, freeText, query);
     }
 
     @Operation(
             summary = "Search for workflows based on task parameters",
             description =
-                    "use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC."
-                            + " If order is not specified, defaults to ASC")
+                    """
+                    use sort options as sort=<field>:ASC|DESC e.g. sort=name&sort=workflowId:DESC.\
+                     If order is not specified, defaults to ASC\
+                    """)
     @GetMapping(value = "/search-by-tasks-v2")
     public SearchResult<Workflow> searchWorkflowsByTasksV2(
-            @RequestParam(value = "start", defaultValue = "0", required = false) int start,
-            @RequestParam(value = "size", defaultValue = "100", required = false) int size,
-            @RequestParam(value = "sort", required = false) String sort,
-            @RequestParam(value = "freeText", defaultValue = "*", required = false) String freeText,
-            @RequestParam(value = "query", required = false) String query) {
+            @RequestParam(defaultValue = "0", required = false) int start,
+            @RequestParam(defaultValue = "100", required = false) int size,
+            @RequestParam(required = false) String sort,
+            @RequestParam(defaultValue = "*", required = false) String freeText,
+            @RequestParam(required = false) String query) {
         return workflowService.searchWorkflowsByTasksV2(start, size, sort, freeText, query);
     }
 
@@ -272,9 +279,9 @@ public class WorkflowResource {
                     "Get the uri and path of the external storage where the workflow payload is to be stored")
     @GetMapping({"/externalstoragelocation", "external-storage-location"})
     public ExternalStorageLocation getExternalStorageLocation(
-            @RequestParam("path") String path,
-            @RequestParam("operation") String operation,
-            @RequestParam("payloadType") String payloadType) {
+            @RequestParam String path,
+            @RequestParam String operation,
+            @RequestParam String payloadType) {
         return workflowService.getExternalStorageLocation(path, operation, payloadType);
     }
 

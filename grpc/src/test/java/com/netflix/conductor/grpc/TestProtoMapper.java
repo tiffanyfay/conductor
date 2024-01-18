@@ -12,12 +12,13 @@
  */
 package com.netflix.conductor.grpc;
 
+import org.junit.jupiter.api.Test;
+
 import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 import com.netflix.conductor.proto.WorkflowTaskPb;
-import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TestProtoMapper {
   private final ProtoMapper mapper = ProtoMapper.INSTANCE;

@@ -15,14 +15,13 @@ package com.netflix.conductor.rest.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.service.MetadataService;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.anyString;
@@ -31,13 +30,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class MetadataResourceTest {
 
     private MetadataResource metadataResource;
 
     private MetadataService mockMetadataService;
 
-    @Before
+    @BeforeEach
     public void before() {
         this.mockMetadataService = mock(MetadataService.class);
         this.metadataResource = new MetadataResource(this.mockMetadataService);

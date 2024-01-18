@@ -144,8 +144,8 @@ public class MetadataMapperService {
                             .orElseThrow(
                                     () -> {
                                         String reason =
-                                                String.format(
-                                                        "The Task %s defined as a sub-workflow has no workflow definition available ",
+                                                
+                                                        "The Task %s defined as a sub-workflow has no workflow definition available ".formatted(
                                                         subWorkflowName);
                                         LOGGER.error(reason);
                                         return new TerminateWorkflowException(reason);

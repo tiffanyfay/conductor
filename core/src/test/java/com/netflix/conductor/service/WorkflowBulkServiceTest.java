@@ -16,14 +16,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.netflix.conductor.core.execution.WorkflowExecutor;
 
@@ -31,13 +30,13 @@ import jakarta.validation.ConstraintViolationException;
 
 import static com.netflix.conductor.TestUtils.getConstraintViolationMessages;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @SuppressWarnings("SpringJavaAutowiredMembersInspection")
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @EnableAutoConfiguration
 public class WorkflowBulkServiceTest {
 
@@ -59,70 +58,80 @@ public class WorkflowBulkServiceTest {
 
     @Autowired private WorkflowBulkService workflowBulkService;
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testPauseWorkflowNull() {
-        try {
-            workflowBulkService.pauseWorkflow(null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("WorkflowIds list cannot be null."));
-            throw ex;
-        }
-    }
-
-    @Test(expected = ConstraintViolationException.class)
-    public void testPauseWorkflowWithInvalidListSize() {
-        try {
-            List<String> list = new ArrayList<>(1001);
-            for (int i = 0; i < 1002; i++) {
-                list.add("test");
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                workflowBulkService.pauseWorkflow(null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("WorkflowIds list cannot be null."));
+                throw ex;
             }
-            workflowBulkService.pauseWorkflow(list);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(
-                    messages.contains(
-                            "Cannot process more than 1000 workflows. Please use multiple requests."));
-            throw ex;
-        }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
+    public void testPauseWorkflowWithInvalidListSize() {
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                List<String> list = new ArrayList<>(1001);
+                for (int i = 0; i < 1002; i++) {
+                    list.add("test");
+                }
+                workflowBulkService.pauseWorkflow(list);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(
+                        messages.contains(
+                                "Cannot process more than 1000 workflows. Please use multiple requests."));
+                throw ex;
+            }
+        });
+    }
+
+    @Test
     public void testResumeWorkflowNull() {
-        try {
-            workflowBulkService.resumeWorkflow(null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("WorkflowIds list cannot be null."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                workflowBulkService.resumeWorkflow(null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("WorkflowIds list cannot be null."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testRestartWorkflowNull() {
-        try {
-            workflowBulkService.restart(null, false);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("WorkflowIds list cannot be null."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                workflowBulkService.restart(null, false);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("WorkflowIds list cannot be null."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testRetryWorkflowNull() {
-        try {
-            workflowBulkService.retry(null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("WorkflowIds list cannot be null."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                workflowBulkService.retry(null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("WorkflowIds list cannot be null."));
+                throw ex;
+            }
+        });
     }
 
     @Test
@@ -133,15 +142,17 @@ public class WorkflowBulkServiceTest {
         verify(workflowExecutor).retry("anyId", false);
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testTerminateNull() {
-        try {
-            workflowBulkService.terminate(null, null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("WorkflowIds list cannot be null."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                workflowBulkService.terminate(null, null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("WorkflowIds list cannot be null."));
+                throw ex;
+            }
+        });
     }
 }

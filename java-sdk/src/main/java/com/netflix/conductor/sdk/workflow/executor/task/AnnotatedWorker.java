@@ -145,8 +145,7 @@ public class AnnotatedWorker implements Worker {
 
         if (List.class.isAssignableFrom(parameterType)) {
             List<?> list = om.convertValue(value, List.class);
-            if (type instanceof ParameterizedType) {
-                ParameterizedType parameterizedType = (ParameterizedType) type;
+            if (type instanceof ParameterizedType parameterizedType) {
                 Class<?> typeOfParameter = (Class<?>) parameterizedType.getActualTypeArguments()[0];
                 List<Object> parameterizedList = new ArrayList<>();
                 for (Object item : list) {
@@ -186,12 +185,11 @@ public class AnnotatedWorker implements Worker {
             result.setStatus(TaskResult.Status.COMPLETED);
             return result;
 
-        } else if (invocationResult instanceof TaskResult) {
+        } else if (invocationResult instanceof TaskResult taskResult) {
 
-            return (TaskResult) invocationResult;
+            return taskResult;
 
-        } else if (invocationResult instanceof Map) {
-            Map resultAsMap = (Map) invocationResult;
+        } else if (invocationResult instanceof Map resultAsMap) {
             result.getOutputData().putAll(resultAsMap);
             result.setStatus(TaskResult.Status.COMPLETED);
             return result;
@@ -208,8 +206,7 @@ public class AnnotatedWorker implements Worker {
             result.setStatus(TaskResult.Status.COMPLETED);
             return result;
 
-        } else if (invocationResult instanceof DynamicForkInput) {
-            DynamicForkInput forkInput = (DynamicForkInput) invocationResult;
+        } else if (invocationResult instanceof DynamicForkInput forkInput) {
             List<com.netflix.conductor.sdk.workflow.def.tasks.Task<?>> tasks = forkInput.getTasks();
             List<WorkflowTask> workflowTasks = new ArrayList<>();
             for (com.netflix.conductor.sdk.workflow.def.tasks.Task<?> sdkTask : tasks) {

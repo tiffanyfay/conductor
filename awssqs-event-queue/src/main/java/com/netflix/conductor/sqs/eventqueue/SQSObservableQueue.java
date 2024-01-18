@@ -245,7 +245,7 @@ public class SQSObservableQueue implements ObservableQueue {
             CreateQueueResult result = client.createQueue(createQueueRequest);
             return result.getQueueUrl();
         } else {
-            return queueUrls.get(0);
+            return queueUrls.getFirst();
         }
     }
 

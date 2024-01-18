@@ -19,7 +19,6 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.netflix.conductor.annotations.VisibleForTesting;
@@ -46,7 +45,6 @@ public class DynamicTaskMapper implements TaskMapper {
     private final ParametersUtils parametersUtils;
     private final MetadataDAO metadataDAO;
 
-    @Autowired
     public DynamicTaskMapper(ParametersUtils parametersUtils, MetadataDAO metadataDAO) {
         this.parametersUtils = parametersUtils;
         this.metadataDAO = metadataDAO;
@@ -123,9 +121,11 @@ public class DynamicTaskMapper implements TaskMapper {
                 .orElseThrow(
                         () -> {
                             String reason =
-                                    String.format(
-                                            "Cannot map a dynamic task based on the parameter and input. "
-                                                    + "Parameter= %s, input= %s",
+                                    (
+                                            """
+                                            Cannot map a dynamic task based on the parameter and input. \
+                                            Parameter= %s, input= %s\
+                                            """).formatted(
                                             taskNameParam, taskInput);
                             return new TerminateWorkflowException(reason);
                         });
@@ -150,8 +150,8 @@ public class DynamicTaskMapper implements TaskMapper {
                                         .orElseThrow(
                                                 () -> {
                                                     String reason =
-                                                            String.format(
-                                                                    "Invalid task specified.  Cannot find task by name %s in the task definitions",
+                                                            
+                                                                    "Invalid task specified.  Cannot find task by name %s in the task definitions".formatted(
                                                                     workflowTask.getName());
                                                     return new TerminateWorkflowException(reason);
                                                 }));

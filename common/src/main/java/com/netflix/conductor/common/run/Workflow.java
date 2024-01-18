@@ -505,7 +505,7 @@ public class Workflow extends Auditable {
     public String toString() {
         String name = workflowDefinition != null ? workflowDefinition.getName() : null;
         Integer version = workflowDefinition != null ? workflowDefinition.getVersion() : null;
-        return String.format("%s.%s/%s.%s", name, version, workflowId, status);
+        return "%s.%s/%s.%s".formatted(name, version, workflowId, status);
     }
 
     /**
@@ -515,7 +515,7 @@ public class Workflow extends Auditable {
     public String toShortString() {
         String name = workflowDefinition != null ? workflowDefinition.getName() : null;
         Integer version = workflowDefinition != null ? workflowDefinition.getVersion() : null;
-        return String.format("%s.%s/%s", name, version, workflowId);
+        return "%s.%s/%s".formatted(name, version, workflowId);
     }
 
     @Override

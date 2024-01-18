@@ -178,20 +178,20 @@ public class Query implements AutoCloseable {
      */
     public Query addParameters(Object... values) {
         for (Object v : values) {
-            if (v instanceof String) {
-                addParameter((String) v);
-            } else if (v instanceof Integer) {
-                addParameter((Integer) v);
-            } else if (v instanceof Long) {
-                addParameter((Long) v);
-            } else if (v instanceof Double) {
-                addParameter((Double) v);
-            } else if (v instanceof Boolean) {
-                addParameter((Boolean) v);
-            } else if (v instanceof Date) {
-                addParameter((Date) v);
-            } else if (v instanceof Timestamp) {
-                addParameter((Timestamp) v);
+            if (v instanceof String string) {
+                addParameter(string);
+            } else if (v instanceof Integer integer) {
+                addParameter(integer);
+            } else if (v instanceof Long long1) {
+                addParameter(long1);
+            } else if (v instanceof Double double1) {
+                addParameter(double1);
+            } else if (v instanceof Boolean boolean1) {
+                addParameter(boolean1);
+            } else if (v instanceof Date date) {
+                addParameter(date);
+            } else if (v instanceof Timestamp timestamp) {
+                addParameter(timestamp);
             } else {
                 throw new IllegalArgumentException(
                         "Type "
@@ -224,8 +224,8 @@ public class Query implements AutoCloseable {
             return convertLong(val) > 0;
         }
 
-        if (val instanceof Boolean) {
-            return (Boolean) val;
+        if (val instanceof Boolean boolean1) {
+            return boolean1;
         }
 
         if (val instanceof String) {
@@ -490,8 +490,8 @@ public class Query implements AutoCloseable {
             return returnType.cast(convertDouble(value));
         } else if (String.class == returnType) {
             return returnType.cast(convertString(value));
-        } else if (value instanceof String) {
-            return fromJson((String) value, returnType);
+        } else if (value instanceof String string) {
+            return fromJson(string, returnType);
         }
 
         final String vName = value.getClass().getName();
@@ -504,12 +504,12 @@ public class Query implements AutoCloseable {
             return null;
         }
 
-        if (value instanceof Integer) {
-            return (Integer) value;
+        if (value instanceof Integer integer) {
+            return integer;
         }
 
-        if (value instanceof Number) {
-            return ((Number) value).intValue();
+        if (value instanceof Number number) {
+            return number.intValue();
         }
 
         return NumberUtils.toInt(value.toString());
@@ -520,12 +520,12 @@ public class Query implements AutoCloseable {
             return null;
         }
 
-        if (value instanceof Double) {
-            return (Double) value;
+        if (value instanceof Double double1) {
+            return double1;
         }
 
-        if (value instanceof Number) {
-            return ((Number) value).doubleValue();
+        if (value instanceof Number number) {
+            return number.doubleValue();
         }
 
         return NumberUtils.toDouble(value.toString());
@@ -536,12 +536,12 @@ public class Query implements AutoCloseable {
             return null;
         }
 
-        if (value instanceof Long) {
-            return (Long) value;
+        if (value instanceof Long long1) {
+            return long1;
         }
 
-        if (value instanceof Number) {
-            return ((Number) value).longValue();
+        if (value instanceof Number number) {
+            return number.longValue();
         }
         return NumberUtils.toLong(value.toString());
     }
@@ -551,8 +551,8 @@ public class Query implements AutoCloseable {
             return null;
         }
 
-        if (value instanceof String) {
-            return (String) value;
+        if (value instanceof String string) {
+            return string;
         }
 
         return value.toString().trim();
@@ -563,12 +563,12 @@ public class Query implements AutoCloseable {
             return null;
         }
 
-        if (value instanceof Boolean) {
-            return (Boolean) value;
+        if (value instanceof Boolean boolean1) {
+            return boolean1;
         }
 
-        if (value instanceof Number) {
-            return ((Number) value).intValue() != 0;
+        if (value instanceof Number number) {
+            return number.intValue() != 0;
         }
 
         String text = value.toString().trim();

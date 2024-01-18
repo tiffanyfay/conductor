@@ -71,8 +71,8 @@ public class RedisConcurrentExecutionLimitDAO implements ConcurrentExecutionLimi
         } catch (Exception e) {
             Monitors.error(CLASS_NAME, "addTaskToLimit");
             String errorMsg =
-                    String.format(
-                            "Error updating taskDefLimit for task - %s:%s in workflow: %s",
+                    
+                            "Error updating taskDefLimit for task - %s:%s in workflow: %s".formatted(
                             task.getTaskDefName(), task.getTaskId(), task.getWorkflowInstanceId());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);
@@ -100,8 +100,8 @@ public class RedisConcurrentExecutionLimitDAO implements ConcurrentExecutionLimi
         } catch (Exception e) {
             Monitors.error(CLASS_NAME, "removeTaskFromLimit");
             String errorMsg =
-                    String.format(
-                            "Error updating taskDefLimit for task - %s:%s in workflow: %s",
+                    
+                            "Error updating taskDefLimit for task - %s:%s in workflow: %s".formatted(
                             task.getTaskDefName(), task.getTaskId(), task.getWorkflowInstanceId());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg, e);
@@ -152,8 +152,8 @@ public class RedisConcurrentExecutionLimitDAO implements ConcurrentExecutionLimi
         } catch (Exception e) {
             Monitors.error(CLASS_NAME, "exceedsLimit");
             String errorMsg =
-                    String.format(
-                            "Failed to get in progress limit - %s:%s in workflow :%s",
+                    
+                            "Failed to get in progress limit - %s:%s in workflow :%s".formatted(
                             task.getTaskDefName(), task.getTaskId(), task.getWorkflowInstanceId());
             LOGGER.error(errorMsg, e);
             throw new TransientException(errorMsg);

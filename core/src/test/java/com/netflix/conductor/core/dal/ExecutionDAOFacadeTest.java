@@ -19,12 +19,10 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.netflix.conductor.common.config.TestObjectMapperConfiguration;
 import com.netflix.conductor.common.metadata.events.EventExecution;
@@ -41,12 +39,11 @@ import com.netflix.conductor.model.WorkflowModel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.*;
 
-@ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
-@RunWith(SpringRunner.class)
+@SpringJUnitConfig(classes = {TestObjectMapperConfiguration.class})
 public class ExecutionDAOFacadeTest {
 
     private ExecutionDAO executionDAO;
@@ -56,7 +53,7 @@ public class ExecutionDAOFacadeTest {
 
     @Autowired private ObjectMapper objectMapper;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         executionDAO = mock(ExecutionDAO.class);
         QueueDAO queueDAO = mock(QueueDAO.class);
@@ -184,18 +181,20 @@ public class ExecutionDAOFacadeTest {
         verify(indexDAO, times(1)).asyncAddEventExecution(any());
     }
 
-    @Test(expected = TerminateWorkflowException.class)
+    @Test
     public void testUpdateTaskThrowsTerminateWorkflowException() {
-        TaskModel task = new TaskModel();
-        task.setScheduledTime(1L);
-        task.setSeq(1);
-        task.setTaskId(UUID.randomUUID().toString());
-        task.setTaskDefName("task1");
+        assertThrows(TerminateWorkflowException.class, () -> {
+            TaskModel task = new TaskModel();
+            task.setScheduledTime(1L);
+            task.setSeq(1);
+            task.setTaskId(UUID.randomUUID().toString());
+            task.setTaskDefName("task1");
 
-        doThrow(new TerminateWorkflowException("failed"))
-                .when(externalPayloadStorageUtils)
-                .verifyAndUpload(task, ExternalPayloadStorage.PayloadType.TASK_OUTPUT);
+            doThrow(new TerminateWorkflowException("failed"))
+                    .when(externalPayloadStorageUtils)
+                    .verifyAndUpload(task, ExternalPayloadStorage.PayloadType.TASK_OUTPUT);
 
-        executionDAOFacade.updateTask(task);
+            executionDAOFacade.updateTask(task);
+        });
     }
 }

@@ -14,20 +14,20 @@ package com.netflix.conductor.common.tasks;
 
 import java.util.HashMap;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TaskResultTest {
 
     private Task task;
     private TaskResult taskResult;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         task = new Task();
         task.setWorkflowInstanceId("workflow-id");

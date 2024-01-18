@@ -17,12 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.netflix.conductor.common.config.TestObjectMapperConfiguration;
 import com.netflix.conductor.common.metadata.workflow.SubWorkflowParams;
@@ -37,11 +34,9 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-@ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
-@RunWith(SpringRunner.class)
+@SpringJUnitConfig(classes = {TestObjectMapperConfiguration.class})
 public class SubWorkflowParamsTest {
 
     @Autowired private ObjectMapper objectMapper;
@@ -71,11 +66,13 @@ public class SubWorkflowParamsTest {
         assertEquals(taskToDomain, subWorkflowParams.getTaskToDomain());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSetWorkflowDefinition() {
-        SubWorkflowParams subWorkflowParams = new SubWorkflowParams();
-        subWorkflowParams.setName("dummy-name");
-        subWorkflowParams.setWorkflowDefinition(new Object());
+        assertThrows(IllegalArgumentException.class, () -> {
+            SubWorkflowParams subWorkflowParams = new SubWorkflowParams();
+            subWorkflowParams.setName("dummy-name");
+            subWorkflowParams.setWorkflowDefinition(new Object());
+        });
     }
 
     @Test

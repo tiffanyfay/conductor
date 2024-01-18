@@ -17,8 +17,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import com.netflix.conductor.common.metadata.tasks.Task;
@@ -33,9 +33,10 @@ import com.netflix.conductor.service.TaskService;
 
 import io.grpc.stub.StreamObserver;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TaskServiceImplTest {
 
@@ -45,7 +46,7 @@ public class TaskServiceImplTest {
 
     private TaskServiceImpl taskServiceImpl;
 
-    @Before
+    @BeforeEach
     public void init() {
         initMocks(this);
         taskServiceImpl = new TaskServiceImpl(executionService, taskService, 5000);

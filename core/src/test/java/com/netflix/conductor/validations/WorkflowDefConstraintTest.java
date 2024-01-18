@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
@@ -35,8 +35,9 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -46,18 +47,18 @@ public class WorkflowDefConstraintTest {
     private static ValidatorFactory validatorFactory;
     private MetadataDAO mockMetadataDao;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
     }
 
-    @AfterClass
+    @AfterAll
     public static void close() {
         validatorFactory.close();
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mockMetadataDao = Mockito.mock(MetadataDAO.class);
         when(mockMetadataDao.getTaskDef(anyString())).thenReturn(new TaskDef());

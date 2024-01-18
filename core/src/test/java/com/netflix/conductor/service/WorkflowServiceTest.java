@@ -17,14 +17,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
 import com.netflix.conductor.common.metadata.workflow.SkipTaskRequest;
@@ -40,7 +39,8 @@ import jakarta.validation.ConstraintViolationException;
 
 import static com.netflix.conductor.TestUtils.getConstraintViolationMessages;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -48,7 +48,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("SpringJavaAutowiredMembersInspection")
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @EnableAutoConfiguration
 public class WorkflowServiceTest {
 
@@ -94,28 +94,32 @@ public class WorkflowServiceTest {
 
     @Autowired private WorkflowService workflowService;
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testStartWorkflowNull() {
-        try {
-            workflowService.startWorkflow(null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("StartWorkflowRequest cannot be null"));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                workflowService.startWorkflow(null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("StartWorkflowRequest cannot be null"));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testGetWorkflowsNoName() {
-        try {
-            workflowService.getWorkflows("", "c123", true, true);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("Workflow name cannot be null or empty"));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                workflowService.getWorkflows("", "c123", true, true);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("Workflow name cannot be null or empty"));
+                throw ex;
+            }
+        });
     }
 
     @Test
@@ -159,22 +163,26 @@ public class WorkflowServiceTest {
         assertEquals(workflow, workflowService.getExecutionStatus("w123", true));
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testGetExecutionStatusNoWorkflowId() {
-        try {
-            workflowService.getExecutionStatus("", true);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("WorkflowId cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                workflowService.getExecutionStatus("", true);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("WorkflowId cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void testNotFoundExceptionGetExecutionStatus() {
-        when(executionService.getExecutionStatus(anyString(), anyBoolean())).thenReturn(null);
-        workflowService.getExecutionStatus("w123", true);
+        assertThrows(NotFoundException.class, () -> {
+            when(executionService.getExecutionStatus(anyString(), anyBoolean())).thenReturn(null);
+            workflowService.getExecutionStatus("w123", true);
+        });
     }
 
     @Test
@@ -183,16 +191,18 @@ public class WorkflowServiceTest {
         verify(executionService, times(1)).removeWorkflow(anyString(), eq(false));
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testInvalidDeleteWorkflow() {
-        try {
-            workflowService.deleteWorkflow(null, false);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("WorkflowId cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                workflowService.deleteWorkflow(null, false);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("WorkflowId cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
     @Test
@@ -201,66 +211,76 @@ public class WorkflowServiceTest {
         verify(executionService, times(1)).removeWorkflow(anyString(), eq(true));
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testInvalidArchiveWorkflow() {
-        try {
-            workflowService.deleteWorkflow(null, true);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("WorkflowId cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                workflowService.deleteWorkflow(null, true);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("WorkflowId cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testInvalidPauseWorkflow() {
-        try {
-            workflowService.pauseWorkflow(null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("WorkflowId cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                workflowService.pauseWorkflow(null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("WorkflowId cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testInvalidResumeWorkflow() {
-        try {
-            workflowService.resumeWorkflow(null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("WorkflowId cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                workflowService.resumeWorkflow(null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("WorkflowId cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testInvalidSkipTaskFromWorkflow() {
-        try {
-            SkipTaskRequest skipTaskRequest = new SkipTaskRequest();
-            workflowService.skipTaskFromWorkflow(null, null, skipTaskRequest);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(2, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("WorkflowId name cannot be null or empty."));
-            assertTrue(messages.contains("TaskReferenceName cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                SkipTaskRequest skipTaskRequest = new SkipTaskRequest();
+                workflowService.skipTaskFromWorkflow(null, null, skipTaskRequest);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(2, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("WorkflowId name cannot be null or empty."));
+                assertTrue(messages.contains("TaskReferenceName cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testInvalidWorkflowNameGetRunningWorkflows() {
-        try {
-            workflowService.getRunningWorkflows(null, 123, null, null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("Workflow name cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                workflowService.getRunningWorkflows(null, 123, null, null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("Workflow name cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
     @Test
@@ -307,65 +327,75 @@ public class WorkflowServiceTest {
         verify(workflowExecutor, times(1)).rerun(any(RerunWorkflowRequest.class));
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testRerunWorkflowNull() {
-        try {
-            workflowService.rerunWorkflow(null, null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(2, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("WorkflowId cannot be null or empty."));
-            assertTrue(messages.contains("RerunWorkflowRequest cannot be null."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                workflowService.rerunWorkflow(null, null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(2, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("WorkflowId cannot be null or empty."));
+                assertTrue(messages.contains("RerunWorkflowRequest cannot be null."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testRestartWorkflowNull() {
-        try {
-            workflowService.restartWorkflow(null, false);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("WorkflowId cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                workflowService.restartWorkflow(null, false);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("WorkflowId cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testRetryWorkflowNull() {
-        try {
-            workflowService.retryWorkflow(null, false);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("WorkflowId cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                workflowService.retryWorkflow(null, false);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("WorkflowId cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testResetWorkflowNull() {
-        try {
-            workflowService.resetWorkflow(null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("WorkflowId cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                workflowService.resetWorkflow(null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("WorkflowId cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testTerminateWorkflowNull() {
-        try {
-            workflowService.terminateWorkflow(null, null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("WorkflowId cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                workflowService.terminateWorkflow(null, null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("WorkflowId cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
     @Test

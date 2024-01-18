@@ -23,16 +23,14 @@ import java.util.*;
 import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import com.netflix.conductor.common.config.TestObjectMapperConfiguration;
 import com.netflix.conductor.common.metadata.tasks.Task;
@@ -46,7 +44,7 @@ import com.netflix.conductor.postgres.util.Query;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ContextConfiguration(
         classes = {
@@ -54,7 +52,6 @@ import static org.junit.Assert.*;
             PostgresConfiguration.class,
             FlywayAutoConfiguration.class
         })
-@RunWith(SpringRunner.class)
 @TestPropertySource(
         properties = {
             "conductor.app.asyncIndexingEnabled=false",
@@ -76,7 +73,7 @@ public class PostgresIndexDAOTest {
     @Autowired Flyway flyway;
 
     // clean the database between tests.
-    @Before
+    @BeforeEach
     public void before() {
         flyway.migrate();
     }
@@ -114,27 +111,27 @@ public class PostgresIndexDAOTest {
     private void compareWorkflowSummary(WorkflowSummary wfs) throws SQLException {
         List<Map<String, Object>> result =
                 queryDb(
-                        String.format(
-                                "SELECT * FROM workflow_index WHERE workflow_id = '%s'",
+                        
+                                "SELECT * FROM workflow_index WHERE workflow_id = '%s'".formatted(
                                 wfs.getWorkflowId()));
-        assertEquals("Wrong number of rows returned", 1, result.size());
+        assertEquals(1, result.size(), "Wrong number of rows returned");
         assertEquals(
-                "Workflow id does not match",
                 wfs.getWorkflowId(),
-                result.get(0).get("workflow_id"));
+                result.getFirst().get("workflow_id"),
+                "Workflow id does not match");
         assertEquals(
-                "Correlation id does not match",
                 wfs.getCorrelationId(),
-                result.get(0).get("correlation_id"));
+                result.getFirst().get("correlation_id"),
+                "Correlation id does not match");
         assertEquals(
-                "Workflow type does not match",
                 wfs.getWorkflowType(),
-                result.get(0).get("workflow_type"));
+                result.getFirst().get("workflow_type"),
+                "Workflow type does not match");
         TemporalAccessor ta = DateTimeFormatter.ISO_INSTANT.parse(wfs.getStartTime());
         Timestamp startTime = Timestamp.from(Instant.from(ta));
-        assertEquals("Start time does not match", startTime, result.get(0).get("start_time"));
+        assertEquals(startTime, result.getFirst().get("start_time"), "Start time does not match");
         assertEquals(
-                "Status does not match", wfs.getStatus().toString(), result.get(0).get("status"));
+                wfs.getStatus().toString(), result.getFirst().get("status"), "Status does not match");
     }
 
     private List<Map<String, Object>> queryDb(String query) throws SQLException {
@@ -148,27 +145,27 @@ public class PostgresIndexDAOTest {
     private void compareTaskSummary(TaskSummary ts) throws SQLException {
         List<Map<String, Object>> result =
                 queryDb(
-                        String.format(
-                                "SELECT * FROM task_index WHERE task_id = '%s'", ts.getTaskId()));
-        assertEquals("Wrong number of rows returned", 1, result.size());
-        assertEquals("Task id does not match", ts.getTaskId(), result.get(0).get("task_id"));
-        assertEquals("Task type does not match", ts.getTaskType(), result.get(0).get("task_type"));
+                        
+                                "SELECT * FROM task_index WHERE task_id = '%s'".formatted(ts.getTaskId()));
+        assertEquals(1, result.size(), "Wrong number of rows returned");
+        assertEquals(ts.getTaskId(), result.getFirst().get("task_id"), "Task id does not match");
+        assertEquals(ts.getTaskType(), result.getFirst().get("task_type"), "Task type does not match");
         assertEquals(
-                "Task def name does not match",
                 ts.getTaskDefName(),
-                result.get(0).get("task_def_name"));
+                result.getFirst().get("task_def_name"),
+                "Task def name does not match");
         TemporalAccessor startTa = DateTimeFormatter.ISO_INSTANT.parse(ts.getStartTime());
         Timestamp startTime = Timestamp.from(Instant.from(startTa));
-        assertEquals("Start time does not match", startTime, result.get(0).get("start_time"));
+        assertEquals(startTime, result.getFirst().get("start_time"), "Start time does not match");
         TemporalAccessor updateTa = DateTimeFormatter.ISO_INSTANT.parse(ts.getUpdateTime());
         Timestamp updateTime = Timestamp.from(Instant.from(updateTa));
-        assertEquals("Update time does not match", updateTime, result.get(0).get("update_time"));
+        assertEquals(updateTime, result.getFirst().get("update_time"), "Update time does not match");
         assertEquals(
-                "Status does not match", ts.getStatus().toString(), result.get(0).get("status"));
+                ts.getStatus().toString(), result.getFirst().get("status"), "Status does not match");
         assertEquals(
-                "Workflow type does not match",
                 ts.getWorkflowType().toString(),
-                result.get(0).get("workflow_type"));
+                result.getFirst().get("workflow_type"),
+                "Workflow type does not match");
     }
 
     @Test
@@ -230,9 +227,9 @@ public class PostgresIndexDAOTest {
 
         List<Map<String, Object>> records =
                 queryDb("SELECT * FROM task_execution_logs ORDER BY created_time ASC");
-        assertEquals("Wrong number of logs returned", 2, records.size());
-        assertEquals(logs.get(0).getLog(), records.get(0).get("log"));
-        assertEquals(new Date(1675845986000L), records.get(0).get("created_time"));
+        assertEquals(2, records.size(), "Wrong number of logs returned");
+        assertEquals(logs.getFirst().getLog(), records.getFirst().get("log"));
+        assertEquals(new Date(1675845986000L), records.getFirst().get("created_time"));
         assertEquals(logs.get(1).getLog(), records.get(1).get("log"));
         assertEquals(new Date(1675845987000L), records.get(1).get("created_time"));
     }
@@ -243,14 +240,14 @@ public class PostgresIndexDAOTest {
 
         indexDAO.indexWorkflow(wfs);
 
-        String query = String.format("workflowId=\"%s\"", wfs.getWorkflowId());
+        String query = "workflowId=\"%s\"".formatted(wfs.getWorkflowId());
         SearchResult<WorkflowSummary> results =
                 indexDAO.searchWorkflowSummary(query, "*", 0, 15, new ArrayList());
-        assertEquals("No results returned", 1, results.getResults().size());
+        assertEquals(1, results.getResults().size(), "No results returned");
         assertEquals(
-                "Wrong workflow returned",
                 wfs.getWorkflowId(),
-                results.getResults().get(0).getWorkflowId());
+                results.getResults().get(0).getWorkflowId(),
+                "Wrong workflow returned");
     }
 
     @Test
@@ -262,15 +259,15 @@ public class PostgresIndexDAOTest {
         String freeText = "notworkflow-id";
         SearchResult<WorkflowSummary> results =
                 indexDAO.searchWorkflowSummary("", freeText, 0, 15, new ArrayList());
-        assertEquals("Wrong number of results returned", 0, results.getResults().size());
+        assertEquals(0, results.getResults().size(), "Wrong number of results returned");
 
         freeText = "workflow-id";
         results = indexDAO.searchWorkflowSummary("", freeText, 0, 15, new ArrayList());
-        assertEquals("No results returned", 1, results.getResults().size());
+        assertEquals(1, results.getResults().size(), "No results returned");
         assertEquals(
-                "Wrong workflow returned",
                 wfs.getWorkflowId(),
-                results.getResults().get(0).getWorkflowId());
+                results.getResults().get(0).getWorkflowId(),
+                "Wrong workflow returned");
     }
 
     @Test
@@ -283,15 +280,15 @@ public class PostgresIndexDAOTest {
         String freeText = "{\"correlationId\":\"not-the-id\"}";
         SearchResult<WorkflowSummary> results =
                 indexDAO.searchWorkflowSummary("", freeText, 0, 15, new ArrayList());
-        assertEquals("Wrong number of results returned", 0, results.getResults().size());
+        assertEquals(0, results.getResults().size(), "Wrong number of results returned");
 
         freeText = "{\"correlationId\":\"correlation-id\", \"version\":3}";
         results = indexDAO.searchWorkflowSummary("", freeText, 0, 15, new ArrayList());
-        assertEquals("No results returned", 1, results.getResults().size());
+        assertEquals(1, results.getResults().size(), "No results returned");
         assertEquals(
-                "Wrong workflow returned",
                 wfs.getWorkflowId(),
-                results.getResults().get(0).getWorkflowId());
+                results.getResults().get(0).getWorkflowId(),
+                "Wrong workflow returned");
     }
 
     @Test
@@ -304,34 +301,34 @@ public class PostgresIndexDAOTest {
         List<String> orderBy = Arrays.asList(new String[] {"workflowId:DESC"});
         SearchResult<WorkflowSummary> results =
                 indexDAO.searchWorkflowSummary("", "*", 0, 2, orderBy);
-        assertEquals("Wrong totalHits returned", 3, results.getTotalHits());
-        assertEquals("Wrong number of results returned", 2, results.getResults().size());
+        assertEquals(3, results.getTotalHits(), "Wrong totalHits returned");
+        assertEquals(2, results.getResults().size(), "Wrong number of results returned");
         assertEquals(
-                "Results returned in wrong order",
                 "workflow-id-4",
-                results.getResults().get(0).getWorkflowId());
+                results.getResults().get(0).getWorkflowId(),
+                "Results returned in wrong order");
         assertEquals(
-                "Results returned in wrong order",
                 "workflow-id-3",
-                results.getResults().get(1).getWorkflowId());
+                results.getResults().get(1).getWorkflowId(),
+                "Results returned in wrong order");
         results = indexDAO.searchWorkflowSummary("", "*", 2, 2, orderBy);
-        assertEquals("Wrong totalHits returned", 5, results.getTotalHits());
-        assertEquals("Wrong number of results returned", 2, results.getResults().size());
+        assertEquals(5, results.getTotalHits(), "Wrong totalHits returned");
+        assertEquals(2, results.getResults().size(), "Wrong number of results returned");
         assertEquals(
-                "Results returned in wrong order",
                 "workflow-id-2",
-                results.getResults().get(0).getWorkflowId());
+                results.getResults().get(0).getWorkflowId(),
+                "Results returned in wrong order");
         assertEquals(
-                "Results returned in wrong order",
                 "workflow-id-1",
-                results.getResults().get(1).getWorkflowId());
+                results.getResults().get(1).getWorkflowId(),
+                "Results returned in wrong order");
         results = indexDAO.searchWorkflowSummary("", "*", 4, 2, orderBy);
-        assertEquals("Wrong totalHits returned", 7, results.getTotalHits());
-        assertEquals("Wrong number of results returned", 2, results.getResults().size());
+        assertEquals(7, results.getTotalHits(), "Wrong totalHits returned");
+        assertEquals(2, results.getResults().size(), "Wrong number of results returned");
         assertEquals(
-                "Results returned in wrong order",
                 "workflow-id-0",
-                results.getResults().get(0).getWorkflowId());
+                results.getResults().get(0).getWorkflowId(),
+                "Results returned in wrong order");
     }
 
     @Test
@@ -340,12 +337,12 @@ public class PostgresIndexDAOTest {
 
         indexDAO.indexTask(ts);
 
-        String query = String.format("taskId=\"%s\"", ts.getTaskId());
+        String query = "taskId=\"%s\"".formatted(ts.getTaskId());
         SearchResult<TaskSummary> results =
                 indexDAO.searchTaskSummary(query, "*", 0, 15, new ArrayList());
-        assertEquals("No results returned", 1, results.getResults().size());
+        assertEquals(1, results.getResults().size(), "No results returned");
         assertEquals(
-                "Wrong task returned", ts.getTaskId(), results.getResults().get(0).getTaskId());
+                ts.getTaskId(), results.getResults().get(0).getTaskId(), "Wrong task returned");
     }
 
     @Test
@@ -357,34 +354,34 @@ public class PostgresIndexDAOTest {
 
         List<String> orderBy = Arrays.asList(new String[] {"taskId:DESC"});
         SearchResult<TaskSummary> results = indexDAO.searchTaskSummary("", "*", 0, 2, orderBy);
-        assertEquals("Wrong totalHits returned", 3, results.getTotalHits());
-        assertEquals("Wrong number of results returned", 2, results.getResults().size());
+        assertEquals(3, results.getTotalHits(), "Wrong totalHits returned");
+        assertEquals(2, results.getResults().size(), "Wrong number of results returned");
         assertEquals(
-                "Results returned in wrong order",
                 "task-id-4",
-                results.getResults().get(0).getTaskId());
+                results.getResults().get(0).getTaskId(),
+                "Results returned in wrong order");
         assertEquals(
-                "Results returned in wrong order",
                 "task-id-3",
-                results.getResults().get(1).getTaskId());
+                results.getResults().get(1).getTaskId(),
+                "Results returned in wrong order");
         results = indexDAO.searchTaskSummary("", "*", 2, 2, orderBy);
-        assertEquals("Wrong totalHits returned", 5, results.getTotalHits());
-        assertEquals("Wrong number of results returned", 2, results.getResults().size());
+        assertEquals(5, results.getTotalHits(), "Wrong totalHits returned");
+        assertEquals(2, results.getResults().size(), "Wrong number of results returned");
         assertEquals(
-                "Results returned in wrong order",
                 "task-id-2",
-                results.getResults().get(0).getTaskId());
+                results.getResults().get(0).getTaskId(),
+                "Results returned in wrong order");
         assertEquals(
-                "Results returned in wrong order",
                 "task-id-1",
-                results.getResults().get(1).getTaskId());
+                results.getResults().get(1).getTaskId(),
+                "Results returned in wrong order");
         results = indexDAO.searchTaskSummary("", "*", 4, 2, orderBy);
-        assertEquals("Wrong totalHits returned", 7, results.getTotalHits());
-        assertEquals("Wrong number of results returned", 2, results.getResults().size());
+        assertEquals(7, results.getTotalHits(), "Wrong totalHits returned");
+        assertEquals(2, results.getResults().size(), "Wrong number of results returned");
         assertEquals(
-                "Results returned in wrong order",
                 "task-id-0",
-                results.getResults().get(0).getTaskId());
+                results.getResults().get(0).getTaskId(),
+                "Results returned in wrong order");
     }
 
     @Test
@@ -396,10 +393,10 @@ public class PostgresIndexDAOTest {
 
         indexDAO.addTaskExecutionLogs(logs);
 
-        List<TaskExecLog> records = indexDAO.getTaskExecutionLogs(logs.get(0).getTaskId());
-        assertEquals("Wrong number of logs returned", 2, records.size());
-        assertEquals(logs.get(0).getLog(), records.get(0).getLog());
-        assertEquals(logs.get(0).getCreatedTime(), 1675845986000L);
+        List<TaskExecLog> records = indexDAO.getTaskExecutionLogs(logs.getFirst().getTaskId());
+        assertEquals(2, records.size(), "Wrong number of logs returned");
+        assertEquals(logs.getFirst().getLog(), records.getFirst().getLog());
+        assertEquals(logs.getFirst().getCreatedTime(), 1675845986000L);
         assertEquals(logs.get(1).getLog(), records.get(1).getLog());
         assertEquals(logs.get(1).getCreatedTime(), 1675845987000L);
     }

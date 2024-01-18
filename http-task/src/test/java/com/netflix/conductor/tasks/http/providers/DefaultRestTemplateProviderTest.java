@@ -14,13 +14,13 @@ package com.netflix.conductor.tasks.http.providers;
 
 import java.time.Duration;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.web.client.RestTemplate;
 
 import com.netflix.conductor.tasks.http.HttpTask;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DefaultRestTemplateProviderTest {
 
@@ -47,7 +47,7 @@ public class DefaultRestTemplateProviderTest {
     }
 
     @Test
-    @Ignore("We can no longer do this and have customizable timeouts per HttpTask.")
+    @Disabled("We can no longer do this and have customizable timeouts per HttpTask.")
     public void sameObjectForSameThread() {
         DefaultRestTemplateProvider defaultRestTemplateProvider =
                 new DefaultRestTemplateProvider(Duration.ofMillis(150), Duration.ofMillis(100));

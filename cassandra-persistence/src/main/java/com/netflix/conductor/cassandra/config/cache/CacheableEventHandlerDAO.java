@@ -88,8 +88,7 @@ public class CacheableEventHandlerDAO implements EventHandlerDAO {
     @Override
     public List<EventHandler> getAllEventHandlers() {
         Object nativeCache = cacheManager.getCache(EVENT_HANDLER_CACHE).getNativeCache();
-        if (nativeCache != null && nativeCache instanceof ConcurrentHashMap) {
-            ConcurrentHashMap cacheMap = (ConcurrentHashMap) nativeCache;
+        if (nativeCache != null && nativeCache instanceof ConcurrentHashMap cacheMap) {
             if (!cacheMap.isEmpty()) {
                 List<EventHandler> eventHandlers = new ArrayList<>();
                 cacheMap.values().stream()

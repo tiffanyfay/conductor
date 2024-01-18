@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.netflix.conductor.core.execution.WorkflowExecutor;
@@ -51,7 +50,6 @@ public class JsonJqTransform extends WorkflowSystemTask {
     private final ObjectMapper objectMapper;
     private final LoadingCache<String, JsonQuery> queryCache = createQueryCache();
 
-    @Autowired
     public JsonJqTransform(ObjectMapper objectMapper) {
         super(NAME);
         this.objectMapper = objectMapper;
@@ -88,7 +86,7 @@ public class JsonJqTransform extends WorkflowSystemTask {
                 task.addOutput(OUTPUT_RESULT, null);
                 task.addOutput(OUTPUT_RESULT_LIST, result);
             } else {
-                task.addOutput(OUTPUT_RESULT, extractBody(result.get(0)));
+                task.addOutput(OUTPUT_RESULT, extractBody(result.getFirst()));
                 task.addOutput(OUTPUT_RESULT_LIST, result);
             }
         } catch (final Exception e) {

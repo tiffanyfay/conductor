@@ -17,25 +17,22 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.After;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
-@Ignore
+@Disabled
 // Test always times out in CI environment
 public class LocalOnlyLockTest {
 
     // Lock can be global since it uses global cache internally
     private final LocalOnlyLock localOnlyLock = new LocalOnlyLock();
 
-    @After
+    @AfterEach
     public void tearDown() {
         // Clean caches between tests as they are shared globally
         localOnlyLock.cache().invalidateAll();
@@ -57,7 +54,8 @@ public class LocalOnlyLockTest {
         assertEquals(localOnlyLock.cache().estimatedSize(), 0);
     }
 
-    @Test(timeout = 10 * 10_000)
+    @Test
+    @Timeout(value = 10 * 10_000, unit = TimeUnit.MILLISECONDS)
     public void testLockTimeout() throws InterruptedException, ExecutionException {
         final ExecutorService executor = Executors.newFixedThreadPool(1);
         executor.submit(
@@ -77,7 +75,8 @@ public class LocalOnlyLockTest {
         assertEquals(localOnlyLock.scheduledFutures().size(), 0);
     }
 
-    @Test(timeout = 10 * 10_000)
+    @Test
+    @Timeout(value = 10 * 10_000, unit = TimeUnit.MILLISECONDS)
     public void testReleaseFromAnotherThread() throws InterruptedException, ExecutionException {
         final ExecutorService executor = Executors.newFixedThreadPool(1);
         executor.submit(
@@ -102,7 +101,8 @@ public class LocalOnlyLockTest {
         fail();
     }
 
-    @Test(timeout = 10 * 10_000)
+    @Test
+    @Timeout(value = 10 * 10_000, unit = TimeUnit.MILLISECONDS)
     public void testLockLeaseWithRelease() throws Exception {
         localOnlyLock.acquireLock("b", 1000, 1000, TimeUnit.MILLISECONDS);
         localOnlyLock.releaseLock("b");
@@ -122,7 +122,8 @@ public class LocalOnlyLockTest {
         assertEquals(false, localOnlyLock.cache().get("x54as4d2;23'4").isLocked());
     }
 
-    @Test(timeout = 10 * 10_000)
+    @Test
+    @Timeout(value = 10 * 10_000, unit = TimeUnit.MILLISECONDS)
     public void testLockLeaseTime() throws InterruptedException {
         for (int i = 0; i < 10; i++) {
             final Thread thread =

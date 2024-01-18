@@ -19,30 +19,25 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.netflix.conductor.common.config.TestObjectMapperConfiguration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-@ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
-@RunWith(SpringRunner.class)
+@SpringJUnitConfig(classes = {TestObjectMapperConfiguration.class})
 public class JsonUtilsTest {
 
     private JsonUtils jsonUtils;
 
     @Autowired private ObjectMapper objectMapper;
 
-    @Before
+    @BeforeEach
     public void setup() {
         jsonUtils = new JsonUtils(objectMapper);
     }
@@ -57,7 +52,7 @@ public class JsonUtilsTest {
         list.add(map);
 
         //noinspection unchecked
-        map = (Map<String, Object>) list.get(0);
+        map = (Map<String, Object>) list.getFirst();
         assertTrue(map.get("externalId") instanceof String);
 
         int before = list.size();
@@ -65,7 +60,7 @@ public class JsonUtilsTest {
         assertEquals(before, list.size());
 
         //noinspection unchecked
-        map = (Map<String, Object>) list.get(0);
+        map = (Map<String, Object>) list.getFirst();
         assertTrue(map.get("externalId") instanceof ArrayList);
     }
 
@@ -109,8 +104,10 @@ public class JsonUtilsTest {
     @Test
     public void testTypes() throws Exception {
         String map =
-                "{\"requestId\":\"1375128656908832001\",\"workflowId\":\"fc147e1d-5408-4d41-b066-53cb2e551d0e\","
-                        + "\"inner\":{\"num\":42,\"status\":\"READY\"}}";
+                """
+                {"requestId":"1375128656908832001","workflowId":"fc147e1d-5408-4d41-b066-53cb2e551d0e",\
+                "inner":{"num":42,"status":"READY"}}\
+                """;
         jsonUtils.expand(map);
 
         Object jsonObject = jsonUtils.expand(map);

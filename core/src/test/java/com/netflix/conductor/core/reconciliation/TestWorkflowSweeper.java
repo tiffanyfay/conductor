@@ -16,8 +16,8 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
@@ -32,10 +32,11 @@ import com.netflix.conductor.model.WorkflowModel;
 
 import static com.netflix.conductor.core.utils.Utils.DECIDER_QUEUE;
 
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestWorkflowSweeper {
 
@@ -48,7 +49,7 @@ public class TestWorkflowSweeper {
 
     private int defaultPostPoneOffSetSeconds = 1800;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         properties = mock(ConductorProperties.class);
         workflowExecutor = mock(WorkflowExecutor.class);

@@ -16,17 +16,15 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.support.RetryTemplate;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.netflix.conductor.common.config.TestObjectMapperConfiguration;
 import com.netflix.conductor.common.metadata.events.EventExecution;
@@ -55,17 +53,16 @@ import com.netflix.conductor.service.MetadataService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.*;
 
-@ContextConfiguration(
+@SpringJUnitConfig(
         classes = {
-            TestObjectMapperConfiguration.class,
-            TestDefaultEventProcessor.TestConfiguration.class,
-            ConductorCoreConfiguration.class
+                TestObjectMapperConfiguration.class,
+                TestDefaultEventProcessor.TestConfiguration.class,
+                ConductorCoreConfiguration.class
         })
-@RunWith(SpringRunner.class)
 public class TestDefaultEventProcessor {
 
     private String event;
@@ -92,7 +89,7 @@ public class TestDefaultEventProcessor {
     @ComponentScan(basePackageClasses = {Evaluator.class}) // load all Evaluator beans
     public static class TestConfiguration {}
 
-    @Before
+    @BeforeEach
     public void setup() {
         event = "sqs:arn:account090:sqstest1";
         String queueURI = "arn:account090:sqstest1";

@@ -15,10 +15,8 @@ package com.netflix.conductor.core.execution.mapper;
 import java.util.HashMap;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
@@ -31,8 +29,10 @@ import com.netflix.conductor.dao.MetadataDAO;
 import com.netflix.conductor.model.TaskModel;
 import com.netflix.conductor.model.WorkflowModel;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserDefinedTaskMapperTest {
 
@@ -40,9 +40,7 @@ public class UserDefinedTaskMapperTest {
 
     private UserDefinedTaskMapper userDefinedTaskMapper;
 
-    @Rule public ExpectedException expectedException = ExpectedException.none();
-
-    @Before
+    @BeforeEach
     public void setUp() {
         ParametersUtils parametersUtils = mock(ParametersUtils.class);
         MetadataDAO metadataDAO = mock(MetadataDAO.class);
@@ -80,39 +78,37 @@ public class UserDefinedTaskMapperTest {
 
         // Then
         assertEquals(1, mappedTasks.size());
-        assertEquals(TaskType.USER_DEFINED.name(), mappedTasks.get(0).getTaskType());
+        assertEquals(TaskType.USER_DEFINED.name(), mappedTasks.getFirst().getTaskType());
     }
 
     @Test
     public void getMappedTasksException() {
-        // Given
-        WorkflowTask workflowTask = new WorkflowTask();
-        workflowTask.setName("user_task");
-        workflowTask.setType(TaskType.USER_DEFINED.name());
-        String taskId = idGenerator.generate();
-        String retriedTaskId = idGenerator.generate();
+        Throwable exception = assertThrows(TerminateWorkflowException.class, () -> {
+            // Given
+            WorkflowTask workflowTask = new WorkflowTask();
+            workflowTask.setName("user_task");
+            workflowTask.setType(TaskType.USER_DEFINED.name());
+            String taskId = idGenerator.generate();
+            String retriedTaskId = idGenerator.generate();
 
-        WorkflowModel workflow = new WorkflowModel();
-        WorkflowDef workflowDef = new WorkflowDef();
-        workflow.setWorkflowDefinition(workflowDef);
+            WorkflowModel workflow = new WorkflowModel();
+            WorkflowDef workflowDef = new WorkflowDef();
+            workflow.setWorkflowDefinition(workflowDef);
 
-        TaskMapperContext taskMapperContext =
-                TaskMapperContext.newBuilder()
-                        .withWorkflowModel(workflow)
-                        .withWorkflowTask(workflowTask)
-                        .withTaskInput(new HashMap<>())
-                        .withRetryCount(0)
-                        .withRetryTaskId(retriedTaskId)
-                        .withTaskId(taskId)
-                        .build();
-
-        // then
-        expectedException.expect(TerminateWorkflowException.class);
-        expectedException.expectMessage(
-                String.format(
-                        "Invalid task specified. Cannot find task by name %s in the task definitions",
-                        workflowTask.getName()));
-        // when
-        userDefinedTaskMapper.getMappedTasks(taskMapperContext);
+            TaskMapperContext taskMapperContext =
+                    TaskMapperContext.newBuilder()
+                            .withWorkflowModel(workflow)
+                            .withWorkflowTask(workflowTask)
+                            .withTaskInput(new HashMap<>())
+                            .withRetryCount(0)
+                            .withRetryTaskId(retriedTaskId)
+                            .withTaskId(taskId)
+                            .build();
+            // when
+            userDefinedTaskMapper.getMappedTasks(taskMapperContext);
+        });
+        assertTrue(exception.getMessage().contains(
+                "Invalid task specified. Cannot find task by name %s in the task definitions".formatted(
+                workflowTask.getName())));
     }
 }

@@ -256,8 +256,8 @@ public class TaskClient extends ClientBase {
                                 > conductorClientConfiguration.getTaskOutputMaxPayloadThresholdKB()
                                         * 1024L) {
                     throw new IllegalArgumentException(
-                            String.format(
-                                    "The TaskResult payload size: %d is greater than the permissible %d bytes",
+                            
+                                    "The TaskResult payload size: %d is greater than the permissible %d bytes".formatted(
                                     taskResultSize, payloadSizeThreshold));
                 }
                 MetricsContainer.incrementExternalPayloadUsedCount(
@@ -270,7 +270,7 @@ public class TaskClient extends ClientBase {
             }
             return Optional.empty();
         } catch (IOException e) {
-            String errorMsg = String.format("Unable to update task: %s with task result", taskType);
+            String errorMsg = "Unable to update task: %s with task result".formatted(taskType);
             LOGGER.error(errorMsg, e);
             throw new ConductorClientException(errorMsg, e);
         }

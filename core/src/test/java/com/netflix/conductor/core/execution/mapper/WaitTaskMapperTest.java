@@ -18,9 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
+
+import org.junit.jupiter.api.Test;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
@@ -32,8 +32,9 @@ import com.netflix.conductor.model.WorkflowModel;
 
 import static com.netflix.conductor.common.metadata.tasks.TaskType.TASK_TYPE_WAIT;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -70,7 +71,7 @@ public class WaitTaskMapperTest {
 
         // Then
         assertEquals(1, mappedTasks.size());
-        assertEquals(TASK_TYPE_WAIT, mappedTasks.get(0).getTaskType());
+        assertEquals(TASK_TYPE_WAIT, mappedTasks.getFirst().getTaskType());
     }
 
     @Test
@@ -100,8 +101,8 @@ public class WaitTaskMapperTest {
         // When
         List<TaskModel> mappedTasks = waitTaskMapper.getMappedTasks(taskMapperContext);
         assertEquals(1, mappedTasks.size());
-        assertEquals(mappedTasks.get(0).getStatus(), TaskModel.Status.IN_PROGRESS);
-        assertTrue(mappedTasks.get(0).getOutputData().isEmpty());
+        assertEquals(mappedTasks.getFirst().getStatus(), TaskModel.Status.IN_PROGRESS);
+        assertTrue(mappedTasks.getFirst().getOutputData().isEmpty());
     }
 
     @Test
@@ -141,8 +142,8 @@ public class WaitTaskMapperTest {
         // When
         List<TaskModel> mappedTasks = waitTaskMapper.getMappedTasks(taskMapperContext);
         assertEquals(1, mappedTasks.size());
-        assertEquals(mappedTasks.get(0).getStatus(), TaskModel.Status.IN_PROGRESS);
-        assertEquals(mappedTasks.get(0).getCallbackAfterSeconds(), 0L);
+        assertEquals(mappedTasks.getFirst().getStatus(), TaskModel.Status.IN_PROGRESS);
+        assertEquals(mappedTasks.getFirst().getCallbackAfterSeconds(), 0L);
     }
 
     @Test
@@ -175,8 +176,8 @@ public class WaitTaskMapperTest {
         // When
         List<TaskModel> mappedTasks = waitTaskMapper.getMappedTasks(taskMapperContext);
         assertEquals(1, mappedTasks.size());
-        assertEquals(mappedTasks.get(0).getStatus(), TaskModel.Status.IN_PROGRESS);
-        assertTrue(mappedTasks.get(0).getCallbackAfterSeconds() <= 1L);
+        assertEquals(mappedTasks.getFirst().getStatus(), TaskModel.Status.IN_PROGRESS);
+        assertTrue(mappedTasks.getFirst().getCallbackAfterSeconds() <= 1L);
     }
 
     @Test
@@ -211,6 +212,6 @@ public class WaitTaskMapperTest {
         // When
         List<TaskModel> mappedTasks = waitTaskMapper.getMappedTasks(taskMapperContext);
         assertEquals(1, mappedTasks.size());
-        assertEquals(mappedTasks.get(0).getStatus(), TaskModel.Status.FAILED_WITH_TERMINAL_ERROR);
+        assertEquals(mappedTasks.getFirst().getStatus(), TaskModel.Status.FAILED_WITH_TERMINAL_ERROR);
     }
 }

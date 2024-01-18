@@ -18,7 +18,6 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.netflix.conductor.common.metadata.tasks.TaskType;
@@ -42,7 +41,6 @@ public class SwitchTaskMapper implements TaskMapper {
 
     private final Map<String, Evaluator> evaluators;
 
-    @Autowired
     public SwitchTaskMapper(Map<String, Evaluator> evaluators) {
         this.evaluators = evaluators;
     }
@@ -82,7 +80,7 @@ public class SwitchTaskMapper implements TaskMapper {
         String evaluatorType = workflowTask.getEvaluatorType();
         Evaluator evaluator = evaluators.get(evaluatorType);
         if (evaluator == null) {
-            String errorMsg = String.format("No evaluator registered for type: %s", evaluatorType);
+            String errorMsg = "No evaluator registered for type: %s".formatted(evaluatorType);
             LOGGER.error(errorMsg);
             throw new TerminateWorkflowException(errorMsg);
         }
@@ -126,7 +124,7 @@ public class SwitchTaskMapper implements TaskMapper {
         // task to be scheduled by using the decider service
         if (selectedTasks != null && !selectedTasks.isEmpty()) {
             WorkflowTask selectedTask =
-                    selectedTasks.get(0); // Schedule the first task to be executed...
+                    selectedTasks.getFirst(); // Schedule the first task to be executed...
             // TODO break out this recursive call using function composition of what needs to be
             // done and then walk back the condition tree
             List<TaskModel> caseTasks =

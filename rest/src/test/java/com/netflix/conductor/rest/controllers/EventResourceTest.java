@@ -15,14 +15,13 @@ package com.netflix.conductor.rest.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import com.netflix.conductor.common.metadata.events.EventHandler;
 import com.netflix.conductor.service.EventService;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -31,13 +30,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class EventResourceTest {
 
     private EventResource eventResource;
 
     @Mock private EventService mockEventService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         this.mockEventService = mock(EventService.class);
         this.eventResource = new EventResource(this.mockEventService);

@@ -95,7 +95,7 @@ public class Enum extends AbstractMessage {
 
         @Override
         public String getProtoTypeDeclaration() {
-            return String.format("%s = %d", getProtoName(), getProtoIndex());
+            return "%s = %d".formatted(getProtoName(), getProtoIndex());
         }
     }
 }

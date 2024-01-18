@@ -18,13 +18,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import com.netflix.conductor.ConductorTestApp;
 import com.netflix.conductor.client.exception.ConductorClientException;
@@ -49,13 +47,8 @@ import com.netflix.conductor.common.run.WorkflowSummary;
 import com.netflix.conductor.common.validation.ValidationError;
 import com.netflix.conductor.test.integration.AbstractEndToEndTest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = ConductorTestApp.class)
 @TestPropertySource(locations = "classpath:application-integrationtest.properties")
 public abstract class AbstractHttpEndToEndTest extends AbstractEndToEndTest {
@@ -163,7 +156,7 @@ public abstract class AbstractHttpEndToEndTest extends AbstractEndToEndTest {
                 workflowClient.getRunningWorkflow(def.getName(), def.getVersion());
         assertNotNull(runningIds);
         assertEquals(1, runningIds.size());
-        assertEquals(workflowId, runningIds.get(0));
+        assertEquals(workflowId, runningIds.getFirst());
 
         List<Task> polled =
                 taskClient.batchPollTasksByTaskType("non existing task", "test", 1, 100);
@@ -173,8 +166,8 @@ public abstract class AbstractHttpEndToEndTest extends AbstractEndToEndTest {
         polled = taskClient.batchPollTasksByTaskType(t0.getName(), "test", 1, 100);
         assertNotNull(polled);
         assertEquals(1, polled.size());
-        assertEquals(t0.getName(), polled.get(0).getTaskDefName());
-        Task task = polled.get(0);
+        assertEquals(t0.getName(), polled.getFirst().getTaskDefName());
+        Task task = polled.getFirst();
 
         task.getOutputData().put("key1", "value1");
         task.setStatus(Status.COMPLETED);
@@ -182,7 +175,7 @@ public abstract class AbstractHttpEndToEndTest extends AbstractEndToEndTest {
 
         polled = taskClient.batchPollTasksByTaskType(t0.getName(), "test", 1, 100);
         assertNotNull(polled);
-        assertTrue(polled.toString(), polled.isEmpty());
+        assertTrue(polled.isEmpty(), polled.toString());
 
         workflow = workflowClient.getWorkflow(workflowId, true);
         assertNotNull(workflow);
@@ -270,93 +263,99 @@ public abstract class AbstractHttpEndToEndTest extends AbstractEndToEndTest {
         workflowClient.skipTaskFromWorkflow(workflowId, "t1");
     }
 
-    @Test(expected = ConductorClientException.class)
+    @Test
     public void testMetadataWorkflowDefinition() {
-        String workflowDefName = "testWorkflowDefMetadata";
-        WorkflowDef def = new WorkflowDef();
-        def.setName(workflowDefName);
-        def.setVersion(1);
-        WorkflowTask t0 = new WorkflowTask();
-        t0.setName("t0");
-        t0.setWorkflowTaskType(TaskType.SIMPLE);
-        t0.setTaskReferenceName("t0");
-        WorkflowTask t1 = new WorkflowTask();
-        t1.setName("t1");
-        t1.setWorkflowTaskType(TaskType.SIMPLE);
-        t1.setTaskReferenceName("t1");
-        def.getTasks().add(t0);
-        def.getTasks().add(t1);
+        assertThrows(ConductorClientException.class, () -> {
+            String workflowDefName = "testWorkflowDefMetadata";
+            WorkflowDef def = new WorkflowDef();
+            def.setName(workflowDefName);
+            def.setVersion(1);
+            WorkflowTask t0 = new WorkflowTask();
+            t0.setName("t0");
+            t0.setWorkflowTaskType(TaskType.SIMPLE);
+            t0.setTaskReferenceName("t0");
+            WorkflowTask t1 = new WorkflowTask();
+            t1.setName("t1");
+            t1.setWorkflowTaskType(TaskType.SIMPLE);
+            t1.setTaskReferenceName("t1");
+            def.getTasks().add(t0);
+            def.getTasks().add(t1);
 
-        metadataClient.registerWorkflowDef(def);
-        metadataClient.unregisterWorkflowDef(workflowDefName, 1);
-
-        try {
-            metadataClient.getWorkflowDef(workflowDefName, 1);
-        } catch (ConductorClientException e) {
-            int statusCode = e.getStatus();
-            String errorMessage = e.getMessage();
-            boolean retryable = e.isRetryable();
-            assertEquals(404, statusCode);
-            assertEquals(
-                    "No such workflow found by name: testWorkflowDefMetadata, version: 1",
-                    errorMessage);
-            assertFalse(retryable);
-            throw e;
-        }
-    }
-
-    @Test(expected = ConductorClientException.class)
-    public void testInvalidResource() {
-        MetadataClient metadataClient = new MetadataClient();
-        metadataClient.setRootURI(String.format("%sinvalid", apiRoot));
-        WorkflowDef def = new WorkflowDef();
-        def.setName("testWorkflowDel");
-        def.setVersion(1);
-        try {
             metadataClient.registerWorkflowDef(def);
-        } catch (ConductorClientException e) {
-            int statusCode = e.getStatus();
-            boolean retryable = e.isRetryable();
-            assertEquals(404, statusCode);
-            assertFalse(retryable);
-            throw e;
-        }
+            metadataClient.unregisterWorkflowDef(workflowDefName, 1);
+
+            try {
+                metadataClient.getWorkflowDef(workflowDefName, 1);
+            } catch (ConductorClientException e) {
+                int statusCode = e.getStatus();
+                String errorMessage = e.getMessage();
+                boolean retryable = e.isRetryable();
+                assertEquals(404, statusCode);
+                assertEquals(
+                        "No such workflow found by name: testWorkflowDefMetadata, version: 1",
+                        errorMessage);
+                assertFalse(retryable);
+                throw e;
+            }
+        });
     }
 
-    @Test(expected = ConductorClientException.class)
+    @Test
+    public void testInvalidResource() {
+        assertThrows(ConductorClientException.class, () -> {
+            MetadataClient metadataClient = new MetadataClient();
+            metadataClient.setRootURI("%sinvalid".formatted(apiRoot));
+            WorkflowDef def = new WorkflowDef();
+            def.setName("testWorkflowDel");
+            def.setVersion(1);
+            try {
+                metadataClient.registerWorkflowDef(def);
+            } catch (ConductorClientException e) {
+                int statusCode = e.getStatus();
+                boolean retryable = e.isRetryable();
+                assertEquals(404, statusCode);
+                assertFalse(retryable);
+                throw e;
+            }
+        });
+    }
+
+    @Test
     public void testUpdateWorkflow() {
-        TaskDef taskDef = new TaskDef();
-        taskDef.setName("taskUpdate");
-        ArrayList<TaskDef> tasks = new ArrayList<>();
-        tasks.add(taskDef);
-        metadataClient.registerTaskDefs(tasks);
+        assertThrows(ConductorClientException.class, () -> {
+            TaskDef taskDef = new TaskDef();
+            taskDef.setName("taskUpdate");
+            ArrayList<TaskDef> tasks = new ArrayList<>();
+            tasks.add(taskDef);
+            metadataClient.registerTaskDefs(tasks);
 
-        WorkflowDef def = new WorkflowDef();
-        def.setName("testWorkflowDel");
-        def.setVersion(1);
-        WorkflowTask workflowTask = new WorkflowTask();
-        workflowTask.setName("taskUpdate");
-        workflowTask.setTaskReferenceName("taskUpdate");
-        List<WorkflowTask> workflowTaskList = new ArrayList<>();
-        workflowTaskList.add(workflowTask);
-        def.setTasks(workflowTaskList);
-        List<WorkflowDef> workflowList = new ArrayList<>();
-        workflowList.add(def);
-        metadataClient.registerWorkflowDef(def);
+            WorkflowDef def = new WorkflowDef();
+            def.setName("testWorkflowDel");
+            def.setVersion(1);
+            WorkflowTask workflowTask = new WorkflowTask();
+            workflowTask.setName("taskUpdate");
+            workflowTask.setTaskReferenceName("taskUpdate");
+            List<WorkflowTask> workflowTaskList = new ArrayList<>();
+            workflowTaskList.add(workflowTask);
+            def.setTasks(workflowTaskList);
+            List<WorkflowDef> workflowList = new ArrayList<>();
+            workflowList.add(def);
+            metadataClient.registerWorkflowDef(def);
 
-        def.setVersion(2);
-        metadataClient.updateWorkflowDefs(workflowList);
-        WorkflowDef def1 = metadataClient.getWorkflowDef(def.getName(), 2);
-        assertNotNull(def1);
-        try {
-            metadataClient.getTaskDef("test");
-        } catch (ConductorClientException e) {
-            int statuCode = e.getStatus();
-            assertEquals(404, statuCode);
-            assertEquals("No such taskType found by name: test", e.getMessage());
-            assertFalse(e.isRetryable());
-            throw e;
-        }
+            def.setVersion(2);
+            metadataClient.updateWorkflowDefs(workflowList);
+            WorkflowDef def1 = metadataClient.getWorkflowDef(def.getName(), 2);
+            assertNotNull(def1);
+            try {
+                metadataClient.getTaskDef("test");
+            } catch (ConductorClientException e) {
+                int statuCode = e.getStatus();
+                assertEquals(404, statuCode);
+                assertEquals("No such taskType found by name: test", e.getMessage());
+                assertFalse(e.isRetryable());
+                throw e;
+            }
+        });
     }
 
     @Test
@@ -372,74 +371,82 @@ public abstract class AbstractHttpEndToEndTest extends AbstractEndToEndTest {
         }
     }
 
-    @Test(expected = ConductorClientException.class)
+    @Test
     public void testUpdateTask() {
-        TaskResult taskResult = new TaskResult();
-        try {
-            taskClient.updateTask(taskResult);
-        } catch (ConductorClientException e) {
-            assertEquals(400, e.getStatus());
-            assertEquals("Validation failed, check below errors for detail.", e.getMessage());
-            assertFalse(e.isRetryable());
-            List<ValidationError> errors = e.getValidationErrors();
-            List<String> errorMessages =
-                    errors.stream().map(ValidationError::getMessage).collect(Collectors.toList());
-            assertEquals(2, errors.size());
-            assertTrue(errorMessages.contains("Workflow Id cannot be null or empty"));
-            throw e;
-        }
+        assertThrows(ConductorClientException.class, () -> {
+            TaskResult taskResult = new TaskResult();
+            try {
+                taskClient.updateTask(taskResult);
+            } catch (ConductorClientException e) {
+                assertEquals(400, e.getStatus());
+                assertEquals("Validation failed, check below errors for detail.", e.getMessage());
+                assertFalse(e.isRetryable());
+                List<ValidationError> errors = e.getValidationErrors();
+                List<String> errorMessages =
+                        errors.stream().map(ValidationError::getMessage).collect(Collectors.toList());
+                assertEquals(2, errors.size());
+                assertTrue(errorMessages.contains("Workflow Id cannot be null or empty"));
+                throw e;
+            }
+        });
     }
 
-    @Test(expected = ConductorClientException.class)
+    @Test
     public void testGetWorfklowNotFound() {
-        try {
-            workflowClient.getWorkflow("w123", true);
-        } catch (ConductorClientException e) {
-            assertEquals(404, e.getStatus());
-            assertEquals("No such workflow found by id: w123", e.getMessage());
-            assertFalse(e.isRetryable());
-            throw e;
-        }
+        assertThrows(ConductorClientException.class, () -> {
+            try {
+                workflowClient.getWorkflow("w123", true);
+            } catch (ConductorClientException e) {
+                assertEquals(404, e.getStatus());
+                assertEquals("No such workflow found by id: w123", e.getMessage());
+                assertFalse(e.isRetryable());
+                throw e;
+            }
+        });
     }
 
-    @Test(expected = ConductorClientException.class)
+    @Test
     public void testEmptyCreateWorkflowDef() {
-        try {
-            WorkflowDef workflowDef = new WorkflowDef();
-            metadataClient.registerWorkflowDef(workflowDef);
-        } catch (ConductorClientException e) {
-            assertEquals(400, e.getStatus());
-            assertEquals("Validation failed, check below errors for detail.", e.getMessage());
-            assertFalse(e.isRetryable());
-            List<ValidationError> errors = e.getValidationErrors();
-            List<String> errorMessages =
-                    errors.stream().map(ValidationError::getMessage).collect(Collectors.toList());
-            assertTrue(errorMessages.contains("WorkflowDef name cannot be null or empty"));
-            assertTrue(errorMessages.contains("WorkflowTask list cannot be empty"));
-            throw e;
-        }
+        assertThrows(ConductorClientException.class, () -> {
+            try {
+                WorkflowDef workflowDef = new WorkflowDef();
+                metadataClient.registerWorkflowDef(workflowDef);
+            } catch (ConductorClientException e) {
+                assertEquals(400, e.getStatus());
+                assertEquals("Validation failed, check below errors for detail.", e.getMessage());
+                assertFalse(e.isRetryable());
+                List<ValidationError> errors = e.getValidationErrors();
+                List<String> errorMessages =
+                        errors.stream().map(ValidationError::getMessage).collect(Collectors.toList());
+                assertTrue(errorMessages.contains("WorkflowDef name cannot be null or empty"));
+                assertTrue(errorMessages.contains("WorkflowTask list cannot be empty"));
+                throw e;
+            }
+        });
     }
 
-    @Test(expected = ConductorClientException.class)
+    @Test
     public void testUpdateWorkflowDef() {
-        try {
-            WorkflowDef workflowDef = new WorkflowDef();
-            List<WorkflowDef> workflowDefList = new ArrayList<>();
-            workflowDefList.add(workflowDef);
-            metadataClient.updateWorkflowDefs(workflowDefList);
-        } catch (ConductorClientException e) {
-            assertEquals(400, e.getStatus());
-            assertEquals("Validation failed, check below errors for detail.", e.getMessage());
-            assertFalse(e.isRetryable());
-            List<ValidationError> errors = e.getValidationErrors();
-            List<String> errorMessages =
-                    errors.stream().map(ValidationError::getMessage).collect(Collectors.toList());
-            assertEquals(3, errors.size());
-            assertTrue(errorMessages.contains("WorkflowTask list cannot be empty"));
-            assertTrue(errorMessages.contains("WorkflowDef name cannot be null or empty"));
-            assertTrue(errorMessages.contains("ownerEmail cannot be empty"));
-            throw e;
-        }
+        assertThrows(ConductorClientException.class, () -> {
+            try {
+                WorkflowDef workflowDef = new WorkflowDef();
+                List<WorkflowDef> workflowDefList = new ArrayList<>();
+                workflowDefList.add(workflowDef);
+                metadataClient.updateWorkflowDefs(workflowDefList);
+            } catch (ConductorClientException e) {
+                assertEquals(400, e.getStatus());
+                assertEquals("Validation failed, check below errors for detail.", e.getMessage());
+                assertFalse(e.isRetryable());
+                List<ValidationError> errors = e.getValidationErrors();
+                List<String> errorMessages =
+                        errors.stream().map(ValidationError::getMessage).collect(Collectors.toList());
+                assertEquals(3, errors.size());
+                assertTrue(errorMessages.contains("WorkflowTask list cannot be empty"));
+                assertTrue(errorMessages.contains("WorkflowDef name cannot be null or empty"));
+                assertTrue(errorMessages.contains("ownerEmail cannot be empty"));
+                throw e;
+            }
+        });
     }
 
     @Test
@@ -457,71 +464,79 @@ public abstract class AbstractHttpEndToEndTest extends AbstractEndToEndTest {
         workflowClient.getWorkflows("test", "test12", false, false);
     }
 
-    @Test(expected = ConductorClientException.class)
+    @Test
     public void testCreateInvalidWorkflowDef() {
-        try {
-            WorkflowDef workflowDef = new WorkflowDef();
-            List<WorkflowDef> workflowDefList = new ArrayList<>();
-            workflowDefList.add(workflowDef);
-            metadataClient.registerWorkflowDef(workflowDef);
-        } catch (ConductorClientException e) {
-            assertEquals(3, e.getValidationErrors().size());
-            assertEquals(400, e.getStatus());
-            assertEquals("Validation failed, check below errors for detail.", e.getMessage());
-            assertFalse(e.isRetryable());
-            List<ValidationError> errors = e.getValidationErrors();
-            List<String> errorMessages =
-                    errors.stream().map(ValidationError::getMessage).collect(Collectors.toList());
-            assertTrue(errorMessages.contains("WorkflowDef name cannot be null or empty"));
-            assertTrue(errorMessages.contains("WorkflowTask list cannot be empty"));
-            assertTrue(errorMessages.contains("ownerEmail cannot be empty"));
-            throw e;
-        }
+        assertThrows(ConductorClientException.class, () -> {
+            try {
+                WorkflowDef workflowDef = new WorkflowDef();
+                List<WorkflowDef> workflowDefList = new ArrayList<>();
+                workflowDefList.add(workflowDef);
+                metadataClient.registerWorkflowDef(workflowDef);
+            } catch (ConductorClientException e) {
+                assertEquals(3, e.getValidationErrors().size());
+                assertEquals(400, e.getStatus());
+                assertEquals("Validation failed, check below errors for detail.", e.getMessage());
+                assertFalse(e.isRetryable());
+                List<ValidationError> errors = e.getValidationErrors();
+                List<String> errorMessages =
+                        errors.stream().map(ValidationError::getMessage).collect(Collectors.toList());
+                assertTrue(errorMessages.contains("WorkflowDef name cannot be null or empty"));
+                assertTrue(errorMessages.contains("WorkflowTask list cannot be empty"));
+                assertTrue(errorMessages.contains("ownerEmail cannot be empty"));
+                throw e;
+            }
+        });
     }
 
-    @Test(expected = ConductorClientException.class)
+    @Test
     public void testUpdateTaskDefNameNull() {
-        TaskDef taskDef = new TaskDef();
-        try {
-            metadataClient.updateTaskDef(taskDef);
-        } catch (ConductorClientException e) {
-            assertEquals(2, e.getValidationErrors().size());
-            assertEquals(400, e.getStatus());
-            assertEquals("Validation failed, check below errors for detail.", e.getMessage());
-            assertFalse(e.isRetryable());
-            List<ValidationError> errors = e.getValidationErrors();
-            List<String> errorMessages =
-                    errors.stream().map(ValidationError::getMessage).collect(Collectors.toList());
-            assertTrue(errorMessages.contains("TaskDef name cannot be null or empty"));
-            assertTrue(errorMessages.contains("ownerEmail cannot be empty"));
-            throw e;
-        }
+        assertThrows(ConductorClientException.class, () -> {
+            TaskDef taskDef = new TaskDef();
+            try {
+                metadataClient.updateTaskDef(taskDef);
+            } catch (ConductorClientException e) {
+                assertEquals(2, e.getValidationErrors().size());
+                assertEquals(400, e.getStatus());
+                assertEquals("Validation failed, check below errors for detail.", e.getMessage());
+                assertFalse(e.isRetryable());
+                List<ValidationError> errors = e.getValidationErrors();
+                List<String> errorMessages =
+                        errors.stream().map(ValidationError::getMessage).collect(Collectors.toList());
+                assertTrue(errorMessages.contains("TaskDef name cannot be null or empty"));
+                assertTrue(errorMessages.contains("ownerEmail cannot be empty"));
+                throw e;
+            }
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testGetTaskDefNotExisting() {
-        metadataClient.getTaskDef("");
+        assertThrows(IllegalArgumentException.class, () -> {
+            metadataClient.getTaskDef("");
+        });
     }
 
-    @Test(expected = ConductorClientException.class)
+    @Test
     public void testUpdateWorkflowDefNameNull() {
-        WorkflowDef workflowDef = new WorkflowDef();
-        List<WorkflowDef> list = new ArrayList<>();
-        list.add(workflowDef);
-        try {
-            metadataClient.updateWorkflowDefs(list);
-        } catch (ConductorClientException e) {
-            assertEquals(3, e.getValidationErrors().size());
-            assertEquals(400, e.getStatus());
-            assertEquals("Validation failed, check below errors for detail.", e.getMessage());
-            assertFalse(e.isRetryable());
-            List<ValidationError> errors = e.getValidationErrors();
-            List<String> errorMessages =
-                    errors.stream().map(ValidationError::getMessage).collect(Collectors.toList());
-            assertTrue(errorMessages.contains("WorkflowDef name cannot be null or empty"));
-            assertTrue(errorMessages.contains("WorkflowTask list cannot be empty"));
-            assertTrue(errorMessages.contains("ownerEmail cannot be empty"));
-            throw e;
-        }
+        assertThrows(ConductorClientException.class, () -> {
+            WorkflowDef workflowDef = new WorkflowDef();
+            List<WorkflowDef> list = new ArrayList<>();
+            list.add(workflowDef);
+            try {
+                metadataClient.updateWorkflowDefs(list);
+            } catch (ConductorClientException e) {
+                assertEquals(3, e.getValidationErrors().size());
+                assertEquals(400, e.getStatus());
+                assertEquals("Validation failed, check below errors for detail.", e.getMessage());
+                assertFalse(e.isRetryable());
+                List<ValidationError> errors = e.getValidationErrors();
+                List<String> errorMessages =
+                        errors.stream().map(ValidationError::getMessage).collect(Collectors.toList());
+                assertTrue(errorMessages.contains("WorkflowDef name cannot be null or empty"));
+                assertTrue(errorMessages.contains("WorkflowTask list cannot be empty"));
+                assertTrue(errorMessages.contains("ownerEmail cannot be empty"));
+                throw e;
+            }
+        });
     }
 }

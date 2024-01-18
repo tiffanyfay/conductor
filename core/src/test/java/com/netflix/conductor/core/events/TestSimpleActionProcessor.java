@@ -15,13 +15,11 @@ package com.netflix.conductor.core.events;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.netflix.conductor.common.config.TestObjectMapperConfiguration;
 import com.netflix.conductor.common.metadata.events.EventHandler.Action;
@@ -42,12 +40,11 @@ import com.netflix.conductor.model.WorkflowModel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.*;
 
-@ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
-@RunWith(SpringRunner.class)
+@SpringJUnitConfig(classes = {TestObjectMapperConfiguration.class})
 public class TestSimpleActionProcessor {
 
     private WorkflowExecutor workflowExecutor;
@@ -57,7 +54,7 @@ public class TestSimpleActionProcessor {
 
     @Autowired private ObjectMapper objectMapper;
 
-    @Before
+    @BeforeEach
     public void setup() {
         externalPayloadStorageUtils = mock(ExternalPayloadStorageUtils.class);
 
@@ -200,11 +197,11 @@ public class TestSimpleActionProcessor {
         assertEquals("testTask", argumentCaptor.getValue().getOutputData().get("taskRefName"));
         assertEquals("someData", argumentCaptor.getValue().getOutputData().get("someKey"));
         // Assert values not in message are evaluated to null
-        assertTrue("testTask", argumentCaptor.getValue().getOutputData().containsKey("someNEKey"));
+        assertTrue(argumentCaptor.getValue().getOutputData().containsKey("someNEKey"), "testTask");
         // Assert null values from message are kept
         assertTrue(
-                "testTask", argumentCaptor.getValue().getOutputData().containsKey("someNullKey"));
-        assertNull("testTask", argumentCaptor.getValue().getOutputData().get("someNullKey"));
+                argumentCaptor.getValue().getOutputData().containsKey("someNullKey"), "testTask");
+        assertNull(argumentCaptor.getValue().getOutputData().get("someNullKey"), "testTask");
     }
 
     @Test
@@ -247,11 +244,11 @@ public class TestSimpleActionProcessor {
         assertEquals("testTask", argumentCaptor.getValue().getOutputData().get("taskRefName"));
         assertEquals("someData", argumentCaptor.getValue().getOutputData().get("someKey"));
         // Assert values not in message are evaluated to null
-        assertTrue("testTask", argumentCaptor.getValue().getOutputData().containsKey("someNEKey"));
+        assertTrue(argumentCaptor.getValue().getOutputData().containsKey("someNEKey"), "testTask");
         // Assert null values from message are kept
         assertTrue(
-                "testTask", argumentCaptor.getValue().getOutputData().containsKey("someNullKey"));
-        assertNull("testTask", argumentCaptor.getValue().getOutputData().get("someNullKey"));
+                argumentCaptor.getValue().getOutputData().containsKey("someNullKey"), "testTask");
+        assertNull(argumentCaptor.getValue().getOutputData().get("someNullKey"), "testTask");
     }
 
     @Test

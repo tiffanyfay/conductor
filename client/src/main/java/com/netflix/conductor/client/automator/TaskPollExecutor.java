@@ -217,7 +217,7 @@ class TaskPollExecutor {
             if (executorService.awaitTermination(timeout, TimeUnit.SECONDS)) {
                 LOGGER.debug("tasks completed, shutting down");
             } else {
-                LOGGER.warn(String.format("forcing shutdown after waiting for %s second", timeout));
+                LOGGER.warn("forcing shutdown after waiting for %s second".formatted(timeout));
                 executorService.shutdownNow();
             }
         } catch (InterruptedException ie) {
@@ -344,8 +344,8 @@ class TaskPollExecutor {
             worker.onErrorUpdate(task);
             MetricsContainer.incrementTaskUpdateErrorCount(worker.getTaskDefName(), e);
             LOGGER.error(
-                    String.format(
-                            "Failed to update result: %s for task: %s in worker: %s",
+                    
+                            "Failed to update result: %s for task: %s in worker: %s".formatted(
                             result.toString(), task.getTaskDefName(), worker.getIdentity()),
                     e);
         }
@@ -380,7 +380,7 @@ class TaskPollExecutor {
     }
 
     private void handleException(Throwable t, TaskResult result, Worker worker, Task task) {
-        LOGGER.error(String.format("Error while executing task %s", task.toString()), t);
+        LOGGER.error("Error while executing task %s".formatted(task.toString()), t);
         MetricsContainer.incrementTaskExecutionErrorCount(worker.getTaskDefName(), t);
         result.setStatus(TaskResult.Status.FAILED);
         result.setReasonForIncompletion("Error while executing the task: " + t);

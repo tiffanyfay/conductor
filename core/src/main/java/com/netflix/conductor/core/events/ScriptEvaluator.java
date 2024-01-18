@@ -66,10 +66,10 @@ public class ScriptEvaluator {
      * @return True or False based on the input provided.
      */
     public static Boolean toBoolean(Object input) {
-        if (input instanceof Boolean) {
-            return ((Boolean) input);
-        } else if (input instanceof Number) {
-            return ((Number) input).doubleValue() > 0;
+        if (input instanceof Boolean boolean1) {
+            returnboolean1;
+        } else if (input instanceof Number number) {
+            return number.doubleValue() > 0;
         }
         return false;
     }

@@ -17,15 +17,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.netflix.conductor.common.config.TestObjectMapperConfiguration;
 
@@ -33,12 +31,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ContextConfiguration(
+@SpringJUnitConfig(
         classes = {
-            TestObjectMapperConfiguration.class,
-            SummaryUtilTest.SummaryUtilTestConfiguration.class
+                TestObjectMapperConfiguration.class,
+                SummaryUtilTest.SummaryUtilTestConfiguration.class
         })
-@RunWith(SpringRunner.class)
 public class SummaryUtilTest {
 
     @Configuration
@@ -54,7 +51,7 @@ public class SummaryUtilTest {
 
     private Map<String, Object> testObject;
 
-    @Before
+    @BeforeEach
     public void init() {
         Map<String, Object> child = new HashMap<>();
         child.put("testStr", "childTestStr");

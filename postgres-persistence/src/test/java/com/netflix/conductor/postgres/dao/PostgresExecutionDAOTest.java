@@ -15,15 +15,13 @@ package com.netflix.conductor.postgres.dao;
 import java.util.List;
 
 import org.flywaydb.core.Flyway;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import com.netflix.conductor.common.config.TestObjectMapperConfiguration;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
@@ -34,8 +32,8 @@ import com.netflix.conductor.postgres.config.PostgresConfiguration;
 
 import com.google.common.collect.Iterables;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ContextConfiguration(
         classes = {
@@ -43,7 +41,6 @@ import static org.junit.Assert.assertNotNull;
             PostgresConfiguration.class,
             FlywayAutoConfiguration.class
         })
-@RunWith(SpringRunner.class)
 @SpringBootTest(properties = "spring.flyway.clean-disabled=false")
 public class PostgresExecutionDAOTest extends ExecutionDAOTest {
 
@@ -52,7 +49,7 @@ public class PostgresExecutionDAOTest extends ExecutionDAOTest {
     @Autowired Flyway flyway;
 
     // clean the database between tests.
-    @Before
+    @BeforeEach
     public void before() {
         flyway.migrate();
     }

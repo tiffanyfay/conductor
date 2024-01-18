@@ -16,8 +16,8 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import com.netflix.conductor.core.config.ConductorProperties;
@@ -35,7 +35,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static com.netflix.conductor.common.metadata.tasks.TaskType.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -53,7 +54,7 @@ public class TestWorkflowRepairService {
     private WorkflowRepairService workflowRepairService;
     private SystemTaskRegistry systemTaskRegistry;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         executionDAO = mock(ExecutionDAO.class);
         queueDAO = mock(QueueDAO.class);

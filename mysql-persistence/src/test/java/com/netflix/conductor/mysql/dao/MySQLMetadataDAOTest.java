@@ -23,14 +23,12 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.flywaydb.core.Flyway;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import com.netflix.conductor.common.config.TestObjectMapperConfiguration;
 import com.netflix.conductor.common.metadata.events.EventHandler;
@@ -39,11 +37,7 @@ import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.core.exception.NonTransientException;
 import com.netflix.conductor.mysql.config.MySQLConfiguration;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ContextConfiguration(
         classes = {
@@ -51,7 +45,6 @@ import static org.junit.Assert.assertTrue;
             MySQLConfiguration.class,
             FlywayAutoConfiguration.class
         })
-@RunWith(SpringRunner.class)
 @SpringBootTest(properties = "spring.flyway.clean-disabled=false")
 public class MySQLMetadataDAOTest {
 
@@ -60,7 +53,7 @@ public class MySQLMetadataDAOTest {
     @Autowired Flyway flyway;
 
     // clean the database between tests.
-    @Before
+    @BeforeEach
     public void before() {
         flyway.clean();
         flyway.migrate();
@@ -108,8 +101,8 @@ public class MySQLMetadataDAOTest {
         List<WorkflowDef> all = metadataDAO.getAllWorkflowDefs();
         assertNotNull(all);
         assertEquals(1, all.size());
-        assertEquals("test", all.get(0).getName());
-        assertEquals(1, all.get(0).getVersion());
+        assertEquals("test", all.getFirst().getName());
+        assertEquals(1, all.getFirst().getVersion());
 
         WorkflowDef found = metadataDAO.getWorkflowDef("test", 1).get();
         assertTrue(EqualsBuilder.reflectionEquals(def, found));
@@ -120,8 +113,8 @@ public class MySQLMetadataDAOTest {
         all = metadataDAO.getAllWorkflowDefs();
         assertNotNull(all);
         assertEquals(2, all.size());
-        assertEquals("test", all.get(0).getName());
-        assertEquals(1, all.get(0).getVersion());
+        assertEquals("test", all.getFirst().getName());
+        assertEquals(1, all.getFirst().getVersion());
 
         found = metadataDAO.getLatestWorkflowDef(def.getName()).get();
         assertEquals(def.getName(), found.getName());
@@ -131,15 +124,15 @@ public class MySQLMetadataDAOTest {
         all = metadataDAO.getAllLatest();
         assertNotNull(all);
         assertEquals(1, all.size());
-        assertEquals("test", all.get(0).getName());
-        assertEquals(3, all.get(0).getVersion());
+        assertEquals("test", all.getFirst().getName());
+        assertEquals(3, all.getFirst().getVersion());
 
         all = metadataDAO.getAllVersions(def.getName());
         assertNotNull(all);
         assertEquals(2, all.size());
-        assertEquals("test", all.get(0).getName());
+        assertEquals("test", all.getFirst().getName());
         assertEquals("test", all.get(1).getName());
-        assertEquals(1, all.get(0).getVersion());
+        assertEquals(1, all.getFirst().getVersion());
         assertEquals(3, all.get(1).getVersion());
 
         def.setDescription("updated");
@@ -150,7 +143,7 @@ public class MySQLMetadataDAOTest {
         List<String> allnames = metadataDAO.findAll();
         assertNotNull(allnames);
         assertEquals(1, allnames.size());
-        assertEquals(def.getName(), allnames.get(0));
+        assertEquals(def.getName(), allnames.getFirst());
 
         def.setVersion(2);
         metadataDAO.createWorkflowDef(def);
@@ -214,7 +207,7 @@ public class MySQLMetadataDAOTest {
         Set<String> allnames = all.stream().map(TaskDef::getName).collect(Collectors.toSet());
         assertEquals(10, allnames.size());
         List<String> sorted = allnames.stream().sorted().collect(Collectors.toList());
-        assertEquals(def.getName(), sorted.get(0));
+        assertEquals(def.getName(), sorted.getFirst());
 
         for (int i = 0; i < 9; i++) {
             assertEquals(def.getName() + i, sorted.get(i + 1));
@@ -226,7 +219,7 @@ public class MySQLMetadataDAOTest {
         all = metadataDAO.getAllTaskDefs();
         assertNotNull(all);
         assertEquals(1, all.size());
-        assertEquals(def.getName(), all.get(0).getName());
+        assertEquals(def.getName(), all.getFirst().getName());
     }
 
     @Test
@@ -257,8 +250,8 @@ public class MySQLMetadataDAOTest {
         List<EventHandler> all = metadataDAO.getAllEventHandlers();
         assertNotNull(all);
         assertEquals(1, all.size());
-        assertEquals(eventHandler.getName(), all.get(0).getName());
-        assertEquals(eventHandler.getEvent(), all.get(0).getEvent());
+        assertEquals(eventHandler.getName(), all.getFirst().getName());
+        assertEquals(eventHandler.getEvent(), all.getFirst().getEvent());
 
         List<EventHandler> byEvents = metadataDAO.getEventHandlersForEvent(event1, true);
         assertNotNull(byEvents);

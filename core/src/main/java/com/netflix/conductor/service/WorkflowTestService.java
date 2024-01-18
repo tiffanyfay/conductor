@@ -119,7 +119,7 @@ public class WorkflowTestService {
                             mockData.remove(refName);
                             workflowService.decideWorkflow(workflowId);
                         } else {
-                            WorkflowTestRequest.TaskMock task = taskMock.remove(0);
+                            WorkflowTestRequest.TaskMock task = taskMock.removeFirst();
                             if (task.getExecutionTime() > 0 || task.getQueueWaitTime() > 0) {
                                 TaskModel existing = executionDAO.getTask(running.getTaskId());
                                 existing.setScheduledTime(

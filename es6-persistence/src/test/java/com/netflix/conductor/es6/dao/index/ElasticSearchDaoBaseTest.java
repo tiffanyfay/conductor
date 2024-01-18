@@ -22,9 +22,9 @@ import org.elasticsearch.common.collect.ImmutableOpenMap;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.retry.support.RetryTemplate;
 
 abstract class ElasticSearchDaoBaseTest extends ElasticSearchTest {
@@ -32,7 +32,7 @@ abstract class ElasticSearchDaoBaseTest extends ElasticSearchTest {
     protected TransportClient elasticSearchClient;
     protected ElasticSearchDAOV6 indexDAO;
 
-    @Before
+    @BeforeEach
     public void setup() throws Exception {
         int mappedPort = container.getMappedPort(9300);
         properties.setUrl("tcp://localhost:" + mappedPort);
@@ -52,12 +52,12 @@ abstract class ElasticSearchDaoBaseTest extends ElasticSearchTest {
         indexDAO.setup();
     }
 
-    @AfterClass
+    @AfterAll
     public static void closeClient() {
         container.stop();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         deleteAllIndices();
 

@@ -16,10 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
@@ -31,21 +29,21 @@ import com.netflix.conductor.dao.MetadataDAO;
 import com.netflix.conductor.model.TaskModel;
 import com.netflix.conductor.model.WorkflowModel;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DynamicTaskMapperTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-    @Rule public ExpectedException expectedException = ExpectedException.none();
+public class DynamicTaskMapperTest {
     private ParametersUtils parametersUtils;
     private MetadataDAO metadataDAO;
     private DynamicTaskMapper dynamicTaskMapper;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         parametersUtils = mock(ParametersUtils.class);
         metadataDAO = mock(MetadataDAO.class);
@@ -92,7 +90,7 @@ public class DynamicTaskMapperTest {
 
         assertEquals(1, mappedTasks.size());
 
-        TaskModel dynamicTask = mappedTasks.get(0);
+        TaskModel dynamicTask = mappedTasks.getFirst();
         assertEquals(taskId, dynamicTask.getTaskId());
     }
 
@@ -108,16 +106,17 @@ public class DynamicTaskMapperTest {
 
     @Test
     public void getDynamicTaskNameNotAvailable() {
-        Map<String, Object> taskInput = new HashMap<>();
+        Throwable exception = assertThrows(TerminateWorkflowException.class, () -> {
+            Map<String, Object> taskInput = new HashMap<>();
 
-        expectedException.expect(TerminateWorkflowException.class);
-        expectedException.expectMessage(
-                String.format(
-                        "Cannot map a dynamic task based on the parameter and input. "
-                                + "Parameter= %s, input= %s",
-                        "dynamicTaskName", taskInput));
-
-        dynamicTaskMapper.getDynamicTaskName(taskInput, "dynamicTaskName");
+            dynamicTaskMapper.getDynamicTaskName(taskInput, "dynamicTaskName");
+        });
+        assertTrue(exception.getMessage().contains((
+                """
+                        Cannot map a dynamic task based on the parameter and input. \
+                        Parameter= %s, input= %s\
+                        """).formatted(
+                "dynamicTaskName", taskInput)));
     }
 
     @Test
@@ -139,17 +138,16 @@ public class DynamicTaskMapperTest {
 
     @Test
     public void getDynamicTaskDefinitionNull() {
+        Throwable exception = assertThrows(TerminateWorkflowException.class, () -> {
 
-        // Given
-        WorkflowTask workflowTask = new WorkflowTask();
-        workflowTask.setName("Foo");
+            // Given
+            WorkflowTask workflowTask = new WorkflowTask();
+            workflowTask.setName("Foo");
 
-        expectedException.expect(TerminateWorkflowException.class);
-        expectedException.expectMessage(
-                String.format(
-                        "Invalid task specified.  Cannot find task by name %s in the task definitions",
-                        workflowTask.getName()));
-
-        dynamicTaskMapper.getDynamicTaskDefinition(workflowTask);
+            dynamicTaskMapper.getDynamicTaskDefinition(workflowTask);
+        });
+        assertTrue(exception.getMessage().contains(
+                "Invalid task specified.  Cannot find task by name %s in the task definitions".formatted(
+                workflowTask.getName())));
     }
 }

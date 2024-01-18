@@ -342,13 +342,13 @@ public class AMQPConnection {
             ConnectionType connectionType, Connection rmqConnection) throws Exception {
         if (!availableChannelPool.containsKey(connectionType)) {
             Channel channel = getOrCreateChannel(connectionType, rmqConnection);
-            LOGGER.info(String.format(AMQPConstants.INFO_CHANNEL_CREATION_SUCCESS, connectionType));
+            LOGGER.info(AMQPConstants.INFO_CHANNEL_CREATION_SUCCESS.formatted(connectionType));
             return channel;
         }
         Set<Channel> channels = availableChannelPool.get(connectionType);
         if (channels != null && channels.isEmpty()) {
             Channel channel = getOrCreateChannel(connectionType, rmqConnection);
-            LOGGER.info(String.format(AMQPConstants.INFO_CHANNEL_CREATION_SUCCESS, connectionType));
+            LOGGER.info(AMQPConstants.INFO_CHANNEL_CREATION_SUCCESS.formatted(connectionType));
             return channel;
         }
         Iterator<Channel> itr = channels.iterator();
@@ -357,14 +357,14 @@ public class AMQPConnection {
             if (channel != null && channel.isOpen()) {
                 itr.remove();
                 LOGGER.info(
-                        String.format(AMQPConstants.INFO_CHANNEL_BORROW_SUCCESS, connectionType));
+                        AMQPConstants.INFO_CHANNEL_BORROW_SUCCESS.formatted(connectionType));
                 return channel;
             } else {
                 itr.remove();
             }
         }
         Channel channel = getOrCreateChannel(connectionType, rmqConnection);
-        LOGGER.info(String.format(AMQPConstants.INFO_CHANNEL_RESET_SUCCESS, connectionType));
+        LOGGER.info(AMQPConstants.INFO_CHANNEL_RESET_SUCCESS.formatted(connectionType));
         return channel;
     }
 
@@ -386,6 +386,6 @@ public class AMQPConnection {
             availableChannelPool.put(connectionType, channels);
         }
         channels.add(channel);
-        LOGGER.info(String.format(AMQPConstants.INFO_CHANNEL_RETURN_SUCCESS, connectionType));
+        LOGGER.info(AMQPConstants.INFO_CHANNEL_RETURN_SUCCESS.formatted(connectionType));
     }
 }

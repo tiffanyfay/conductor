@@ -21,8 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.*;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -39,9 +38,8 @@ import com.netflix.discovery.EurekaClient;
 import static com.netflix.conductor.common.metadata.tasks.TaskResult.Status.COMPLETED;
 import static com.netflix.conductor.common.metadata.tasks.TaskResult.Status.IN_PROGRESS;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 

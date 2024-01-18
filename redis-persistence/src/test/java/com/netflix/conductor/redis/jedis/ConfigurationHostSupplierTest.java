@@ -14,15 +14,16 @@ package com.netflix.conductor.redis.jedis;
 
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.redis.config.RedisProperties;
 import com.netflix.conductor.redis.dynoqueue.ConfigurationHostSupplier;
 import com.netflix.dyno.connectionpool.Host;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -32,7 +33,7 @@ public class ConfigurationHostSupplierTest {
 
     private ConfigurationHostSupplier configurationHostSupplier;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         properties = mock(RedisProperties.class);
         configurationHostSupplier = new ConfigurationHostSupplier(properties);
@@ -45,7 +46,7 @@ public class ConfigurationHostSupplierTest {
         List<Host> hosts = configurationHostSupplier.getHosts();
         assertEquals(1, hosts.size());
 
-        Host firstHost = hosts.get(0);
+        Host firstHost = hosts.getFirst();
         assertEquals("dyno1", firstHost.getHostName());
         assertEquals(8102, firstHost.getPort());
         assertEquals("us-east-1c", firstHost.getRack());
@@ -59,7 +60,7 @@ public class ConfigurationHostSupplierTest {
         List<Host> hosts = configurationHostSupplier.getHosts();
         assertEquals(2, hosts.size());
 
-        Host firstHost = hosts.get(0);
+        Host firstHost = hosts.getFirst();
         assertEquals("dyno1", firstHost.getHostName());
         assertEquals(8102, firstHost.getPort());
         assertEquals("us-east-1c", firstHost.getRack());
@@ -79,7 +80,7 @@ public class ConfigurationHostSupplierTest {
         List<Host> hosts = configurationHostSupplier.getHosts();
         assertEquals(1, hosts.size());
 
-        Host firstHost = hosts.get(0);
+        Host firstHost = hosts.getFirst();
         assertEquals("redis1", firstHost.getHostName());
         assertEquals(6432, firstHost.getPort());
         assertEquals("us-east-1c", firstHost.getRack());

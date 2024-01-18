@@ -17,8 +17,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
@@ -37,8 +37,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static com.netflix.conductor.common.metadata.tasks.TaskType.TASK_TYPE_DO_WHILE;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class DoWhileTaskMapperTest {
 
@@ -50,7 +50,7 @@ public class DoWhileTaskMapperTest {
     private MetadataDAO metadataDAO;
     private ParametersUtils parametersUtils;
 
-    @Before
+    @BeforeEach
     public void setup() {
         WorkflowTask workflowTask = new WorkflowTask();
         workflowTask.setType(TaskType.DO_WHILE.name());
@@ -106,9 +106,9 @@ public class DoWhileTaskMapperTest {
 
         assertNotNull(mappedTasks);
         assertEquals(mappedTasks.size(), 1);
-        assertEquals(TASK_TYPE_DO_WHILE, mappedTasks.get(0).getTaskType());
-        assertNotNull(mappedTasks.get(0).getInputData());
-        assertEquals(Map.of("value", "bar"), mappedTasks.get(0).getInputData());
+        assertEquals(TASK_TYPE_DO_WHILE, mappedTasks.getFirst().getTaskType());
+        assertNotNull(mappedTasks.getFirst().getInputData());
+        assertEquals(Map.of("value", "bar"), mappedTasks.getFirst().getInputData());
     }
 
     @Test

@@ -179,8 +179,8 @@ public class WorkflowExecutor {
 
         if (!workflow.getStatus().isTerminal()) {
             String errorMsg =
-                    String.format(
-                            "Workflow: %s is not in terminal state, unable to restart.", workflow);
+                    
+                            "Workflow: %s is not in terminal state, unable to restart.".formatted(workflow);
             LOGGER.error(errorMsg);
             throw new ConflictException(errorMsg);
         }
@@ -303,12 +303,12 @@ public class WorkflowExecutor {
             String currentWorkflowIdentifier = workflow.toShortString();
             workflowIdentifier =
                     !workflowIdentifier.equals("")
-                            ? String.format(
-                                    "%s -> %s", currentWorkflowIdentifier, workflowIdentifier)
+                            ? 
+                            "%s -> %s".formatted(currentWorkflowIdentifier, workflowIdentifier)
                             : currentWorkflowIdentifier;
             TaskExecLog log =
                     new TaskExecLog(
-                            String.format("Sub workflow %s %s.", workflowIdentifier, operation));
+                            "Sub workflow %s %s.".formatted(workflowIdentifier, operation));
             log.setTaskId(subWorkflowTask.getTaskId());
             executionDAOFacade.addTaskExecLog(Collections.singletonList(log));
             LOGGER.info("Task {} updated. {}", log.getTaskId(), log.getLog());
@@ -479,8 +479,8 @@ public class WorkflowExecutor {
                                     .get(Terminate.getTerminationReasonParameter());
             if (StringUtils.isBlank(reason)) {
                 reason =
-                        String.format(
-                                "Workflow is %s by TERMINATE task: %s",
+                        
+                                "Workflow is %s by TERMINATE task: %s".formatted(
                                 terminationStatus, terminateTask.getTaskId());
             }
             if (WorkflowModel.Status.FAILED.name().equals(terminationStatus)) {
@@ -700,8 +700,8 @@ public class WorkflowExecutor {
             List<String> erroredTasks = cancelNonTerminalTasks(workflow);
             if (!erroredTasks.isEmpty()) {
                 throw new NonTransientException(
-                        String.format(
-                                "Error canceling system tasks: %s",
+                        
+                                "Error canceling system tasks: %s".formatted(
                                 String.join(",", erroredTasks)));
             }
             return workflow;
@@ -811,8 +811,8 @@ public class WorkflowExecutor {
                     // Ignore exceptions on queue remove as it wouldn't impact task and workflow
                     // execution, and will be cleaned up eventually
                     String errorMsg =
-                            String.format(
-                                    "Error removing the message in queue for task: %s for workflow: %s",
+                            
+                                    "Error removing the message in queue for task: %s for workflow: %s".formatted(
                                     task.getTaskId(), workflowId);
                     LOGGER.warn(errorMsg, e);
                     Monitors.recordTaskQueueOpError(
@@ -834,8 +834,8 @@ public class WorkflowExecutor {
                 } catch (Exception e) {
                     // Throw exceptions on queue postpone, this would impact task execution
                     String errorMsg =
-                            String.format(
-                                    "Error postponing the message in queue for task: %s for workflow: %s",
+                            
+                                    "Error postponing the message in queue for task: %s for workflow: %s".formatted(
                                     task.getTaskId(), workflowId);
                     LOGGER.error(errorMsg, e);
                     Monitors.recordTaskQueueOpError(
@@ -852,8 +852,8 @@ public class WorkflowExecutor {
             executionDAOFacade.updateTask(task);
         } catch (Exception e) {
             String errorMsg =
-                    String.format(
-                            "Error updating task: %s for workflow: %s",
+                    
+                            "Error updating task: %s for workflow: %s".formatted(
                             task.getTaskId(), workflowId);
             LOGGER.error(errorMsg, e);
             Monitors.recordTaskUpdateError(task.getTaskType(), workflowInstance.getWorkflowName());
@@ -864,8 +864,8 @@ public class WorkflowExecutor {
             notifyTaskStatusListener(task);
         } catch (Exception e) {
             String errorMsg =
-                    String.format(
-                            "Error while notifying TaskStatusListener: %s for workflow: %s",
+                    
+                            "Error while notifying TaskStatusListener: %s for workflow: %s".formatted(
                             task.getTaskId(), workflowId);
             LOGGER.error(errorMsg, e);
         }
@@ -932,8 +932,8 @@ public class WorkflowExecutor {
                 executionDAOFacade.extendLease(task);
             } catch (Exception e) {
                 String errorMsg =
-                        String.format(
-                                "Error extend lease for Task: %s belonging to Workflow: %s",
+                        
+                                "Error extend lease for Task: %s belonging to Workflow: %s".formatted(
                                 task.getTaskId(), task.getWorkflowInstanceId());
                 LOGGER.error(errorMsg, e);
                 Monitors.recordTaskExtendLeaseError(task.getTaskType(), task.getWorkflowType());
@@ -1330,8 +1330,8 @@ public class WorkflowExecutor {
         // If the workflow is not running then cannot skip any task
         if (!workflow.getStatus().equals(WorkflowModel.Status.RUNNING)) {
             String errorMsg =
-                    String.format(
-                            "The workflow %s is not running so the task referenced by %s cannot be skipped",
+                    
+                            "The workflow %s is not running so the task referenced by %s cannot be skipped".formatted(
                             workflowId, taskReferenceName);
             throw new IllegalStateException(errorMsg);
         }
@@ -1341,8 +1341,8 @@ public class WorkflowExecutor {
                 workflow.getWorkflowDefinition().getTaskByRefName(taskReferenceName);
         if (workflowTask == null) {
             String errorMsg =
-                    String.format(
-                            "The task referenced by %s does not exist in the WorkflowDefinition %s",
+                    
+                            "The task referenced by %s does not exist in the WorkflowDefinition %s".formatted(
                             taskReferenceName, workflow.getWorkflowName());
             throw new IllegalStateException(errorMsg);
         }
@@ -1353,8 +1353,8 @@ public class WorkflowExecutor {
                         task -> {
                             if (task.getReferenceTaskName().equals(taskReferenceName)) {
                                 String errorMsg =
-                                        String.format(
-                                                "The task referenced %s has already been processed, cannot be skipped",
+                                        
+                                                "The task referenced %s has already been processed, cannot be skipped".formatted(
                                                 taskReferenceName);
                                 throw new IllegalStateException(errorMsg);
                             }
@@ -1533,8 +1533,8 @@ public class WorkflowExecutor {
                         workflowSystemTask.start(workflow, task, this);
                     } catch (Exception e) {
                         String errorMsg =
-                                String.format(
-                                        "Unable to start system task: %s, {id: %s, name: %s}",
+                                
+                                        "Unable to start system task: %s, {id: %s, name: %s}".formatted(
                                         task.getTaskType(),
                                         task.getTaskId(),
                                         task.getTaskDefName());
@@ -1551,8 +1551,8 @@ public class WorkflowExecutor {
             List<String> taskIds =
                     tasks.stream().map(TaskModel::getTaskId).collect(Collectors.toList());
             String errorMsg =
-                    String.format(
-                            "Error scheduling tasks: %s, for workflow: %s",
+                    
+                            "Error scheduling tasks: %s, for workflow: %s".formatted(
                             taskIds, workflow.getWorkflowId());
             LOGGER.error(errorMsg, e);
             Monitors.error(CLASS_NAME, "scheduleTask");
@@ -1567,8 +1567,8 @@ public class WorkflowExecutor {
             List<String> taskIds =
                     tasksToBeQueued.stream().map(TaskModel::getTaskId).collect(Collectors.toList());
             String errorMsg =
-                    String.format(
-                            "Error pushing tasks to the queue: %s, for workflow: %s",
+                    
+                            "Error pushing tasks to the queue: %s, for workflow: %s".formatted(
                             taskIds, workflow.getWorkflowId());
             LOGGER.warn(errorMsg, e);
             Monitors.error(CLASS_NAME, "scheduleTask");
@@ -1584,8 +1584,8 @@ public class WorkflowExecutor {
                 taskStatusListener.onTaskScheduled(task);
             } catch (Exception e) {
                 String errorMsg =
-                        String.format(
-                                "Error while notifying TaskStatusListener: %s for workflow: %s",
+                        
+                                "Error while notifying TaskStatusListener: %s for workflow: %s".formatted(
                                 task.getTaskId(), task.getWorkflowInstanceId());
                 LOGGER.error(errorMsg, e);
             }
@@ -1628,8 +1628,8 @@ public class WorkflowExecutor {
         WorkflowModel workflow = executionDAOFacade.getWorkflowModel(workflowId, true);
         if (!workflow.getStatus().isTerminal()) {
             String errorMsg =
-                    String.format(
-                            "Workflow: %s is not in terminal state, unable to rerun.", workflow);
+                    
+                            "Workflow: %s is not in terminal state, unable to rerun.".formatted(workflow);
             LOGGER.error(errorMsg);
             throw new ConflictException(errorMsg);
         }
@@ -1789,8 +1789,8 @@ public class WorkflowExecutor {
                                         .orElseThrow(
                                                 () -> {
                                                     String reason =
-                                                            String.format(
-                                                                    "Invalid task specified. Cannot find task by name %s in the task definitions",
+                                                            
+                                                                    "Invalid task specified. Cannot find task by name %s in the task definitions".formatted(
                                                                     task.getWorkflowTask()
                                                                             .getName());
                                                     return new TerminateWorkflowException(reason);

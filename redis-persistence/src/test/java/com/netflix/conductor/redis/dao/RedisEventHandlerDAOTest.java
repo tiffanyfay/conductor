@@ -15,12 +15,10 @@ package com.netflix.conductor.redis.dao;
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.netflix.conductor.common.config.TestObjectMapperConfiguration;
 import com.netflix.conductor.common.metadata.events.EventHandler;
@@ -35,19 +33,19 @@ import com.netflix.conductor.redis.jedis.JedisProxy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import redis.clients.jedis.commands.JedisCommands;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import static org.mockito.Mockito.mock;
 
-@ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
-@RunWith(SpringRunner.class)
+@SpringJUnitConfig(classes = {TestObjectMapperConfiguration.class})
 public class RedisEventHandlerDAOTest {
 
     private RedisEventHandlerDAO redisEventHandlerDAO;
 
     @Autowired private ObjectMapper objectMapper;
 
-    @Before
+    @BeforeEach
     public void init() {
         ConductorProperties conductorProperties = mock(ConductorProperties.class);
         RedisProperties properties = mock(RedisProperties.class);
@@ -77,8 +75,8 @@ public class RedisEventHandlerDAOTest {
         List<EventHandler> allEventHandlers = redisEventHandlerDAO.getAllEventHandlers();
         assertNotNull(allEventHandlers);
         assertEquals(1, allEventHandlers.size());
-        assertEquals(eventHandler.getName(), allEventHandlers.get(0).getName());
-        assertEquals(eventHandler.getEvent(), allEventHandlers.get(0).getEvent());
+        assertEquals(eventHandler.getName(), allEventHandlers.getFirst().getName());
+        assertEquals(eventHandler.getEvent(), allEventHandlers.getFirst().getEvent());
 
         List<EventHandler> byEvents = redisEventHandlerDAO.getEventHandlersForEvent(event1, true);
         assertNotNull(byEvents);

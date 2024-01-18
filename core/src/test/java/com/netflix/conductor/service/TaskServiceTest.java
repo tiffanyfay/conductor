@@ -14,14 +14,13 @@ package com.netflix.conductor.service;
 
 import java.util.List;
 import java.util.Set;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
@@ -33,12 +32,13 @@ import jakarta.validation.ConstraintViolationException;
 
 import static com.netflix.conductor.TestUtils.getConstraintViolationMessages;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("SpringJavaAutowiredMembersInspection")
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @EnableAutoConfiguration
 public class TaskServiceTest {
 
@@ -61,91 +61,105 @@ public class TaskServiceTest {
 
     @Autowired private ExecutionService executionService;
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testPoll() {
-        try {
-            taskService.poll(null, null, null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("TaskType cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                taskService.poll(null, null, null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("TaskType cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testBatchPoll() {
-        try {
-            taskService.batchPoll(null, null, null, null, null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("TaskType cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                taskService.batchPoll(null, null, null, null, null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("TaskType cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testGetTasks() {
-        try {
-            taskService.getTasks(null, null, null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("TaskType cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                taskService.getTasks(null, null, null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("TaskType cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testGetPendingTaskForWorkflow() {
-        try {
-            taskService.getPendingTaskForWorkflow(null, null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(2, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("WorkflowId cannot be null or empty."));
-            assertTrue(messages.contains("TaskReferenceName cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                taskService.getPendingTaskForWorkflow(null, null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(2, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("WorkflowId cannot be null or empty."));
+                assertTrue(messages.contains("TaskReferenceName cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testUpdateTask() {
-        try {
-            taskService.updateTask(null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("TaskResult cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                taskService.updateTask(null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("TaskResult cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testUpdateTaskInValid() {
-        try {
-            TaskResult taskResult = new TaskResult();
-            taskService.updateTask(taskResult);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(2, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("Workflow Id cannot be null or empty"));
-            assertTrue(messages.contains("Task ID cannot be null or empty"));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                TaskResult taskResult = new TaskResult();
+                taskService.updateTask(taskResult);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(2, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("Workflow Id cannot be null or empty"));
+                assertTrue(messages.contains("Task ID cannot be null or empty"));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testAckTaskReceived() {
-        try {
-            taskService.ackTaskReceived(null, null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("TaskId cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                taskService.ackTaskReceived(null, null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("TaskId cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
     @Test
@@ -154,77 +168,89 @@ public class TaskServiceTest {
         assertNotNull(ack);
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testLog() {
-        try {
-            taskService.log(null, null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("TaskId cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                taskService.log(null, null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("TaskId cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testGetTaskLogs() {
-        try {
-            taskService.getTaskLogs(null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("TaskId cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                taskService.getTaskLogs(null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("TaskId cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testGetTask() {
-        try {
-            taskService.getTask(null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("TaskId cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                taskService.getTask(null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("TaskId cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testRemoveTaskFromQueue() {
-        try {
-            taskService.removeTaskFromQueue(null, null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(2, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("TaskId cannot be null or empty."));
-            assertTrue(messages.contains("TaskType cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                taskService.removeTaskFromQueue(null, null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(2, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("TaskId cannot be null or empty."));
+                assertTrue(messages.contains("TaskType cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testGetPollData() {
-        try {
-            taskService.getPollData(null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("TaskType cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                taskService.getPollData(null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("TaskType cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void testRequeuePendingTask() {
-        try {
-            taskService.requeuePendingTask(null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("TaskType cannot be null or empty."));
-            throw ex;
-        }
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                taskService.requeuePendingTask(null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("TaskType cannot be null or empty."));
+                throw ex;
+            }
+        });
     }
 
     @Test
