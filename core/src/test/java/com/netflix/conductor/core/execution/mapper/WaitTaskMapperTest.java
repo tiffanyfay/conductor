@@ -18,9 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
+
+import org.junit.jupiter.api.Test;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
@@ -32,16 +32,17 @@ import com.netflix.conductor.model.WorkflowModel;
 
 import static com.netflix.conductor.common.metadata.tasks.TaskType.TASK_TYPE_WAIT;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
-public class WaitTaskMapperTest {
+class WaitTaskMapperTest {
 
     @Test
-    public void getMappedTasks() {
+    void getMappedTasks() {
 
         // Given
         WorkflowTask workflowTask = new WorkflowTask();
@@ -74,7 +75,7 @@ public class WaitTaskMapperTest {
     }
 
     @Test
-    public void testWaitForever() {
+    void waitForever() {
 
         WorkflowTask workflowTask = new WorkflowTask();
         workflowTask.setName("Wait_task");
@@ -100,12 +101,12 @@ public class WaitTaskMapperTest {
         // When
         List<TaskModel> mappedTasks = waitTaskMapper.getMappedTasks(taskMapperContext);
         assertEquals(1, mappedTasks.size());
-        assertEquals(mappedTasks.get(0).getStatus(), TaskModel.Status.IN_PROGRESS);
+        assertEquals(TaskModel.Status.IN_PROGRESS, mappedTasks.get(0).getStatus());
         assertTrue(mappedTasks.get(0).getOutputData().isEmpty());
     }
 
     @Test
-    public void testWaitUntil() {
+    void waitUntil() {
 
         String dateFormat = "yyyy-MM-dd HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormat);
@@ -141,12 +142,12 @@ public class WaitTaskMapperTest {
         // When
         List<TaskModel> mappedTasks = waitTaskMapper.getMappedTasks(taskMapperContext);
         assertEquals(1, mappedTasks.size());
-        assertEquals(mappedTasks.get(0).getStatus(), TaskModel.Status.IN_PROGRESS);
-        assertEquals(mappedTasks.get(0).getCallbackAfterSeconds(), 0L);
+        assertEquals(TaskModel.Status.IN_PROGRESS, mappedTasks.get(0).getStatus());
+        assertEquals(0L, mappedTasks.get(0).getCallbackAfterSeconds());
     }
 
     @Test
-    public void testWaitDuration() {
+    void waitDuration() {
 
         WorkflowTask workflowTask = new WorkflowTask();
         workflowTask.setName("Wait_task");
@@ -175,12 +176,12 @@ public class WaitTaskMapperTest {
         // When
         List<TaskModel> mappedTasks = waitTaskMapper.getMappedTasks(taskMapperContext);
         assertEquals(1, mappedTasks.size());
-        assertEquals(mappedTasks.get(0).getStatus(), TaskModel.Status.IN_PROGRESS);
+        assertEquals(TaskModel.Status.IN_PROGRESS, mappedTasks.get(0).getStatus());
         assertTrue(mappedTasks.get(0).getCallbackAfterSeconds() <= 1L);
     }
 
     @Test
-    public void testInvalidWaitConfig() {
+    void invalidWaitConfig() {
 
         WorkflowTask workflowTask = new WorkflowTask();
         workflowTask.setName("Wait_task");
@@ -211,6 +212,6 @@ public class WaitTaskMapperTest {
         // When
         List<TaskModel> mappedTasks = waitTaskMapper.getMappedTasks(taskMapperContext);
         assertEquals(1, mappedTasks.size());
-        assertEquals(mappedTasks.get(0).getStatus(), TaskModel.Status.FAILED_WITH_TERMINAL_ERROR);
+        assertEquals(TaskModel.Status.FAILED_WITH_TERMINAL_ERROR, mappedTasks.get(0).getStatus());
     }
 }

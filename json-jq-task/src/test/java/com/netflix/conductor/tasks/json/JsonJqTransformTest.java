@@ -18,23 +18,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-
 import com.netflix.conductor.common.config.ObjectMapperProvider;
+
+import org.junit.jupiter.api.Test;
 import com.netflix.conductor.model.TaskModel;
 import com.netflix.conductor.model.WorkflowModel;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class JsonJqTransformTest {
+class JsonJqTransformTest {
 
     private final ObjectMapper objectMapper = new ObjectMapperProvider().getObjectMapper();
 
     @Test
-    public void dataShouldBeCorrectlySelected() {
+    void dataShouldBeCorrectlySelected() {
         final JsonJqTransform jsonJqTransform = new JsonJqTransform(objectMapper);
         final WorkflowModel workflow = new WorkflowModel();
         final TaskModel task = new TaskModel();
@@ -54,7 +54,7 @@ public class JsonJqTransformTest {
     }
 
     @Test
-    public void simpleErrorShouldBeDisplayed() {
+    void simpleErrorShouldBeDisplayed() {
         final JsonJqTransform jsonJqTransform = new JsonJqTransform(objectMapper);
         final WorkflowModel workflow = new WorkflowModel();
         final TaskModel task = new TaskModel();
@@ -71,7 +71,7 @@ public class JsonJqTransformTest {
     }
 
     @Test
-    public void nestedExceptionsWithNACausesShouldBeDisregarded() {
+    void nestedExceptionsWithNACausesShouldBeDisregarded() {
         final JsonJqTransform jsonJqTransform = new JsonJqTransform(objectMapper);
         final WorkflowModel workflow = new WorkflowModel();
         final TaskModel task = new TaskModel();
@@ -97,7 +97,7 @@ public class JsonJqTransformTest {
     }
 
     @Test
-    public void mapResultShouldBeCorrectlyExtracted() {
+    void mapResultShouldBeCorrectlyExtracted() {
         final JsonJqTransform jsonJqTransform = new JsonJqTransform(objectMapper);
         final WorkflowModel workflow = new WorkflowModel();
         final TaskModel task = new TaskModel();
@@ -129,7 +129,7 @@ public class JsonJqTransformTest {
     }
 
     @Test
-    public void stringResultShouldBeCorrectlyExtracted() {
+    void stringResultShouldBeCorrectlyExtracted() {
         final JsonJqTransform jsonJqTransform = new JsonJqTransform(objectMapper);
         final WorkflowModel workflow = new WorkflowModel();
         final TaskModel task = new TaskModel();
@@ -150,7 +150,7 @@ public class JsonJqTransformTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void listResultShouldBeCorrectlyExtracted() throws JsonProcessingException {
+    void listResultShouldBeCorrectlyExtracted() throws JsonProcessingException {
         final JsonJqTransform jsonJqTransform = new JsonJqTransform(objectMapper);
         final WorkflowModel workflow = new WorkflowModel();
         final TaskModel task = new TaskModel();
@@ -173,7 +173,7 @@ public class JsonJqTransformTest {
     }
 
     @Test
-    public void nullResultShouldBeCorrectlyExtracted() throws JsonProcessingException {
+    void nullResultShouldBeCorrectlyExtracted() throws JsonProcessingException {
         final JsonJqTransform jsonJqTransform = new JsonJqTransform(objectMapper);
         final WorkflowModel workflow = new WorkflowModel();
         final TaskModel task = new TaskModel();

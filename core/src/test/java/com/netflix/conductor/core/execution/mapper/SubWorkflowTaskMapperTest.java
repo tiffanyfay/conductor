@@ -16,10 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.workflow.SubWorkflowParams;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
@@ -34,24 +32,22 @@ import com.netflix.conductor.model.WorkflowModel;
 
 import static com.netflix.conductor.common.metadata.tasks.TaskType.TASK_TYPE_SUB_WORKFLOW;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class SubWorkflowTaskMapperTest {
+class SubWorkflowTaskMapperTest {
 
     private SubWorkflowTaskMapper subWorkflowTaskMapper;
     private ParametersUtils parametersUtils;
     private DeciderService deciderService;
     private IDGenerator idGenerator;
 
-    @Rule public ExpectedException expectedException = ExpectedException.none();
-
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         parametersUtils = mock(ParametersUtils.class);
         MetadataDAO metadataDAO = mock(MetadataDAO.class);
         subWorkflowTaskMapper = new SubWorkflowTaskMapper(parametersUtils, metadataDAO);
@@ -60,7 +56,7 @@ public class SubWorkflowTaskMapperTest {
     }
 
     @Test
-    public void getMappedTasks() {
+    void getMappedTasks() {
         // Given
         WorkflowDef workflowDef = new WorkflowDef();
         WorkflowModel workflowModel = new WorkflowModel();
@@ -111,7 +107,7 @@ public class SubWorkflowTaskMapperTest {
     }
 
     @Test
-    public void testTaskToDomain() {
+    void taskToDomain() {
         // Given
         WorkflowDef workflowDef = new WorkflowDef();
         WorkflowModel workflowModel = new WorkflowModel();
@@ -160,7 +156,7 @@ public class SubWorkflowTaskMapperTest {
     }
 
     @Test
-    public void getSubWorkflowParams() {
+    void getSubWorkflowParams() {
         WorkflowTask workflowTask = new WorkflowTask();
         SubWorkflowParams subWorkflowParams = new SubWorkflowParams();
         subWorkflowParams.setName("Foo");
@@ -171,17 +167,16 @@ public class SubWorkflowTaskMapperTest {
     }
 
     @Test
-    public void getExceptionWhenNoSubWorkflowParamsPassed() {
-        WorkflowTask workflowTask = new WorkflowTask();
-        workflowTask.setName("FooWorkFLow");
+    void getExceptionWhenNoSubWorkflowParamsPassed() {
+        Throwable exception = assertThrows(TerminateWorkflowException.class, () -> {
+            WorkflowTask workflowTask = new WorkflowTask();
+            workflowTask.setName("FooWorkFLow");
 
-        expectedException.expect(TerminateWorkflowException.class);
-        expectedException.expectMessage(
-                String.format(
-                        "Task %s is defined as sub-workflow and is missing subWorkflowParams. "
-                                + "Please check the workflow definition",
-                        workflowTask.getName()));
-
-        subWorkflowTaskMapper.getSubWorkflowParams(workflowTask);
+            subWorkflowTaskMapper.getSubWorkflowParams(workflowTask);
+        });
+        assertTrue(exception.getMessage().contains(String.format(
+                "Task %s is defined as sub-workflow and is missing subWorkflowParams. "
+                        + "Please check the workflow definition",
+                workflowTask.getName())));
     }
 }

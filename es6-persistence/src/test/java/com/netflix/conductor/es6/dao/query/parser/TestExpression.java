@@ -16,21 +16,17 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.junit.Test;
-
 import com.netflix.conductor.es6.dao.query.parser.internal.ConstValue;
+
+import org.junit.jupiter.api.Test;
 import com.netflix.conductor.es6.dao.query.parser.internal.TestAbstractParser;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class TestExpression extends TestAbstractParser {
+class TestExpression extends TestAbstractParser {
 
     @Test
-    public void test() throws Exception {
+    void test() throws Exception {
         String test =
                 "type='IMAGE' AND subType	='sdp' AND (metadata.width > 50 OR metadata.height > 50)";
         InputStream inputStream =
@@ -86,7 +82,7 @@ public class TestExpression extends TestAbstractParser {
     }
 
     @Test
-    public void testWithSysConstants() throws Exception {
+    void withSysConstants() throws Exception {
         String test = "type='IMAGE' AND subType	='sdp' AND description IS null";
         InputStream inputStream =
                 new BufferedInputStream(new ByteArrayInputStream(test.getBytes()));
@@ -126,7 +122,7 @@ public class TestExpression extends TestAbstractParser {
 
         ConstValue constValue = nameValue.getValue();
         assertNotNull(constValue);
-        assertEquals(constValue.getSysConstant(), ConstValue.SystemConsts.NULL);
+        assertEquals(ConstValue.SystemConsts.NULL, constValue.getSysConstant());
 
         test = "description IS not null";
         inputStream = new BufferedInputStream(new ByteArrayInputStream(test.getBytes()));
@@ -139,6 +135,6 @@ public class TestExpression extends TestAbstractParser {
 
         constValue = nameValue.getValue();
         assertNotNull(constValue);
-        assertEquals(constValue.getSysConstant(), ConstValue.SystemConsts.NOT_NULL);
+        assertEquals(ConstValue.SystemConsts.NOT_NULL, constValue.getSysConstant());
     }
 }

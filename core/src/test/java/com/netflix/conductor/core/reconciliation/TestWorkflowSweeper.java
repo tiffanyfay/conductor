@@ -16,8 +16,8 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
@@ -32,12 +32,13 @@ import com.netflix.conductor.model.WorkflowModel;
 
 import static com.netflix.conductor.core.utils.Utils.DECIDER_QUEUE;
 
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class TestWorkflowSweeper {
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class TestWorkflowSweeper {
 
     private ConductorProperties properties;
     private WorkflowExecutor workflowExecutor;
@@ -48,8 +49,8 @@ public class TestWorkflowSweeper {
 
     private int defaultPostPoneOffSetSeconds = 1800;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         properties = mock(ConductorProperties.class);
         workflowExecutor = mock(WorkflowExecutor.class);
         queueDAO = mock(QueueDAO.class);
@@ -65,7 +66,7 @@ public class TestWorkflowSweeper {
     }
 
     @Test
-    public void testPostponeDurationForHumanTaskType() {
+    void postponeDurationForHumanTaskType() {
         WorkflowModel workflowModel = new WorkflowModel();
         workflowModel.setWorkflowId("1");
         TaskModel taskModel = new TaskModel();
@@ -84,7 +85,7 @@ public class TestWorkflowSweeper {
     }
 
     @Test
-    public void testPostponeDurationForWaitTaskType() {
+    void postponeDurationForWaitTaskType() {
         WorkflowModel workflowModel = new WorkflowModel();
         workflowModel.setWorkflowId("1");
         TaskModel taskModel = new TaskModel();
@@ -103,7 +104,7 @@ public class TestWorkflowSweeper {
     }
 
     @Test
-    public void testPostponeDurationForWaitTaskTypeWithLongWaitTime() {
+    void postponeDurationForWaitTaskTypeWithLongWaitTime() {
         long waitTimeout = 65845;
         WorkflowModel workflowModel = new WorkflowModel();
         workflowModel.setWorkflowId("1");
@@ -122,7 +123,7 @@ public class TestWorkflowSweeper {
     }
 
     @Test
-    public void testPostponeDurationForWaitTaskTypeWithLessOneSecondWaitTime() {
+    void postponeDurationForWaitTaskTypeWithLessOneSecondWaitTime() {
         long waitTimeout = 180;
         WorkflowModel workflowModel = new WorkflowModel();
         workflowModel.setWorkflowId("1");
@@ -141,7 +142,7 @@ public class TestWorkflowSweeper {
     }
 
     @Test
-    public void testPostponeDurationForWaitTaskTypeWithZeroWaitTime() {
+    void postponeDurationForWaitTaskTypeWithZeroWaitTime() {
         long waitTimeout = 0;
         WorkflowModel workflowModel = new WorkflowModel();
         workflowModel.setWorkflowId("1");
@@ -160,7 +161,7 @@ public class TestWorkflowSweeper {
     }
 
     @Test
-    public void testPostponeDurationForTaskInProgress() {
+    void postponeDurationForTaskInProgress() {
         WorkflowModel workflowModel = new WorkflowModel();
         workflowModel.setWorkflowId("1");
         TaskModel taskModel = new TaskModel();
@@ -179,7 +180,7 @@ public class TestWorkflowSweeper {
     }
 
     @Test
-    public void testPostponeDurationForTaskInProgressWithResponseTimeoutSet() {
+    void postponeDurationForTaskInProgressWithResponseTimeoutSet() {
         long responseTimeout = 200;
         WorkflowModel workflowModel = new WorkflowModel();
         workflowModel.setWorkflowId("1");
@@ -198,7 +199,7 @@ public class TestWorkflowSweeper {
     }
 
     @Test
-    public void testPostponeDurationForTaskInScheduled() {
+    void postponeDurationForTaskInScheduled() {
         WorkflowModel workflowModel = new WorkflowModel();
         workflowModel.setWorkflowId("1");
         WorkflowDef workflowDef = new WorkflowDef();
@@ -220,7 +221,7 @@ public class TestWorkflowSweeper {
     }
 
     @Test
-    public void testPostponeDurationForTaskInScheduledWithWorkflowTimeoutSet() {
+    void postponeDurationForTaskInScheduledWithWorkflowTimeoutSet() {
         long workflowTimeout = 1800;
         WorkflowModel workflowModel = new WorkflowModel();
         workflowModel.setWorkflowId("1");
@@ -241,7 +242,7 @@ public class TestWorkflowSweeper {
     }
 
     @Test
-    public void testPostponeDurationForTaskInScheduledWithWorkflowTimeoutSetAndNoPollTimeout() {
+    void postponeDurationForTaskInScheduledWithWorkflowTimeoutSetAndNoPollTimeout() {
         long workflowTimeout = 1800;
         WorkflowModel workflowModel = new WorkflowModel();
         workflowModel.setWorkflowId("1");
@@ -262,7 +263,7 @@ public class TestWorkflowSweeper {
     }
 
     @Test
-    public void testPostponeDurationForTaskInScheduledWithNoWorkflowTimeoutSetAndNoPollTimeout() {
+    void postponeDurationForTaskInScheduledWithNoWorkflowTimeoutSetAndNoPollTimeout() {
         WorkflowModel workflowModel = new WorkflowModel();
         workflowModel.setWorkflowId("1");
         WorkflowDef workflowDef = new WorkflowDef();
@@ -283,7 +284,7 @@ public class TestWorkflowSweeper {
     }
 
     @Test
-    public void testPostponeDurationForTaskInScheduledWithNoPollTimeoutSet() {
+    void postponeDurationForTaskInScheduledWithNoPollTimeoutSet() {
         WorkflowModel workflowModel = new WorkflowModel();
         workflowModel.setWorkflowId("1");
         TaskDef taskDef = new TaskDef();
@@ -304,7 +305,7 @@ public class TestWorkflowSweeper {
     }
 
     @Test
-    public void testPostponeDurationForTaskInScheduledWithPollTimeoutSet() {
+    void postponeDurationForTaskInScheduledWithPollTimeoutSet() {
         int pollTimeout = 200;
         WorkflowModel workflowModel = new WorkflowModel();
         workflowModel.setWorkflowId("1");
@@ -324,7 +325,7 @@ public class TestWorkflowSweeper {
     }
 
     @Test
-    public void testWorkflowOffsetJitter() {
+    void workflowOffsetJitter() {
         long offset = 45;
         for (int i = 0; i < 10; i++) {
             long offsetWithJitter = workflowSweeper.workflowOffsetWithJitter(offset);

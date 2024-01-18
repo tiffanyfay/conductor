@@ -20,10 +20,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -43,13 +41,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static com.netflix.conductor.model.TaskModel.Status.FAILED_WITH_TERMINAL_ERROR;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
 @RunWith(SpringRunner.class)
-public class ExternalPayloadStorageUtilsTest {
+class ExternalPayloadStorageUtilsTest {
 
     private ExternalPayloadStorage externalPayloadStorage;
     private ExternalStorageLocation location;
@@ -59,10 +57,8 @@ public class ExternalPayloadStorageUtilsTest {
     // Subject
     private ExternalPayloadStorageUtils externalPayloadStorageUtils;
 
-    @Rule public ExpectedException expectedException = ExpectedException.none();
-
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         externalPayloadStorage = mock(ExternalPayloadStorage.class);
         ConductorProperties properties = mock(ConductorProperties.class);
         location = new ExternalStorageLocation();
@@ -88,7 +84,7 @@ public class ExternalPayloadStorageUtilsTest {
     }
 
     @Test
-    public void testDownloadPayload() throws IOException {
+    void downloadPayload() throws IOException {
         String path = "test/payload";
 
         Map<String, Object> payload = new HashMap<>();
@@ -105,7 +101,7 @@ public class ExternalPayloadStorageUtilsTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testUploadTaskPayload() throws IOException {
+    void uploadTaskPayload() throws IOException {
         AtomicInteger uploadCount = new AtomicInteger(0);
 
         InputStream stream =
@@ -140,7 +136,7 @@ public class ExternalPayloadStorageUtilsTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testUploadWorkflowPayload() throws IOException {
+    void uploadWorkflowPayload() throws IOException {
         AtomicInteger uploadCount = new AtomicInteger(0);
 
         InputStream stream =
@@ -178,7 +174,7 @@ public class ExternalPayloadStorageUtilsTest {
     }
 
     @Test
-    public void testUploadHelper() {
+    void uploadHelper() {
         AtomicInteger uploadCount = new AtomicInteger(0);
         String path = "some/test/path.json";
         ExternalStorageLocation location = new ExternalStorageLocation();
@@ -201,7 +197,7 @@ public class ExternalPayloadStorageUtilsTest {
     }
 
     @Test
-    public void testFailTaskWithInputPayload() {
+    void failTaskWithInputPayload() {
         TaskModel task = new TaskModel();
         task.setInputData(new HashMap<>());
 
@@ -213,7 +209,7 @@ public class ExternalPayloadStorageUtilsTest {
     }
 
     @Test
-    public void testFailTaskWithOutputPayload() {
+    void failTaskWithOutputPayload() {
         TaskModel task = new TaskModel();
         task.setOutputData(new HashMap<>());
 
@@ -225,33 +221,33 @@ public class ExternalPayloadStorageUtilsTest {
     }
 
     @Test
-    public void testFailWorkflowWithInputPayload() {
-        WorkflowModel workflow = new WorkflowModel();
-        workflow.setInput(new HashMap<>());
-
-        expectedException.expect(TerminateWorkflowException.class);
-        externalPayloadStorageUtils.failWorkflow(
-                workflow, ExternalPayloadStorage.PayloadType.TASK_INPUT, "error");
-        assertNotNull(workflow);
-        assertTrue(workflow.getInput().isEmpty());
-        assertEquals(WorkflowModel.Status.FAILED, workflow.getStatus());
+    void failWorkflowWithInputPayload() {
+        assertThrows(TerminateWorkflowException.class, () -> {
+            WorkflowModel workflow = new WorkflowModel();
+            workflow.setInput(new HashMap<>());
+            externalPayloadStorageUtils.failWorkflow(
+                    workflow, ExternalPayloadStorage.PayloadType.TASK_INPUT, "error");
+            assertNotNull(workflow);
+            assertTrue(workflow.getInput().isEmpty());
+            assertEquals(WorkflowModel.Status.FAILED, workflow.getStatus());
+        });
     }
 
     @Test
-    public void testFailWorkflowWithOutputPayload() {
-        WorkflowModel workflow = new WorkflowModel();
-        workflow.setOutput(new HashMap<>());
-
-        expectedException.expect(TerminateWorkflowException.class);
-        externalPayloadStorageUtils.failWorkflow(
-                workflow, ExternalPayloadStorage.PayloadType.TASK_OUTPUT, "error");
-        assertNotNull(workflow);
-        assertTrue(workflow.getOutput().isEmpty());
-        assertEquals(WorkflowModel.Status.FAILED, workflow.getStatus());
+    void failWorkflowWithOutputPayload() {
+        assertThrows(TerminateWorkflowException.class, () -> {
+            WorkflowModel workflow = new WorkflowModel();
+            workflow.setOutput(new HashMap<>());
+            externalPayloadStorageUtils.failWorkflow(
+                    workflow, ExternalPayloadStorage.PayloadType.TASK_OUTPUT, "error");
+            assertNotNull(workflow);
+            assertTrue(workflow.getOutput().isEmpty());
+            assertEquals(WorkflowModel.Status.FAILED, workflow.getStatus());
+        });
     }
 
     @Test
-    public void testShouldUpload() {
+    void shouldUpload() {
         Map<String, Object> payload = new HashMap<>();
         payload.put("key1", "value1");
         payload.put("key2", "value2");

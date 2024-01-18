@@ -17,8 +17,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import com.netflix.conductor.common.metadata.tasks.Task;
@@ -33,11 +33,12 @@ import com.netflix.conductor.service.TaskService;
 
 import io.grpc.stub.StreamObserver;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class TaskServiceImplTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class TaskServiceImplTest {
 
     @Mock private TaskService taskService;
 
@@ -45,14 +46,14 @@ public class TaskServiceImplTest {
 
     private TaskServiceImpl taskServiceImpl;
 
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         initMocks(this);
         taskServiceImpl = new TaskServiceImpl(executionService, taskService, 5000);
     }
 
     @Test
-    public void searchExceptionTest() throws InterruptedException {
+    void searchExceptionTest() throws InterruptedException {
         CountDownLatch streamAlive = new CountDownLatch(1);
         AtomicReference<Throwable> throwable = new AtomicReference<>();
 
@@ -92,7 +93,7 @@ public class TaskServiceImplTest {
     }
 
     @Test
-    public void searchV2ExceptionTest() throws InterruptedException {
+    void searchV2ExceptionTest() throws InterruptedException {
         CountDownLatch streamAlive = new CountDownLatch(1);
         AtomicReference<Throwable> throwable = new AtomicReference<>();
 
@@ -132,7 +133,7 @@ public class TaskServiceImplTest {
     }
 
     @Test
-    public void searchTest() throws InterruptedException {
+    void searchTest() throws InterruptedException {
 
         CountDownLatch streamAlive = new CountDownLatch(1);
         AtomicReference<TaskServicePb.TaskSummarySearchResult> result = new AtomicReference<>();
@@ -184,7 +185,7 @@ public class TaskServiceImplTest {
     }
 
     @Test
-    public void searchV2Test() throws InterruptedException {
+    void searchV2Test() throws InterruptedException {
 
         CountDownLatch streamAlive = new CountDownLatch(1);
         AtomicReference<TaskServicePb.TaskSearchResult> result = new AtomicReference<>();

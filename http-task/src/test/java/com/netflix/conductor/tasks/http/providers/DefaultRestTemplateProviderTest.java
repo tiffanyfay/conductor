@@ -14,18 +14,18 @@ package com.netflix.conductor.tasks.http.providers;
 
 import java.time.Duration;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.web.client.RestTemplate;
 
 import com.netflix.conductor.tasks.http.HttpTask;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class DefaultRestTemplateProviderTest {
+class DefaultRestTemplateProviderTest {
 
     @Test
-    public void differentObjectsForDifferentThreads() throws InterruptedException {
+    void differentObjectsForDifferentThreads() throws InterruptedException {
         DefaultRestTemplateProvider defaultRestTemplateProvider =
                 new DefaultRestTemplateProvider(Duration.ofMillis(150), Duration.ofMillis(100));
         final RestTemplate restTemplate =
@@ -43,12 +43,12 @@ public class DefaultRestTemplateProviderTest {
                         });
         t1.start();
         t1.join();
-        assertEquals(result.toString(), "different");
+        assertEquals("different", result.toString());
     }
 
     @Test
-    @Ignore("We can no longer do this and have customizable timeouts per HttpTask.")
-    public void sameObjectForSameThread() {
+    @Disabled("We can no longer do this and have customizable timeouts per HttpTask.")
+    void sameObjectForSameThread() {
         DefaultRestTemplateProvider defaultRestTemplateProvider =
                 new DefaultRestTemplateProvider(Duration.ofMillis(150), Duration.ofMillis(100));
         RestTemplate client1 = defaultRestTemplateProvider.getRestTemplate(new HttpTask.Input());

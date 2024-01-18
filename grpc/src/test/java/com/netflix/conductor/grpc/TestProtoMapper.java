@@ -12,18 +12,19 @@
  */
 package com.netflix.conductor.grpc;
 
+import org.junit.jupiter.api.Test;
+
 import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 import com.netflix.conductor.proto.WorkflowTaskPb;
-import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class TestProtoMapper {
+class TestProtoMapper {
   private final ProtoMapper mapper = ProtoMapper.INSTANCE;
 
-  @Test
-  public void workflowTaskToProto() {
+    @Test
+    void workflowTaskToProto() {
     final WorkflowTask taskWithDefaultRetryCount = new WorkflowTask();
     final WorkflowTask taskWith1RetryCount = new WorkflowTask();
     taskWith1RetryCount.setRetryCount(1);
@@ -34,8 +35,8 @@ public class TestProtoMapper {
     assertEquals(0, mapper.toProto(taskWithNoRetryCount).getRetryCount());
   }
 
-  @Test
-  public void workflowTaskFromProto() {
+    @Test
+    void workflowTaskFromProto() {
     final WorkflowTaskPb.WorkflowTask taskWithDefaultRetryCount = WorkflowTaskPb.WorkflowTask.newBuilder().build();
     final WorkflowTaskPb.WorkflowTask taskWith1RetryCount = WorkflowTaskPb.WorkflowTask.newBuilder().setRetryCount(1).build();
     final WorkflowTaskPb.WorkflowTask taskWithNoRetryCount = WorkflowTaskPb.WorkflowTask.newBuilder().setRetryCount(-1).build();

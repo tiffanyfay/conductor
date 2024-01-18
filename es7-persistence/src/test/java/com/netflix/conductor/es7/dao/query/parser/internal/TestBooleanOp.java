@@ -12,18 +12,17 @@
  */
 package com.netflix.conductor.es7.dao.query.parser.internal;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Viren
  */
-public class TestBooleanOp extends AbstractParserTest {
+class TestBooleanOp extends AbstractParserTest {
 
     @Test
-    public void test() throws Exception {
+    void test() throws Exception {
         String[] tests = new String[] {"AND", "OR"};
         for (String test : tests) {
             BooleanOp name = new BooleanOp(getInputStream(test));
@@ -33,12 +32,14 @@ public class TestBooleanOp extends AbstractParserTest {
         }
     }
 
-    @Test(expected = ParserException.class)
-    public void testInvalid() throws Exception {
-        String test = "<";
-        BooleanOp name = new BooleanOp(getInputStream(test));
-        String nameVal = name.getOperator();
-        assertNotNull(nameVal);
-        assertEquals(test, nameVal);
+    @Test
+    void invalid() throws Exception {
+        assertThrows(ParserException.class, () -> {
+            String test = "<";
+            BooleanOp name = new BooleanOp(getInputStream(test));
+            String nameVal = name.getOperator();
+            assertNotNull(nameVal);
+            assertEquals(test, nameVal);
+        });
     }
 }

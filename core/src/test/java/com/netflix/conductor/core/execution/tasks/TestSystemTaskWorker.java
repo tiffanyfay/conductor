@@ -17,9 +17,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.netflix.conductor.core.config.ConductorProperties;
@@ -27,7 +27,6 @@ import com.netflix.conductor.core.execution.AsyncSystemTaskExecutor;
 import com.netflix.conductor.dao.QueueDAO;
 import com.netflix.conductor.service.ExecutionService;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -37,7 +36,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class TestSystemTaskWorker {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class TestSystemTaskWorker {
 
     private static final String TEST_TASK = "system_task";
     private static final String ISOLATED_TASK = "system_task-isolated";
@@ -49,8 +50,8 @@ public class TestSystemTaskWorker {
 
     private SystemTaskWorker systemTaskWorker;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         asyncSystemTaskExecutor = mock(AsyncSystemTaskExecutor.class);
         executionService = mock(ExecutionService.class);
         queueDAO = mock(QueueDAO.class);
@@ -67,35 +68,35 @@ public class TestSystemTaskWorker {
         systemTaskWorker.start();
     }
 
-    @After
-    public void tearDown() {
+    @AfterEach
+    void tearDown() {
         systemTaskWorker.queueExecutionConfigMap.clear();
         systemTaskWorker.stop();
     }
 
     @Test
-    public void testGetExecutionConfigForSystemTask() {
+    void getExecutionConfigForSystemTask() {
         when(properties.getSystemTaskWorkerThreadCount()).thenReturn(5);
         systemTaskWorker =
                 new SystemTaskWorker(
                         queueDAO, asyncSystemTaskExecutor, properties, executionService);
-        assertEquals(
-                systemTaskWorker.getExecutionConfig("").getSemaphoreUtil().availableSlots(), 5);
+        assertEquals(5,
+                systemTaskWorker.getExecutionConfig("").getSemaphoreUtil().availableSlots());
     }
 
     @Test
-    public void testGetExecutionConfigForIsolatedSystemTask() {
+    void getExecutionConfigForIsolatedSystemTask() {
         when(properties.getIsolatedSystemTaskWorkerThreadCount()).thenReturn(7);
         systemTaskWorker =
                 new SystemTaskWorker(
                         queueDAO, asyncSystemTaskExecutor, properties, executionService);
         assertEquals(
-                systemTaskWorker.getExecutionConfig("test-iso").getSemaphoreUtil().availableSlots(),
-                7);
+                7,
+                systemTaskWorker.getExecutionConfig("test-iso").getSemaphoreUtil().availableSlots());
     }
 
     @Test
-    public void testPollAndExecuteSystemTask() throws Exception {
+    void pollAndExecuteSystemTask() throws Exception {
         when(queueDAO.pop(anyString(), anyInt(), anyInt()))
                 .thenReturn(Collections.singletonList("taskId"));
 
@@ -116,7 +117,7 @@ public class TestSystemTaskWorker {
     }
 
     @Test
-    public void testBatchPollAndExecuteSystemTask() throws Exception {
+    void batchPollAndExecuteSystemTask() throws Exception {
         when(queueDAO.pop(anyString(), anyInt(), anyInt())).thenReturn(List.of("t1", "t1"));
 
         CountDownLatch latch = new CountDownLatch(2);
@@ -136,7 +137,7 @@ public class TestSystemTaskWorker {
     }
 
     @Test
-    public void testPollAndExecuteIsolatedSystemTask() throws Exception {
+    void pollAndExecuteIsolatedSystemTask() throws Exception {
         when(queueDAO.pop(anyString(), anyInt(), anyInt())).thenReturn(List.of("isolated_taskId"));
 
         CountDownLatch latch = new CountDownLatch(1);
@@ -156,7 +157,7 @@ public class TestSystemTaskWorker {
     }
 
     @Test
-    public void testPollException() {
+    void pollException() {
         when(properties.getSystemTaskWorkerThreadCount()).thenReturn(1);
         when(queueDAO.pop(anyString(), anyInt(), anyInt())).thenThrow(RuntimeException.class);
 
@@ -166,7 +167,7 @@ public class TestSystemTaskWorker {
     }
 
     @Test
-    public void testBatchPollException() {
+    void batchPollException() {
         when(properties.getSystemTaskWorkerThreadCount()).thenReturn(2);
         when(queueDAO.pop(anyString(), anyInt(), anyInt())).thenThrow(RuntimeException.class);
 

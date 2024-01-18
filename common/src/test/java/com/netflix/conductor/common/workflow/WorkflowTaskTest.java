@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Test;
-
 import com.netflix.conductor.common.metadata.tasks.TaskType;
 import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 
@@ -25,16 +23,14 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class WorkflowTaskTest {
+class WorkflowTaskTest {
 
     @Test
-    public void test() {
+    void test() {
         WorkflowTask workflowTask = new WorkflowTask();
         workflowTask.setWorkflowTaskType(TaskType.DECISION);
 
@@ -49,7 +45,7 @@ public class WorkflowTaskTest {
     }
 
     @Test
-    public void testOptional() {
+    void optional() {
         WorkflowTask task = new WorkflowTask();
         assertFalse(task.isOptional());
 
@@ -61,7 +57,7 @@ public class WorkflowTaskTest {
     }
 
     @Test
-    public void testWorkflowTaskName() {
+    void workflowTaskName() {
         WorkflowTask taskDef = new WorkflowTask(); // name is null
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();

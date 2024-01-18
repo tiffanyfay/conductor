@@ -18,10 +18,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -45,17 +43,18 @@ import com.netflix.conductor.model.WorkflowModel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @ContextConfiguration(
         classes = {
-            TestObjectMapperConfiguration.class,
-            SwitchTaskMapperTest.TestConfiguration.class
+                TestObjectMapperConfiguration.class,
+                SwitchTaskMapperTest.TestConfiguration.class
         })
 @RunWith(SpringRunner.class)
-public class SwitchTaskMapperTest {
+class SwitchTaskMapperTest {
 
     private IDGenerator idGenerator;
     private ParametersUtils parametersUtils;
@@ -71,15 +70,13 @@ public class SwitchTaskMapperTest {
 
     @Autowired private Map<String, Evaluator> evaluators;
 
-    @Rule public ExpectedException expectedException = ExpectedException.none();
-
     Map<String, Object> ip1;
     WorkflowTask task1;
     WorkflowTask task2;
     WorkflowTask task3;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         parametersUtils = new ParametersUtils(objectMapper);
         idGenerator = new IDGenerator();
 
@@ -107,7 +104,7 @@ public class SwitchTaskMapperTest {
     }
 
     @Test
-    public void getMappedTasks() {
+    void getMappedTasks() {
 
         // Given
         // Task Definition
@@ -176,7 +173,7 @@ public class SwitchTaskMapperTest {
     }
 
     @Test
-    public void getMappedTasksWithValueParamEvaluator() {
+    void getMappedTasksWithValueParamEvaluator() {
 
         // Given
         // Task Definition
@@ -244,7 +241,7 @@ public class SwitchTaskMapperTest {
     }
 
     @Test
-    public void getMappedTasksWhenEvaluatorThrowsException() {
+    void getMappedTasksWhenEvaluatorThrowsException() {
 
         // Given
         // Task Definition

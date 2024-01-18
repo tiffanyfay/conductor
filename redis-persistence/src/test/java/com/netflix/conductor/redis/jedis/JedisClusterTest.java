@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import redis.clients.jedis.GeoUnit;
@@ -31,307 +31,309 @@ import redis.clients.jedis.params.SetParams;
 import redis.clients.jedis.params.ZAddParams;
 import redis.clients.jedis.params.ZIncrByParams;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class JedisClusterTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class JedisClusterTest {
 
     private final redis.clients.jedis.JedisCluster mockCluster =
             mock(redis.clients.jedis.JedisCluster.class);
     private final JedisCluster jedisCluster = new JedisCluster(mockCluster);
 
     @Test
-    public void testSet() {
+    void set() {
         jedisCluster.set("key", "value");
         jedisCluster.set("key", "value", SetParams.setParams());
     }
 
     @Test
-    public void testGet() {
+    void get() {
         jedisCluster.get("key");
     }
 
     @Test
-    public void testExists() {
+    void exists() {
         jedisCluster.exists("key");
     }
 
     @Test
-    public void testPersist() {
+    void persist() {
         jedisCluster.persist("key");
     }
 
     @Test
-    public void testType() {
+    void type() {
         jedisCluster.type("key");
     }
 
     @Test
-    public void testExpire() {
+    void expire() {
         jedisCluster.expire("key", 1337);
     }
 
     @Test
-    public void testPexpire() {
+    void pexpire() {
         jedisCluster.pexpire("key", 1337);
     }
 
     @Test
-    public void testExpireAt() {
+    void expireAt() {
         jedisCluster.expireAt("key", 1337);
     }
 
     @Test
-    public void testPexpireAt() {
+    void pexpireAt() {
         jedisCluster.pexpireAt("key", 1337);
     }
 
     @Test
-    public void testTtl() {
+    void ttl() {
         jedisCluster.ttl("key");
     }
 
     @Test
-    public void testPttl() {
+    void pttl() {
         jedisCluster.pttl("key");
     }
 
     @Test
-    public void testSetbit() {
+    void setbit() {
         jedisCluster.setbit("key", 1337, "value");
         jedisCluster.setbit("key", 1337, true);
     }
 
     @Test
-    public void testGetbit() {
+    void getbit() {
         jedisCluster.getbit("key", 1337);
     }
 
     @Test
-    public void testSetrange() {
+    void setrange() {
         jedisCluster.setrange("key", 1337, "value");
     }
 
     @Test
-    public void testGetrange() {
+    void getrange() {
         jedisCluster.getrange("key", 1337, 1338);
     }
 
     @Test
-    public void testGetSet() {
+    void getSet() {
         jedisCluster.getSet("key", "value");
     }
 
     @Test
-    public void testSetnx() {
+    void setnx() {
         jedisCluster.setnx("test", "value");
     }
 
     @Test
-    public void testSetex() {
+    void setex() {
         jedisCluster.setex("key", 1337, "value");
     }
 
     @Test
-    public void testPsetex() {
+    void psetex() {
         jedisCluster.psetex("key", 1337, "value");
     }
 
     @Test
-    public void testDecrBy() {
+    void decrBy() {
         jedisCluster.decrBy("key", 1337);
     }
 
     @Test
-    public void testDecr() {
+    void decr() {
         jedisCluster.decr("key");
     }
 
     @Test
-    public void testIncrBy() {
+    void incrBy() {
         jedisCluster.incrBy("key", 1337);
     }
 
     @Test
-    public void testIncrByFloat() {
+    void incrByFloat() {
         jedisCluster.incrByFloat("key", 1337);
     }
 
     @Test
-    public void testIncr() {
+    void incr() {
         jedisCluster.incr("key");
     }
 
     @Test
-    public void testAppend() {
+    void append() {
         jedisCluster.append("key", "value");
     }
 
     @Test
-    public void testSubstr() {
+    void substr() {
         jedisCluster.substr("key", 1337, 1338);
     }
 
     @Test
-    public void testHset() {
+    void hset() {
         jedisCluster.hset("key", "field", "value");
     }
 
     @Test
-    public void testHget() {
+    void hget() {
         jedisCluster.hget("key", "field");
     }
 
     @Test
-    public void testHsetnx() {
+    void hsetnx() {
         jedisCluster.hsetnx("key", "field", "value");
     }
 
     @Test
-    public void testHmset() {
+    void hmset() {
         jedisCluster.hmset("key", new HashMap<>());
     }
 
     @Test
-    public void testHmget() {
+    void hmget() {
         jedisCluster.hmget("key", "fields");
     }
 
     @Test
-    public void testHincrBy() {
+    void hincrBy() {
         jedisCluster.hincrBy("key", "field", 1337);
     }
 
     @Test
-    public void testHincrByFloat() {
+    void hincrByFloat() {
         jedisCluster.hincrByFloat("key", "field", 1337);
     }
 
     @Test
-    public void testHexists() {
+    void hexists() {
         jedisCluster.hexists("key", "field");
     }
 
     @Test
-    public void testHdel() {
+    void hdel() {
         jedisCluster.hdel("key", "field");
     }
 
     @Test
-    public void testHlen() {
+    void hlen() {
         jedisCluster.hlen("key");
     }
 
     @Test
-    public void testHkeys() {
+    void hkeys() {
         jedisCluster.hkeys("key");
     }
 
     @Test
-    public void testHvals() {
+    void hvals() {
         jedisCluster.hvals("key");
     }
 
     @Test
-    public void testGgetAll() {
+    void ggetAll() {
         jedisCluster.hgetAll("key");
     }
 
     @Test
-    public void testRpush() {
+    void rpush() {
         jedisCluster.rpush("key", "string");
     }
 
     @Test
-    public void testLpush() {
+    void lpush() {
         jedisCluster.lpush("key", "string");
     }
 
     @Test
-    public void testLlen() {
+    void llen() {
         jedisCluster.llen("key");
     }
 
     @Test
-    public void testLrange() {
+    void lrange() {
         jedisCluster.lrange("key", 1337, 1338);
     }
 
     @Test
-    public void testLtrim() {
+    void ltrim() {
         jedisCluster.ltrim("key", 1337, 1338);
     }
 
     @Test
-    public void testLindex() {
+    void lindex() {
         jedisCluster.lindex("key", 1337);
     }
 
     @Test
-    public void testLset() {
+    void lset() {
         jedisCluster.lset("key", 1337, "value");
     }
 
     @Test
-    public void testLrem() {
+    void lrem() {
         jedisCluster.lrem("key", 1337, "value");
     }
 
     @Test
-    public void testLpop() {
+    void lpop() {
         jedisCluster.lpop("key");
     }
 
     @Test
-    public void testRpop() {
+    void rpop() {
         jedisCluster.rpop("key");
     }
 
     @Test
-    public void testSadd() {
+    void sadd() {
         jedisCluster.sadd("key", "member");
     }
 
     @Test
-    public void testSmembers() {
+    void smembers() {
         jedisCluster.smembers("key");
     }
 
     @Test
-    public void testSrem() {
+    void srem() {
         jedisCluster.srem("key", "member");
     }
 
     @Test
-    public void testSpop() {
+    void spop() {
         jedisCluster.spop("key");
         jedisCluster.spop("key", 1337);
     }
 
     @Test
-    public void testScard() {
+    void scard() {
         jedisCluster.scard("key");
     }
 
     @Test
-    public void testSismember() {
+    void sismember() {
         jedisCluster.sismember("key", "member");
     }
 
     @Test
-    public void testSrandmember() {
+    void srandmember() {
         jedisCluster.srandmember("key");
         jedisCluster.srandmember("key", 1337);
     }
 
     @Test
-    public void testStrlen() {
+    void strlen() {
         jedisCluster.strlen("key");
     }
 
     @Test
-    public void testZadd() {
+    void zadd() {
         jedisCluster.zadd("key", new HashMap<>());
         jedisCluster.zadd("key", new HashMap<>(), ZAddParams.zAddParams());
         jedisCluster.zadd("key", 1337, "members");
@@ -339,70 +341,70 @@ public class JedisClusterTest {
     }
 
     @Test
-    public void testZrange() {
+    void zrange() {
         jedisCluster.zrange("key", 1337, 1338);
     }
 
     @Test
-    public void testZrem() {
+    void zrem() {
         jedisCluster.zrem("key", "member");
     }
 
     @Test
-    public void testZincrby() {
+    void zincrby() {
         jedisCluster.zincrby("key", 1337, "member");
         jedisCluster.zincrby("key", 1337, "member", ZIncrByParams.zIncrByParams());
     }
 
     @Test
-    public void testZrank() {
+    void zrank() {
         jedisCluster.zrank("key", "member");
     }
 
     @Test
-    public void testZrevrank() {
+    void zrevrank() {
         jedisCluster.zrevrank("key", "member");
     }
 
     @Test
-    public void testZrevrange() {
+    void zrevrange() {
         jedisCluster.zrevrange("key", 1337, 1338);
     }
 
     @Test
-    public void testZrangeWithScores() {
+    void zrangeWithScores() {
         jedisCluster.zrangeWithScores("key", 1337, 1338);
     }
 
     @Test
-    public void testZrevrangeWithScores() {
+    void zrevrangeWithScores() {
         jedisCluster.zrevrangeWithScores("key", 1337, 1338);
     }
 
     @Test
-    public void testZcard() {
+    void zcard() {
         jedisCluster.zcard("key");
     }
 
     @Test
-    public void testZscore() {
+    void zscore() {
         jedisCluster.zscore("key", "member");
     }
 
     @Test
-    public void testSort() {
+    void sort() {
         jedisCluster.sort("key");
         jedisCluster.sort("key", new SortingParams());
     }
 
     @Test
-    public void testZcount() {
+    void zcount() {
         jedisCluster.zcount("key", "min", "max");
         jedisCluster.zcount("key", 1337, 1338);
     }
 
     @Test
-    public void testZrangeByScore() {
+    void zrangeByScore() {
         jedisCluster.zrangeByScore("key", "min", "max");
         jedisCluster.zrangeByScore("key", 1337, 1338);
         jedisCluster.zrangeByScore("key", "min", "max", 1337, 1338);
@@ -410,7 +412,7 @@ public class JedisClusterTest {
     }
 
     @Test
-    public void testZrevrangeByScore() {
+    void zrevrangeByScore() {
         jedisCluster.zrevrangeByScore("key", "max", "min");
         jedisCluster.zrevrangeByScore("key", 1337, 1338);
         jedisCluster.zrevrangeByScore("key", "max", "min", 1337, 1338);
@@ -418,7 +420,7 @@ public class JedisClusterTest {
     }
 
     @Test
-    public void testZrangeByScoreWithScores() {
+    void zrangeByScoreWithScores() {
         jedisCluster.zrangeByScoreWithScores("key", "min", "max");
         jedisCluster.zrangeByScoreWithScores("key", "min", "max", 1337, 1338);
         jedisCluster.zrangeByScoreWithScores("key", 1337, 1338);
@@ -426,7 +428,7 @@ public class JedisClusterTest {
     }
 
     @Test
-    public void testZrevrangeByScoreWithScores() {
+    void zrevrangeByScoreWithScores() {
         jedisCluster.zrevrangeByScoreWithScores("key", "max", "min");
         jedisCluster.zrevrangeByScoreWithScores("key", "max", "min", 1337, 1338);
         jedisCluster.zrevrangeByScoreWithScores("key", 1337, 1338);
@@ -434,91 +436,95 @@ public class JedisClusterTest {
     }
 
     @Test
-    public void testZremrangeByRank() {
+    void zremrangeByRank() {
         jedisCluster.zremrangeByRank("key", 1337, 1338);
     }
 
     @Test
-    public void testZremrangeByScore() {
+    void zremrangeByScore() {
         jedisCluster.zremrangeByScore("key", "start", "end");
         jedisCluster.zremrangeByScore("key", 1337, 1338);
     }
 
     @Test
-    public void testZlexcount() {
+    void zlexcount() {
         jedisCluster.zlexcount("key", "min", "max");
     }
 
     @Test
-    public void testZrangeByLex() {
+    void zrangeByLex() {
         jedisCluster.zrangeByLex("key", "min", "max");
         jedisCluster.zrangeByLex("key", "min", "max", 1337, 1338);
     }
 
     @Test
-    public void testZrevrangeByLex() {
+    void zrevrangeByLex() {
         jedisCluster.zrevrangeByLex("key", "max", "min");
         jedisCluster.zrevrangeByLex("key", "max", "min", 1337, 1338);
     }
 
     @Test
-    public void testZremrangeByLex() {
+    void zremrangeByLex() {
         jedisCluster.zremrangeByLex("key", "min", "max");
     }
 
     @Test
-    public void testLinsert() {
+    void linsert() {
         jedisCluster.linsert("key", ListPosition.AFTER, "pivot", "value");
     }
 
     @Test
-    public void testLpushx() {
+    void lpushx() {
         jedisCluster.lpushx("key", "string");
     }
 
     @Test
-    public void testRpushx() {
+    void rpushx() {
         jedisCluster.rpushx("key", "string");
     }
 
     @Test
-    public void testBlpop() {
+    void blpop() {
         jedisCluster.blpop(1337, "arg");
     }
 
     @Test
-    public void testBrpop() {
+    void brpop() {
         jedisCluster.brpop(1337, "arg");
     }
 
     @Test
-    public void testDel() {
+    void del() {
         jedisCluster.del("key");
     }
 
     @Test
-    public void testEcho() {
+    void echo() {
         jedisCluster.echo("string");
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void testMove() {
-        jedisCluster.move("key", 1337);
+    @Test
+    void move() {
+        assertThrows(UnsupportedOperationException.class, () -> {
+            jedisCluster.move("key", 1337);
+        });
     }
 
     @Test
-    public void testBitcount() {
+    void bitcount() {
         jedisCluster.bitcount("key");
         jedisCluster.bitcount("key", 1337, 1338);
     }
 
-    @Test(expected = UnsupportedOperationException.class)
-    public void testBitpos() {
-        jedisCluster.bitpos("key", true);
+    @Test
+    void bitpos() {
+        assertThrows(UnsupportedOperationException.class, () -> {
+            jedisCluster.bitpos("key", true);
+        });
     }
 
     @Test
-    public void testHscan() {
+    void hscan() {
         jedisCluster.hscan("key", "cursor");
 
         ScanResult<Entry<byte[], byte[]>> scanResult =
@@ -540,7 +546,7 @@ public class JedisClusterTest {
     }
 
     @Test
-    public void testSscan() {
+    void sscan() {
         jedisCluster.sscan("key", "cursor");
 
         ScanResult<byte[]> scanResult =
@@ -557,58 +563,58 @@ public class JedisClusterTest {
     }
 
     @Test
-    public void testZscan() {
+    void zscan() {
         jedisCluster.zscan("key", "cursor");
         jedisCluster.zscan("key", "cursor", new ScanParams());
     }
 
     @Test
-    public void testPfadd() {
+    void pfadd() {
         jedisCluster.pfadd("key", "elements");
     }
 
     @Test
-    public void testPfcount() {
+    void pfcount() {
         jedisCluster.pfcount("key");
     }
 
     @Test
-    public void testGeoadd() {
+    void geoadd() {
         jedisCluster.geoadd("key", new HashMap<>());
         jedisCluster.geoadd("key", 1337, 1338, "member");
     }
 
     @Test
-    public void testGeodist() {
+    void geodist() {
         jedisCluster.geodist("key", "member1", "member2");
         jedisCluster.geodist("key", "member1", "member2", GeoUnit.KM);
     }
 
     @Test
-    public void testGeohash() {
+    void geohash() {
         jedisCluster.geohash("key", "members");
     }
 
     @Test
-    public void testGeopos() {
+    void geopos() {
         jedisCluster.geopos("key", "members");
     }
 
     @Test
-    public void testGeoradius() {
+    void georadius() {
         jedisCluster.georadius("key", 1337, 1338, 32, GeoUnit.KM);
         jedisCluster.georadius("key", 1337, 1338, 32, GeoUnit.KM, GeoRadiusParam.geoRadiusParam());
     }
 
     @Test
-    public void testGeoradiusByMember() {
+    void georadiusByMember() {
         jedisCluster.georadiusByMember("key", "member", 1337, GeoUnit.KM);
         jedisCluster.georadiusByMember(
                 "key", "member", 1337, GeoUnit.KM, GeoRadiusParam.geoRadiusParam());
     }
 
     @Test
-    public void testBitfield() {
+    void bitfield() {
         jedisCluster.bitfield("key", "arguments");
     }
 }

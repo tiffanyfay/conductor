@@ -12,32 +12,28 @@
  */
 package com.netflix.conductor.client.config;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class TestPropertyFactory {
+class TestPropertyFactory {
 
     @Test
-    public void testIdentity() {
+    void identity() {
         Worker worker = Worker.create("Test2", TaskResult::new);
         assertNotNull(worker.getIdentity());
         boolean paused = worker.paused();
-        assertFalse("Paused? " + paused, paused);
+        assertFalse(paused, "Paused? " + paused);
     }
 
     @Test
-    public void test() {
+    void test() {
 
         int val = PropertyFactory.getInteger("workerB", "pollingInterval", 100);
-        assertEquals("got: " + val, 2, val);
+        assertEquals(2, val, "got: " + val);
         assertEquals(
                 100, PropertyFactory.getInteger("workerB", "propWithoutValue", 100).intValue());
 
@@ -64,9 +60,9 @@ public class TestPropertyFactory {
     }
 
     @Test
-    public void testProperty() {
+    void property() {
         Worker worker = Worker.create("Test", TaskResult::new);
         boolean paused = worker.paused();
-        assertTrue("Paused? " + paused, paused);
+        assertTrue(paused, "Paused? " + paused);
     }
 }

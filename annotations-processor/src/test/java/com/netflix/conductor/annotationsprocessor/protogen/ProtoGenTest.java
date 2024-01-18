@@ -16,25 +16,23 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ProtoGenTest {
     private static final Charset charset = StandardCharsets.UTF_8;
 
-    @Rule public TemporaryFolder folder = new TemporaryFolder();
+    @TempDir
+    public File folder;
 
     @Test
-    public void happyPath() throws Exception {
-        File rootDir = folder.getRoot();
+    void happyPath() throws Exception {
+        File rootDir = folder;
         String protoPackage = "protoPackage";
         String javaPackage = "abc.protogen.example";
         String goPackage = "goPackage";

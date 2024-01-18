@@ -16,8 +16,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +26,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.netflix.spectator.api.Registry;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.netflix.spectator.api.Spectator;
 import com.netflix.spectator.micrometer.MicrometerRegistry;
 
@@ -34,16 +35,14 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.prometheus.PrometheusConfig;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 
-import static org.junit.Assert.assertTrue;
-
 @RunWith(SpringRunner.class)
 @Import({PrometheusMetricsConfiguration.class})
 @TestPropertySource(properties = {"conductor.metrics-prometheus.enabled=true"})
-public class PrometheusMetricsConfigurationTest {
+class PrometheusMetricsConfigurationTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testCollector() throws IllegalAccessException {
+    void collector() throws IllegalAccessException {
         final Optional<Field> registries =
                 Arrays.stream(Spectator.globalRegistry().getClass().getDeclaredFields())
                         .filter(f -> f.getName().equals("registries"))

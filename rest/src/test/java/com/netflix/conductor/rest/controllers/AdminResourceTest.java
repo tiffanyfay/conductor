@@ -17,14 +17,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.service.AdminService;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -33,20 +32,22 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class AdminResourceTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class AdminResourceTest {
 
     @Mock private AdminService mockAdminService;
 
     @Mock private AdminResource adminResource;
 
-    @Before
-    public void before() {
+    @BeforeEach
+    void before() {
         this.mockAdminService = mock(AdminService.class);
         this.adminResource = new AdminResource(mockAdminService);
     }
 
     @Test
-    public void testGetAllConfig() {
+    void getAllConfig() {
         Map<String, Object> configs = new HashMap<>();
         configs.put("config1", "test");
         when(mockAdminService.getAllConfig()).thenReturn(configs);
@@ -54,7 +55,7 @@ public class AdminResourceTest {
     }
 
     @Test
-    public void testView() {
+    void view() {
         Task task = new Task();
         task.setReferenceTaskName("test");
         List<Task> listOfTask = new ArrayList<>();
@@ -65,14 +66,14 @@ public class AdminResourceTest {
     }
 
     @Test
-    public void testRequeueSweep() {
+    void requeueSweep() {
         String workflowId = "w123";
         when(mockAdminService.requeueSweep(anyString())).thenReturn(workflowId);
         assertEquals(workflowId, adminResource.requeueSweep(workflowId));
     }
 
     @Test
-    public void testGetEventQueues() {
+    void getEventQueues() {
         adminResource.getEventQueues(false);
         verify(mockAdminService, times(1)).getEventQueues(anyBoolean());
     }

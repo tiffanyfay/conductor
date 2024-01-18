@@ -17,8 +17,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -36,11 +36,12 @@ import com.netflix.conductor.core.execution.WorkflowExecutor;
 import com.netflix.conductor.core.execution.tasks.SystemTaskRegistry;
 import com.netflix.conductor.dao.QueueDAO;
 
-import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.when;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @RunWith(SpringRunner.class)
-public class ExecutionServiceTest {
+class ExecutionServiceTest {
 
     @Mock private WorkflowExecutor workflowExecutor;
     @Mock private ExecutionDAOFacade executionDAOFacade;
@@ -57,8 +58,8 @@ public class ExecutionServiceTest {
     private Task taskWorkflow2;
     private final List<String> sort = Collections.singletonList("Sort");
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         when(conductorProperties.getTaskExecutionPostponeDuration())
                 .thenReturn(Duration.ofSeconds(60));
         executionService =
@@ -85,7 +86,7 @@ public class ExecutionServiceTest {
     }
 
     @Test
-    public void workflowSearchTest() {
+    void workflowSearchTest() {
         when(executionDAOFacade.searchWorkflowSummary("query", "*", 0, 2, sort))
                 .thenReturn(
                         new SearchResult<>(
@@ -106,7 +107,7 @@ public class ExecutionServiceTest {
     }
 
     @Test
-    public void workflowSearchV2Test() {
+    void workflowSearchV2Test() {
         when(executionDAOFacade.searchWorkflows("query", "*", 0, 2, sort))
                 .thenReturn(
                         new SearchResult<>(
@@ -123,7 +124,7 @@ public class ExecutionServiceTest {
     }
 
     @Test
-    public void workflowSearchV2ExceptionTest() {
+    void workflowSearchV2ExceptionTest() {
         when(executionDAOFacade.searchWorkflows("query", "*", 0, 2, sort))
                 .thenReturn(
                         new SearchResult<>(
@@ -140,7 +141,7 @@ public class ExecutionServiceTest {
     }
 
     @Test
-    public void workflowSearchByTasksTest() {
+    void workflowSearchByTasksTest() {
         when(executionDAOFacade.searchTaskSummary("query", "*", 0, 2, sort))
                 .thenReturn(
                         new SearchResult<>(
@@ -161,7 +162,7 @@ public class ExecutionServiceTest {
     }
 
     @Test
-    public void workflowSearchByTasksExceptionTest() {
+    void workflowSearchByTasksExceptionTest() {
         when(executionDAOFacade.searchTaskSummary("query", "*", 0, 2, sort))
                 .thenReturn(
                         new SearchResult<>(
@@ -181,7 +182,7 @@ public class ExecutionServiceTest {
     }
 
     @Test
-    public void workflowSearchByTasksV2Test() {
+    void workflowSearchByTasksV2Test() {
         when(executionDAOFacade.searchTasks("query", "*", 0, 2, sort))
                 .thenReturn(
                         new SearchResult<>(
@@ -201,7 +202,7 @@ public class ExecutionServiceTest {
     }
 
     @Test
-    public void workflowSearchByTasksV2ExceptionTest() {
+    void workflowSearchByTasksV2ExceptionTest() {
         when(executionDAOFacade.searchTasks("query", "*", 0, 2, sort))
                 .thenReturn(
                         new SearchResult<>(
@@ -220,7 +221,7 @@ public class ExecutionServiceTest {
     }
 
     @Test
-    public void TaskSearchTest() {
+    void TaskSearchTest() {
         List<TaskSummary> taskList =
                 Arrays.asList(new TaskSummary(taskWorkflow1), new TaskSummary(taskWorkflow2));
         when(executionDAOFacade.searchTaskSummary("query", "*", 0, 2, sort))
@@ -234,7 +235,7 @@ public class ExecutionServiceTest {
     }
 
     @Test
-    public void TaskSearchV2Test() {
+    void TaskSearchV2Test() {
         when(executionDAOFacade.searchTasks("query", "*", 0, 2, sort))
                 .thenReturn(
                         new SearchResult<>(
@@ -250,7 +251,7 @@ public class ExecutionServiceTest {
     }
 
     @Test
-    public void TaskSearchV2ExceptionTest() {
+    void TaskSearchV2ExceptionTest() {
         when(executionDAOFacade.searchTasks("query", "*", 0, 2, sort))
                 .thenReturn(
                         new SearchResult<>(

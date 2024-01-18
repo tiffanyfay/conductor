@@ -16,8 +16,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,10 +32,7 @@ import com.google.protobuf.Any;
 import com.google.protobuf.Struct;
 import com.google.protobuf.Value;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests the customized {@link ObjectMapper} that is used by {@link com.netflix.conductor.Conductor}
@@ -45,12 +41,12 @@ import static org.junit.Assert.assertTrue;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RunWith(SpringRunner.class)
 @TestPropertySource(properties = "conductor.queue.type=")
-public class ConductorObjectMapperTest {
+class ConductorObjectMapperTest {
 
     @Autowired ObjectMapper objectMapper;
 
     @Test
-    public void testSimpleMapping() throws IOException {
+    void simpleMapping() throws IOException {
         assertTrue(objectMapper.canSerialize(Any.class));
 
         Struct struct1 =
@@ -75,7 +71,7 @@ public class ConductorObjectMapperTest {
     }
 
     @Test
-    public void testNullOnWrite() throws JsonProcessingException {
+    void nullOnWrite() throws JsonProcessingException {
         Map<String, Object> data = new HashMap<>();
         data.put("someKey", null);
         data.put("someId", "abc123");
@@ -84,7 +80,7 @@ public class ConductorObjectMapperTest {
     }
 
     @Test
-    public void testWorkflowSerDe() throws IOException {
+    void workflowSerDe() throws IOException {
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setName("testDef");
         workflowDef.setVersion(2);

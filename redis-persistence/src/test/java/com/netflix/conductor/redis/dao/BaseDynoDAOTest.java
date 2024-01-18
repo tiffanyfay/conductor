@@ -12,8 +12,8 @@
  */
 package com.netflix.conductor.redis.dao;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import com.netflix.conductor.core.config.ConductorProperties;
@@ -22,11 +22,12 @@ import com.netflix.conductor.redis.jedis.JedisProxy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class BaseDynoDAOTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class BaseDynoDAOTest {
 
     @Mock private JedisProxy jedisProxy;
 
@@ -37,8 +38,8 @@ public class BaseDynoDAOTest {
 
     private BaseDynoDAO baseDynoDAO;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         properties = mock(RedisProperties.class);
         conductorProperties = mock(ConductorProperties.class);
         this.baseDynoDAO =
@@ -46,7 +47,7 @@ public class BaseDynoDAOTest {
     }
 
     @Test
-    public void testNsKey() {
+    void nsKey() {
         assertEquals("", baseDynoDAO.nsKey());
 
         String[] keys = {"key1", "key2"};

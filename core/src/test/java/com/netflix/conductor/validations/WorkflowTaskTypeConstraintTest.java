@@ -20,11 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
@@ -40,36 +36,37 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import jakarta.validation.executable.ExecutableValidator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-public class WorkflowTaskTypeConstraintTest {
+class WorkflowTaskTypeConstraintTest {
 
     private static Validator validator;
     private static ValidatorFactory validatorFactory;
     private MetadataDAO mockMetadataDao;
 
-    @BeforeClass
-    public static void init() {
+    @BeforeAll
+    static void init() {
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
     }
 
-    @AfterClass
-    public static void close() {
+    @AfterAll
+    static void close() {
         validatorFactory.close();
     }
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         mockMetadataDao = Mockito.mock(MetadataDAO.class);
         ValidationContext.initialize(mockMetadataDao);
     }
 
     @Test
-    public void testWorkflowTaskMissingReferenceName() {
+    void workflowTaskMissingReferenceName() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setDynamicForkTasksParam("taskList");
         workflowTask.setDynamicForkTasksInputParamName("ForkTaskInputParam");
@@ -79,12 +76,12 @@ public class WorkflowTaskTypeConstraintTest {
         assertEquals(1, result.size());
 
         assertEquals(
-                result.iterator().next().getMessage(),
-                "WorkflowTask taskReferenceName name cannot be empty or null");
+                "WorkflowTask taskReferenceName name cannot be empty or null",
+                result.iterator().next().getMessage());
     }
 
     @Test
-    public void testWorkflowTaskTestSetType() throws NoSuchMethodException {
+    void workflowTaskTestSetType() throws NoSuchMethodException {
         WorkflowTask workflowTask = createSampleWorkflowTask();
 
         Method method = WorkflowTask.class.getMethod("setType", String.class);
@@ -96,12 +93,12 @@ public class WorkflowTaskTypeConstraintTest {
                 executableValidator.validateParameters(workflowTask, method, parameterValues);
 
         assertEquals(1, result.size());
-        assertEquals(
-                result.iterator().next().getMessage(), "WorkTask type cannot be null or empty");
+        assertEquals("WorkTask type cannot be null or empty",
+                result.iterator().next().getMessage());
     }
 
     @Test
-    public void testWorkflowTaskTypeEvent() {
+    void workflowTaskTypeEvent() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("EVENT");
 
@@ -110,12 +107,12 @@ public class WorkflowTaskTypeConstraintTest {
         Set<ConstraintViolation<WorkflowTask>> result = validator.validate(workflowTask);
         assertEquals(1, result.size());
         assertEquals(
-                result.iterator().next().getMessage(),
-                "sink field is required for taskType: EVENT taskName: encode");
+                "sink field is required for taskType: EVENT taskName: encode",
+                result.iterator().next().getMessage());
     }
 
     @Test
-    public void testWorkflowTaskTypeDynamic() {
+    void workflowTaskTypeDynamic() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("DYNAMIC");
 
@@ -124,12 +121,12 @@ public class WorkflowTaskTypeConstraintTest {
         Set<ConstraintViolation<WorkflowTask>> result = validator.validate(workflowTask);
         assertEquals(1, result.size());
         assertEquals(
-                result.iterator().next().getMessage(),
-                "dynamicTaskNameParam field is required for taskType: DYNAMIC taskName: encode");
+                "dynamicTaskNameParam field is required for taskType: DYNAMIC taskName: encode",
+                result.iterator().next().getMessage());
     }
 
     @Test
-    public void testWorkflowTaskTypeDecision() {
+    void workflowTaskTypeDecision() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("DECISION");
 
@@ -151,7 +148,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeDoWhile() {
+    void workflowTaskTypeDoWhile() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("DO_WHILE");
 
@@ -173,7 +170,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeWait() {
+    void workflowTaskTypeWait() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("WAIT");
         Set<ConstraintViolation<WorkflowTask>> result = validator.validate(workflowTask);
@@ -194,7 +191,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeDecisionWithCaseParam() {
+    void workflowTaskTypeDecisionWithCaseParam() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("DECISION");
         workflowTask.setCaseExpression("$.valueCheck == null ? 'true': 'false'");
@@ -214,7 +211,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeForJoinDynamic() {
+    void workflowTaskTypeForJoinDynamic() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("FORK_JOIN_DYNAMIC");
 
@@ -236,7 +233,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeForJoinDynamicLegacy() {
+    void workflowTaskTypeForJoinDynamicLegacy() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("FORK_JOIN_DYNAMIC");
         workflowTask.setDynamicForkJoinTasksParam("taskList");
@@ -248,7 +245,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeForJoinDynamicWithForJoinTaskParam() {
+    void workflowTaskTypeForJoinDynamicWithForJoinTaskParam() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("FORK_JOIN_DYNAMIC");
         workflowTask.setDynamicForkJoinTasksParam("taskList");
@@ -269,7 +266,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeForJoinDynamicValid() {
+    void workflowTaskTypeForJoinDynamicValid() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("FORK_JOIN_DYNAMIC");
         workflowTask.setDynamicForkTasksParam("ForkTasksParam");
@@ -282,7 +279,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeForJoinDynamicWithForJoinTaskParamAndInputTaskParam() {
+    void workflowTaskTypeForJoinDynamicWithForJoinTaskParamAndInputTaskParam() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("FORK_JOIN_DYNAMIC");
         workflowTask.setDynamicForkJoinTasksParam("taskList");
@@ -304,7 +301,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeHTTP() {
+    void workflowTaskTypeHTTP() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("HTTP");
         workflowTask.getInputParameters().put("http_request", "http://www.netflix.com");
@@ -316,7 +313,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeHTTPWithHttpParamMissing() {
+    void workflowTaskTypeHTTPWithHttpParamMissing() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("HTTP");
 
@@ -335,7 +332,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeHTTPWithHttpParamInTaskDef() {
+    void workflowTaskTypeHTTPWithHttpParamInTaskDef() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("HTTP");
 
@@ -350,7 +347,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeHTTPWithHttpParamInTaskDefAndWorkflowTask() {
+    void workflowTaskTypeHTTPWithHttpParamInTaskDefAndWorkflowTask() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("HTTP");
         workflowTask.getInputParameters().put("http_request", "http://www.netflix.com");
@@ -366,7 +363,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeFork() {
+    void workflowTaskTypeFork() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("FORK_JOIN");
 
@@ -385,7 +382,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeSubworkflowMissingSubworkflowParam() {
+    void workflowTaskTypeSubworkflowMissingSubworkflowParam() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("SUB_WORKFLOW");
 
@@ -402,7 +399,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeSubworkflow() {
+    void workflowTaskTypeSubworkflow() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("SUB_WORKFLOW");
 
@@ -421,7 +418,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeTerminateWithoutTerminationStatus() {
+    void workflowTaskTypeTerminateWithoutTerminationStatus() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType(TaskType.TASK_TYPE_TERMINATE);
         workflowTask.setName("terminate_task");
@@ -431,14 +428,14 @@ public class WorkflowTaskTypeConstraintTest {
                         Terminate.getTerminationWorkflowOutputParameter(), "blah"));
         List<String> validationErrors = getErrorMessages(workflowTask);
 
-        Assert.assertEquals(1, validationErrors.size());
-        Assert.assertEquals(
+        Assertions.assertEquals(1, validationErrors.size());
+        Assertions.assertEquals(
                 "terminate task must have an terminationStatus parameter and must be set to COMPLETED or FAILED, taskName: terminate_task",
                 validationErrors.get(0));
     }
 
     @Test
-    public void testWorkflowTaskTypeTerminateWithInvalidStatus() {
+    void workflowTaskTypeTerminateWithInvalidStatus() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType(TaskType.TASK_TYPE_TERMINATE);
         workflowTask.setName("terminate_task");
@@ -448,14 +445,14 @@ public class WorkflowTaskTypeConstraintTest {
 
         List<String> validationErrors = getErrorMessages(workflowTask);
 
-        Assert.assertEquals(1, validationErrors.size());
-        Assert.assertEquals(
+        Assertions.assertEquals(1, validationErrors.size());
+        Assertions.assertEquals(
                 "terminate task must have an terminationStatus parameter and must be set to COMPLETED or FAILED, taskName: terminate_task",
                 validationErrors.get(0));
     }
 
     @Test
-    public void testWorkflowTaskTypeTerminateOptional() {
+    void workflowTaskTypeTerminateOptional() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType(TaskType.TASK_TYPE_TERMINATE);
         workflowTask.setName("terminate_task");
@@ -466,14 +463,14 @@ public class WorkflowTaskTypeConstraintTest {
 
         List<String> validationErrors = getErrorMessages(workflowTask);
 
-        Assert.assertEquals(1, validationErrors.size());
-        Assert.assertEquals(
+        Assertions.assertEquals(1, validationErrors.size());
+        Assertions.assertEquals(
                 "terminate task cannot be optional, taskName: terminate_task",
                 validationErrors.get(0));
     }
 
     @Test
-    public void testWorkflowTaskTypeTerminateValid() {
+    void workflowTaskTypeTerminateValid() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType(TaskType.TASK_TYPE_TERMINATE);
         workflowTask.setName("terminate_task");
@@ -483,11 +480,11 @@ public class WorkflowTaskTypeConstraintTest {
 
         List<String> validationErrors = getErrorMessages(workflowTask);
 
-        Assert.assertEquals(0, validationErrors.size());
+        Assertions.assertEquals(0, validationErrors.size());
     }
 
     @Test
-    public void testWorkflowTaskTypeKafkaPublish() {
+    void workflowTaskTypeKafkaPublish() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("KAFKA_PUBLISH");
         workflowTask.getInputParameters().put("kafka_request", "testInput");
@@ -499,7 +496,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeKafkaPublishWithRequestParamMissing() {
+    void workflowTaskTypeKafkaPublishWithRequestParamMissing() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("KAFKA_PUBLISH");
 
@@ -518,7 +515,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeKafkaPublishWithKafkaParamInTaskDef() {
+    void workflowTaskTypeKafkaPublishWithKafkaParamInTaskDef() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("KAFKA_PUBLISH");
 
@@ -533,7 +530,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeKafkaPublishWithRequestParamInTaskDefAndWorkflowTask() {
+    void workflowTaskTypeKafkaPublishWithRequestParamInTaskDefAndWorkflowTask() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("KAFKA_PUBLISH");
         workflowTask.getInputParameters().put("kafka_request", "http://www.netflix.com");
@@ -549,7 +546,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeJSONJQTransform() {
+    void workflowTaskTypeJSONJQTransform() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("JSON_JQ_TRANSFORM");
         workflowTask.getInputParameters().put("queryExpression", ".");
@@ -561,7 +558,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeJSONJQTransformWithQueryParamMissing() {
+    void workflowTaskTypeJSONJQTransformWithQueryParamMissing() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("JSON_JQ_TRANSFORM");
 
@@ -580,7 +577,7 @@ public class WorkflowTaskTypeConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskTypeJSONJQTransformWithQueryParamInTaskDef() {
+    void workflowTaskTypeJSONJQTransformWithQueryParamInTaskDef() {
         WorkflowTask workflowTask = createSampleWorkflowTask();
         workflowTask.setType("JSON_JQ_TRANSFORM");
 

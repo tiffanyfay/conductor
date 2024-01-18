@@ -12,8 +12,8 @@
  */
 package com.netflix.conductor.client.grpc;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -31,12 +31,13 @@ import com.netflix.conductor.proto.TaskSummaryPb;
 
 import io.grpc.ManagedChannelBuilder;
 
-import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @RunWith(SpringRunner.class)
-public class TaskClientTest {
+class TaskClientTest {
 
     @Mock ProtoMapper mockedProtoMapper;
 
@@ -44,15 +45,15 @@ public class TaskClientTest {
 
     TaskClient taskClient;
 
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         taskClient = new TaskClient("test", 0);
         ReflectionTestUtils.setField(taskClient, "stub", mockedStub);
         ReflectionTestUtils.setField(taskClient, "protoMapper", mockedProtoMapper);
     }
 
     @Test
-    public void testSearch() {
+    void search() {
         TaskSummary taskSummary = mock(TaskSummary.class);
         TaskSummaryPb.TaskSummary taskSummaryPB = mock(TaskSummaryPb.TaskSummary.class);
         when(mockedProtoMapper.fromProto(taskSummaryPB)).thenReturn(taskSummary);
@@ -70,7 +71,7 @@ public class TaskClientTest {
     }
 
     @Test
-    public void testSearchV2() {
+    void searchV2() {
         Task task = mock(Task.class);
         TaskPb.Task taskPB = mock(TaskPb.Task.class);
         when(mockedProtoMapper.fromProto(taskPB)).thenReturn(task);
@@ -88,7 +89,7 @@ public class TaskClientTest {
     }
 
     @Test
-    public void testSearchWithParams() {
+    void searchWithParams() {
         TaskSummary taskSummary = mock(TaskSummary.class);
         TaskSummaryPb.TaskSummary taskSummaryPB = mock(TaskSummaryPb.TaskSummary.class);
         when(mockedProtoMapper.fromProto(taskSummaryPB)).thenReturn(taskSummary);
@@ -112,7 +113,7 @@ public class TaskClientTest {
     }
 
     @Test
-    public void testSearchV2WithParams() {
+    void searchV2WithParams() {
         Task task = mock(Task.class);
         TaskPb.Task taskPB = mock(TaskPb.Task.class);
         when(mockedProtoMapper.fromProto(taskPB)).thenReturn(task);
@@ -136,7 +137,7 @@ public class TaskClientTest {
     }
 
     @Test
-    public void testSearchWithChannelBuilder() {
+    void searchWithChannelBuilder() {
         TaskClient taskClient = createClientWithManagedChannel();
         TaskSummary taskSummary = mock(TaskSummary.class);
         TaskSummaryPb.TaskSummary taskSummaryPB = mock(TaskSummaryPb.TaskSummary.class);

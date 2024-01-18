@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
@@ -35,37 +35,38 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-public class WorkflowDefConstraintTest {
+class WorkflowDefConstraintTest {
 
     private static Validator validator;
     private static ValidatorFactory validatorFactory;
     private MetadataDAO mockMetadataDao;
 
-    @BeforeClass
-    public static void init() {
+    @BeforeAll
+    static void init() {
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
     }
 
-    @AfterClass
-    public static void close() {
+    @AfterAll
+    static void close() {
         validatorFactory.close();
     }
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         mockMetadataDao = Mockito.mock(MetadataDAO.class);
         when(mockMetadataDao.getTaskDef(anyString())).thenReturn(new TaskDef());
         ValidationContext.initialize(mockMetadataDao);
     }
 
     @Test
-    public void testWorkflowTaskName() {
+    void workflowTaskName() {
         TaskDef taskDef = new TaskDef(); // name is null
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
@@ -74,7 +75,7 @@ public class WorkflowDefConstraintTest {
     }
 
     @Test
-    public void testWorkflowTaskSimple() {
+    void workflowTaskSimple() {
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setName("sampleWorkflow");
         workflowDef.setDescription("Sample workflow def");
@@ -100,10 +101,10 @@ public class WorkflowDefConstraintTest {
         assertEquals(0, result.size());
     }
 
-    @Test
     /*Testcase to check inputParam is not valid
      */
-    public void testWorkflowTaskInvalidInputParam() {
+    @Test
+    void workflowTaskInvalidInputParam() {
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setName("sampleWorkflow");
         workflowDef.setDescription("Sample workflow def");
@@ -132,12 +133,12 @@ public class WorkflowDefConstraintTest {
         Set<ConstraintViolation<WorkflowDef>> result = validator.validate(workflowDef);
         assertEquals(1, result.size());
         assertEquals(
-                result.iterator().next().getMessage(),
-                "taskReferenceName: work for given task: task_1 input value: fileLocation of input parameter: ${work.input.fileLocation} is not defined in workflow definition.");
+                "taskReferenceName: work for given task: task_1 input value: fileLocation of input parameter: ${work.input.fileLocation} is not defined in workflow definition.",
+                result.iterator().next().getMessage());
     }
 
     @Test
-    public void testWorkflowTaskReferenceNameNotUnique() {
+    void workflowTaskReferenceNameNotUnique() {
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setName("sampleWorkflow");
         workflowDef.setDescription("Sample workflow def");

@@ -16,8 +16,8 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -36,21 +36,22 @@ import com.netflix.conductor.redis.jedis.JedisProxy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import redis.clients.jedis.commands.JedisCommands;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
 @RunWith(SpringRunner.class)
-public class RedisExecutionDAOTest extends ExecutionDAOTest {
+class RedisExecutionDAOTest extends ExecutionDAOTest {
 
     private RedisExecutionDAO executionDAO;
 
     @Autowired private ObjectMapper objectMapper;
 
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         ConductorProperties conductorProperties = mock(ConductorProperties.class);
         RedisProperties properties = mock(RedisProperties.class);
         when(properties.getEventExecutionPersistenceTTL()).thenReturn(Duration.ofSeconds(5));
@@ -62,7 +63,7 @@ public class RedisExecutionDAOTest extends ExecutionDAOTest {
     }
 
     @Test
-    public void testCorrelateTaskToWorkflowInDS() {
+    void correlateTaskToWorkflowInDS() {
         String workflowId = "workflowId";
         String taskId = "taskId1";
         String taskDefName = "task1";

@@ -16,8 +16,8 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import com.netflix.conductor.core.config.ConductorProperties;
@@ -35,7 +35,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static com.netflix.conductor.common.metadata.tasks.TaskType.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -45,7 +46,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class TestWorkflowRepairService {
+class TestWorkflowRepairService {
 
     private QueueDAO queueDAO;
     private ExecutionDAO executionDAO;
@@ -53,8 +54,8 @@ public class TestWorkflowRepairService {
     private WorkflowRepairService workflowRepairService;
     private SystemTaskRegistry systemTaskRegistry;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         executionDAO = mock(ExecutionDAO.class);
         queueDAO = mock(QueueDAO.class);
         properties = mock(ConductorProperties.class);
@@ -64,7 +65,7 @@ public class TestWorkflowRepairService {
     }
 
     @Test
-    public void verifyAndRepairSimpleTaskInScheduledState() {
+    void verifyAndRepairSimpleTaskInScheduledState() {
         TaskModel task = new TaskModel();
         task.setTaskType("SIMPLE");
         task.setStatus(TaskModel.Status.SCHEDULED);
@@ -80,7 +81,7 @@ public class TestWorkflowRepairService {
     }
 
     @Test
-    public void verifySimpleTaskInProgressState() {
+    void verifySimpleTaskInProgressState() {
         TaskModel task = new TaskModel();
         task.setTaskType("SIMPLE");
         task.setStatus(TaskModel.Status.IN_PROGRESS);
@@ -96,7 +97,7 @@ public class TestWorkflowRepairService {
     }
 
     @Test
-    public void verifyAndRepairSystemTask() {
+    void verifyAndRepairSystemTask() {
         String taskType = "TEST_SYS_TASK";
         TaskModel task = new TaskModel();
         task.setTaskType(taskType);
@@ -143,7 +144,7 @@ public class TestWorkflowRepairService {
     }
 
     @Test
-    public void assertSyncSystemTasksAreNotCheckedAgainstQueue() {
+    void assertSyncSystemTasksAreNotCheckedAgainstQueue() {
         // Return a Switch task object to init WorkflowSystemTask registry.
         when(systemTaskRegistry.get(TASK_TYPE_DECISION)).thenReturn(new Decision());
         when(systemTaskRegistry.isSystemTask(TASK_TYPE_DECISION)).thenReturn(true);
@@ -172,7 +173,7 @@ public class TestWorkflowRepairService {
     }
 
     @Test
-    public void assertAsyncCompleteInProgressSystemTasksAreNotCheckedAgainstQueue() {
+    void assertAsyncCompleteInProgressSystemTasksAreNotCheckedAgainstQueue() {
         TaskModel task = new TaskModel();
         task.setTaskType(TASK_TYPE_EVENT);
         task.setStatus(TaskModel.Status.IN_PROGRESS);
@@ -196,7 +197,7 @@ public class TestWorkflowRepairService {
     }
 
     @Test
-    public void assertAsyncCompleteScheduledSystemTasksAreCheckedAgainstQueue() {
+    void assertAsyncCompleteScheduledSystemTasksAreCheckedAgainstQueue() {
         TaskModel task = new TaskModel();
         task.setTaskType(TASK_TYPE_SUB_WORKFLOW);
         task.setStatus(TaskModel.Status.SCHEDULED);
@@ -217,7 +218,7 @@ public class TestWorkflowRepairService {
     }
 
     @Test
-    public void verifyAndRepairParentWorkflow() {
+    void verifyAndRepairParentWorkflow() {
         WorkflowModel workflow = new WorkflowModel();
         workflow.setWorkflowId("abcd");
         workflow.setParentWorkflowId("parentWorkflowId");
@@ -232,7 +233,7 @@ public class TestWorkflowRepairService {
     }
 
     @Test
-    public void assertInProgressSubWorkflowSystemTasksAreCheckedAndRepaired() {
+    void assertInProgressSubWorkflowSystemTasksAreCheckedAndRepaired() {
         String subWorkflowId = "subWorkflowId";
         String taskId = "taskId";
 

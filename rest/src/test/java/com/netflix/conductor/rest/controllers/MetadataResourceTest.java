@@ -15,14 +15,13 @@ package com.netflix.conductor.rest.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.service.MetadataService;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.anyString;
@@ -31,34 +30,36 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class MetadataResourceTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class MetadataResourceTest {
 
     private MetadataResource metadataResource;
 
     private MetadataService mockMetadataService;
 
-    @Before
-    public void before() {
+    @BeforeEach
+    void before() {
         this.mockMetadataService = mock(MetadataService.class);
         this.metadataResource = new MetadataResource(this.mockMetadataService);
     }
 
     @Test
-    public void testCreateWorkflow() {
+    void createWorkflow() {
         WorkflowDef workflowDef = new WorkflowDef();
         metadataResource.create(workflowDef);
         verify(mockMetadataService, times(1)).registerWorkflowDef(any(WorkflowDef.class));
     }
 
     @Test
-    public void testValidateWorkflow() {
+    void validateWorkflow() {
         WorkflowDef workflowDef = new WorkflowDef();
         metadataResource.validate(workflowDef);
         verify(mockMetadataService, times(1)).validateWorkflowDef(any(WorkflowDef.class));
     }
 
     @Test
-    public void testUpdateWorkflow() {
+    void updateWorkflow() {
         WorkflowDef workflowDef = new WorkflowDef();
         List<WorkflowDef> listOfWorkflowDef = new ArrayList<>();
         listOfWorkflowDef.add(workflowDef);
@@ -67,7 +68,7 @@ public class MetadataResourceTest {
     }
 
     @Test
-    public void testGetWorkflowDef() {
+    void getWorkflowDef() {
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setName("test");
         workflowDef.setVersion(1);
@@ -78,7 +79,7 @@ public class MetadataResourceTest {
     }
 
     @Test
-    public void testGetAllWorkflowDef() {
+    void getAllWorkflowDef() {
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setName("test");
         workflowDef.setVersion(1);
@@ -92,7 +93,7 @@ public class MetadataResourceTest {
     }
 
     @Test
-    public void testGetAllWorkflowDefLatestVersions() {
+    void getAllWorkflowDefLatestVersions() {
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setName("test");
         workflowDef.setVersion(1);
@@ -106,13 +107,13 @@ public class MetadataResourceTest {
     }
 
     @Test
-    public void testUnregisterWorkflowDef() throws Exception {
+    void unregisterWorkflowDef() throws Exception {
         metadataResource.unregisterWorkflowDef("test", 1);
         verify(mockMetadataService, times(1)).unregisterWorkflowDef(anyString(), any());
     }
 
     @Test
-    public void testRegisterListOfTaskDef() {
+    void registerListOfTaskDef() {
         TaskDef taskDef = new TaskDef();
         taskDef.setName("test");
         taskDef.setDescription("desc");
@@ -124,7 +125,7 @@ public class MetadataResourceTest {
     }
 
     @Test
-    public void testRegisterTaskDef() {
+    void registerTaskDef() {
         TaskDef taskDef = new TaskDef();
         taskDef.setName("test");
         taskDef.setDescription("desc");
@@ -133,7 +134,7 @@ public class MetadataResourceTest {
     }
 
     @Test
-    public void testGetAllTaskDefs() {
+    void getAllTaskDefs() {
         TaskDef taskDef = new TaskDef();
         taskDef.setName("test");
         taskDef.setDescription("desc");
@@ -145,7 +146,7 @@ public class MetadataResourceTest {
     }
 
     @Test
-    public void testGetTaskDef() {
+    void getTaskDef() {
         TaskDef taskDef = new TaskDef();
         taskDef.setName("test");
         taskDef.setDescription("desc");
@@ -155,7 +156,7 @@ public class MetadataResourceTest {
     }
 
     @Test
-    public void testUnregisterTaskDef() {
+    void unregisterTaskDef() {
         metadataResource.unregisterTaskDef("test");
         verify(mockMetadataService, times(1)).unregisterTaskDef(anyString());
     }

@@ -29,14 +29,14 @@ import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TaskConversionsTests {
+class TaskConversionsTests {
 
     static {
         WorkflowExecutor.initTaskImplementations();
     }
 
     @Test
-    public void testSimpleTaskConversion() {
+    void simpleTaskConversion() {
         SimpleTask simpleTask = new SimpleTask("task_name", "task_ref_name");
 
         Map<String, Object> map = new HashMap<>();
@@ -64,7 +64,7 @@ public class TaskConversionsTests {
     }
 
     @Test
-    public void testDynamicTaskCoversion() {
+    void dynamicTaskCoversion() {
         Dynamic dynamicTask = new Dynamic("task_name", "task_ref_name");
 
         WorkflowTask workflowTask = dynamicTask.getWorkflowDefTasks().get(0);
@@ -83,7 +83,7 @@ public class TaskConversionsTests {
     }
 
     @Test
-    public void testForkTaskConversion() {
+    void forkTaskConversion() {
         SimpleTask task1 = new SimpleTask("task1", "task1");
         SimpleTask task2 = new SimpleTask("task2", "task2");
         SimpleTask task3 = new SimpleTask("task3", "task3");
@@ -128,7 +128,7 @@ public class TaskConversionsTests {
     }
 
     @Test
-    public void testDynamicForkTaskCoversion() {
+    void dynamicForkTaskCoversion() {
         DynamicFork dynamicTask = new DynamicFork("task_ref_name", "forkTasks", "forkTaskInputs");
 
         WorkflowTask workflowTask = dynamicTask.getWorkflowDefTasks().get(0);
@@ -152,7 +152,7 @@ public class TaskConversionsTests {
     }
 
     @Test
-    public void testDoWhileConversion() {
+    void doWhileConversion() {
         SimpleTask task1 = new SimpleTask("task_name", "task_ref_name");
         SimpleTask task2 = new SimpleTask("task_name", "task_ref_name");
 
@@ -185,14 +185,14 @@ public class TaskConversionsTests {
     }
 
     @Test
-    public void testJoin() {
+    void join() {
 
         Join joinTask = new Join("task_ref_name", "task1", "task2");
 
         WorkflowTask workflowTask = joinTask.getWorkflowDefTasks().get(0);
         assertNotNull(workflowTask.getInputParameters());
         assertNotNull(workflowTask.getJoinOn());
-        assertTrue(!workflowTask.getJoinOn().isEmpty());
+        assertFalse(workflowTask.getJoinOn().isEmpty());
 
         Task fromWorkflowTask = TaskRegistry.getTask(workflowTask);
         assertTrue(
@@ -216,7 +216,7 @@ public class TaskConversionsTests {
     }
 
     @Test
-    public void testEvent() {
+    void event() {
 
         Event eventTask = new Event("task_ref_name", "sqs:queue11");
 
@@ -239,7 +239,7 @@ public class TaskConversionsTests {
     }
 
     @Test
-    public void testSetVariableConversion() {
+    void setVariableConversion() {
 
         SetVariable setVariableTask = new SetVariable("task_ref_name");
 
@@ -263,7 +263,7 @@ public class TaskConversionsTests {
     }
 
     @Test
-    public void testSubWorkflowConversion() {
+    void subWorkflowConversion() {
 
         SubWorkflow subWorkflowTask = new SubWorkflow("task_ref_name", "sub_flow", 2);
 
@@ -290,7 +290,7 @@ public class TaskConversionsTests {
     }
 
     @Test
-    public void testSwitchConversion() {
+    void switchConversion() {
 
         SimpleTask task1 = new SimpleTask("task_name", "task_ref_name1");
         SimpleTask task2 = new SimpleTask("task_name", "task_ref_name2");
@@ -339,7 +339,7 @@ public class TaskConversionsTests {
     }
 
     @Test
-    public void testTerminateConversion() {
+    void terminateConversion() {
 
         Terminate terminateTask =
                 new Terminate("terminate", Workflow.WorkflowStatus.FAILED, "", new HashMap<>());
@@ -363,7 +363,7 @@ public class TaskConversionsTests {
     }
 
     @Test
-    public void testWaitConversion() {
+    void waitConversion() {
 
         Wait waitTask = new Wait("terminate");
 
@@ -405,7 +405,7 @@ public class TaskConversionsTests {
     }
 
     @Test
-    public void testHttpConverter() {
+    void httpConverter() {
 
         Http httpTask = new Http("terminate");
         Http.Input input = new Http.Input();
@@ -441,7 +441,7 @@ public class TaskConversionsTests {
     }
 
     @Test
-    public void testJQTaskConversion() {
+    void jQTaskConversion() {
         JQ jqTask = new JQ("task_name", "{ key3: (.key1.value1 + .key2.value2) }");
 
         Map<String, Object> map = new HashMap<>();
@@ -468,7 +468,7 @@ public class TaskConversionsTests {
     }
 
     @Test
-    public void testInlineTaskConversion() {
+    void inlineTaskConversion() {
 
         Javascript inlineTask =
                 new Javascript(
@@ -501,7 +501,7 @@ public class TaskConversionsTests {
     }
 
     @Test
-    public void testJavascriptValidation() {
+    void javascriptValidation() {
         // This script has errors
         Javascript inlineTask =
                 new Javascript(

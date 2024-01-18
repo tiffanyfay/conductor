@@ -21,8 +21,8 @@ import org.apache.http.HttpHost;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.retry.support.RetryTemplate;
 
 abstract class ElasticSearchRestDaoBaseTest extends ElasticSearchTest {
@@ -30,8 +30,8 @@ abstract class ElasticSearchRestDaoBaseTest extends ElasticSearchTest {
     protected RestClient restClient;
     protected ElasticSearchRestDAOV6 indexDAO;
 
-    @Before
-    public void setup() throws Exception {
+    @BeforeEach
+    void setup() throws Exception {
         String httpHostAddress = container.getHttpHostAddress();
         String host = httpHostAddress.split(":")[0];
         int port = Integer.parseInt(httpHostAddress.split(":")[1]);
@@ -47,8 +47,8 @@ abstract class ElasticSearchRestDaoBaseTest extends ElasticSearchTest {
         indexDAO.setup();
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterEach
+    void tearDown() throws Exception {
         deleteAllIndices();
 
         if (restClient != null) {

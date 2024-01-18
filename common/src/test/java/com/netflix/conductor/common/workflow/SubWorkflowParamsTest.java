@@ -17,8 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -37,17 +36,16 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
 @RunWith(SpringRunner.class)
-public class SubWorkflowParamsTest {
+class SubWorkflowParamsTest {
 
     @Autowired private ObjectMapper objectMapper;
 
     @Test
-    public void testWorkflowTaskName() {
+    void workflowTaskName() {
         SubWorkflowParams subWorkflowParams = new SubWorkflowParams(); // name is null
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
@@ -63,7 +61,7 @@ public class SubWorkflowParamsTest {
     }
 
     @Test
-    public void testWorkflowSetTaskToDomain() {
+    void workflowSetTaskToDomain() {
         SubWorkflowParams subWorkflowParams = new SubWorkflowParams();
         Map<String, String> taskToDomain = new HashMap<>();
         taskToDomain.put("unit", "test");
@@ -71,15 +69,17 @@ public class SubWorkflowParamsTest {
         assertEquals(taskToDomain, subWorkflowParams.getTaskToDomain());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testSetWorkflowDefinition() {
-        SubWorkflowParams subWorkflowParams = new SubWorkflowParams();
-        subWorkflowParams.setName("dummy-name");
-        subWorkflowParams.setWorkflowDefinition(new Object());
+    @Test
+    void setWorkflowDefinition() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            SubWorkflowParams subWorkflowParams = new SubWorkflowParams();
+            subWorkflowParams.setName("dummy-name");
+            subWorkflowParams.setWorkflowDefinition(new Object());
+        });
     }
 
     @Test
-    public void testGetWorkflowDef() {
+    void getWorkflowDef() {
         SubWorkflowParams subWorkflowParams = new SubWorkflowParams();
         subWorkflowParams.setName("dummy-name");
         WorkflowDef def = new WorkflowDef();
@@ -95,7 +95,7 @@ public class SubWorkflowParamsTest {
     }
 
     @Test
-    public void testWorkflowDefJson() throws Exception {
+    void workflowDefJson() throws Exception {
         SubWorkflowParams subWorkflowParams = new SubWorkflowParams();
         subWorkflowParams.setName("dummy-name");
         WorkflowDef def = new WorkflowDef();

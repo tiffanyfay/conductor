@@ -14,9 +14,9 @@ package com.netflix.conductor.core.execution.mapper;
 
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
@@ -29,16 +29,16 @@ import com.netflix.conductor.model.WorkflowModel;
 
 import static org.mockito.Mockito.mock;
 
-public class TerminateTaskMapperTest {
+class TerminateTaskMapperTest {
     private ParametersUtils parametersUtils;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         parametersUtils = mock(ParametersUtils.class);
     }
 
     @Test
-    public void getMappedTasks() {
+    void getMappedTasks() {
 
         WorkflowTask workflowTask = new WorkflowTask();
         workflowTask.setType(TaskType.TASK_TYPE_TERMINATE);
@@ -61,8 +61,8 @@ public class TerminateTaskMapperTest {
         List<TaskModel> mappedTasks =
                 new TerminateTaskMapper(parametersUtils).getMappedTasks(taskMapperContext);
 
-        Assert.assertNotNull(mappedTasks);
-        Assert.assertEquals(1, mappedTasks.size());
-        Assert.assertEquals(TaskType.TASK_TYPE_TERMINATE, mappedTasks.get(0).getTaskType());
+        Assertions.assertNotNull(mappedTasks);
+        Assertions.assertEquals(1, mappedTasks.size());
+        Assertions.assertEquals(TaskType.TASK_TYPE_TERMINATE, mappedTasks.get(0).getTaskType());
     }
 }

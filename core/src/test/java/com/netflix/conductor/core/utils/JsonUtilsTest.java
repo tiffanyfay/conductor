@@ -19,8 +19,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -30,25 +30,23 @@ import com.netflix.conductor.common.config.TestObjectMapperConfiguration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
 @RunWith(SpringRunner.class)
-public class JsonUtilsTest {
+class JsonUtilsTest {
 
     private JsonUtils jsonUtils;
 
     @Autowired private ObjectMapper objectMapper;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         jsonUtils = new JsonUtils(objectMapper);
     }
 
     @Test
-    public void testArray() {
+    void array() {
         List<Object> list = new LinkedList<>();
         Map<String, Object> map = new HashMap<>();
         map.put("externalId", "[{\"taskRefName\":\"t001\",\"workflowId\":\"w002\"}]");
@@ -70,7 +68,7 @@ public class JsonUtilsTest {
     }
 
     @Test
-    public void testMap() {
+    void map() {
         Map<String, Object> map = new HashMap<>();
         map.put("externalId", "{\"taskRefName\":\"t001\",\"workflowId\":\"w002\"}");
         map.put("name", "conductor");
@@ -84,7 +82,7 @@ public class JsonUtilsTest {
     }
 
     @Test
-    public void testMultiLevelMap() {
+    void multiLevelMap() {
         Map<String, Object> parentMap = new HashMap<>();
         parentMap.put("requestId", "abcde");
         parentMap.put("status", "PROCESSED");
@@ -107,7 +105,7 @@ public class JsonUtilsTest {
     // This test verifies that the types of the elements in the input are maintained upon expanding
     // the JSON object
     @Test
-    public void testTypes() throws Exception {
+    void types() throws Exception {
         String map =
                 "{\"requestId\":\"1375128656908832001\",\"workflowId\":\"fc147e1d-5408-4d41-b066-53cb2e551d0e\","
                         + "\"inner\":{\"num\":42,\"status\":\"READY\"}}";

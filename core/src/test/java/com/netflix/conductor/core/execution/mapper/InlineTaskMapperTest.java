@@ -14,8 +14,8 @@ package com.netflix.conductor.core.execution.mapper;
 
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
@@ -28,23 +28,24 @@ import com.netflix.conductor.dao.MetadataDAO;
 import com.netflix.conductor.model.TaskModel;
 import com.netflix.conductor.model.WorkflowModel;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import static org.mockito.Mockito.mock;
 
-public class InlineTaskMapperTest {
+class InlineTaskMapperTest {
 
     private ParametersUtils parametersUtils;
     private MetadataDAO metadataDAO;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         parametersUtils = mock(ParametersUtils.class);
         metadataDAO = mock(MetadataDAO.class);
     }
 
     @Test
-    public void getMappedTasks() {
+    void getMappedTasks() {
 
         WorkflowTask workflowTask = new WorkflowTask();
         workflowTask.setName("inline_task");
@@ -80,7 +81,7 @@ public class InlineTaskMapperTest {
     }
 
     @Test
-    public void getMappedTasks_WithoutTaskDef() {
+    void getMappedTasks_WithoutTaskDef() {
 
         WorkflowTask workflowTask = new WorkflowTask();
         workflowTask.setType(TaskType.INLINE.name());

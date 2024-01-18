@@ -14,8 +14,8 @@ package com.netflix.conductor.redis.dao;
 
 import java.util.UUID;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -32,20 +32,21 @@ import com.netflix.conductor.redis.jedis.JedisProxy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import redis.clients.jedis.commands.JedisCommands;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.mockito.Mockito.mock;
 
 @ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
 @RunWith(SpringRunner.class)
-public class RedisRateLimitDAOTest {
+class RedisRateLimitDAOTest {
 
     private RedisRateLimitingDAO rateLimitingDao;
 
     @Autowired private ObjectMapper objectMapper;
 
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         ConductorProperties conductorProperties = mock(ConductorProperties.class);
         RedisProperties properties = mock(RedisProperties.class);
         JedisCommands jedisMock = new JedisMock();
@@ -56,7 +57,7 @@ public class RedisRateLimitDAOTest {
     }
 
     @Test
-    public void testExceedsRateLimitWhenNoRateLimitSet() {
+    void exceedsRateLimitWhenNoRateLimitSet() {
         TaskDef taskDef = new TaskDef("TestTaskDefinition");
         TaskModel task = new TaskModel();
         task.setTaskId(UUID.randomUUID().toString());
@@ -65,7 +66,7 @@ public class RedisRateLimitDAOTest {
     }
 
     @Test
-    public void testExceedsRateLimitWithinLimit() {
+    void exceedsRateLimitWithinLimit() {
         TaskDef taskDef = new TaskDef("TestTaskDefinition");
         taskDef.setRateLimitFrequencyInSeconds(60);
         taskDef.setRateLimitPerFrequency(20);
@@ -76,7 +77,7 @@ public class RedisRateLimitDAOTest {
     }
 
     @Test
-    public void testExceedsRateLimitOutOfLimit() {
+    void exceedsRateLimitOutOfLimit() {
         TaskDef taskDef = new TaskDef("TestTaskDefinition");
         taskDef.setRateLimitFrequencyInSeconds(60);
         taskDef.setRateLimitPerFrequency(1);

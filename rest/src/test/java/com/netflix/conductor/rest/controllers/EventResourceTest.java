@@ -15,14 +15,13 @@ package com.netflix.conductor.rest.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import com.netflix.conductor.common.metadata.events.EventHandler;
 import com.netflix.conductor.service.EventService;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -31,40 +30,42 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class EventResourceTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class EventResourceTest {
 
     private EventResource eventResource;
 
     @Mock private EventService mockEventService;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         this.mockEventService = mock(EventService.class);
         this.eventResource = new EventResource(this.mockEventService);
     }
 
     @Test
-    public void testAddEventHandler() {
+    void addEventHandler() {
         EventHandler eventHandler = new EventHandler();
         eventResource.addEventHandler(eventHandler);
         verify(mockEventService, times(1)).addEventHandler(any(EventHandler.class));
     }
 
     @Test
-    public void testUpdateEventHandler() {
+    void updateEventHandler() {
         EventHandler eventHandler = new EventHandler();
         eventResource.updateEventHandler(eventHandler);
         verify(mockEventService, times(1)).updateEventHandler(any(EventHandler.class));
     }
 
     @Test
-    public void testRemoveEventHandlerStatus() {
+    void removeEventHandlerStatus() {
         eventResource.removeEventHandlerStatus("testEvent");
         verify(mockEventService, times(1)).removeEventHandlerStatus(anyString());
     }
 
     @Test
-    public void testGetEventHandlersForEvent() {
+    void getEventHandlersForEvent() {
         EventHandler eventHandler = new EventHandler();
         eventResource.addEventHandler(eventHandler);
         List<EventHandler> listOfEventHandler = new ArrayList<>();
@@ -75,7 +76,7 @@ public class EventResourceTest {
     }
 
     @Test
-    public void testGetEventHandlers() {
+    void getEventHandlers() {
         EventHandler eventHandler = new EventHandler();
         eventResource.addEventHandler(eventHandler);
         List<EventHandler> listOfEventHandler = new ArrayList<>();

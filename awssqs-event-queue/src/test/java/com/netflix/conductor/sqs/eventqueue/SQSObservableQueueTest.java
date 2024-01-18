@@ -16,8 +16,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.Answer;
 
 import com.netflix.conductor.core.events.queue.Message;
@@ -30,16 +29,17 @@ import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import com.google.common.util.concurrent.Uninterruptibles;
 import rx.Observable;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class SQSObservableQueueTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+class SQSObservableQueueTest {
 
     @Test
-    public void test() {
+    void test() {
 
         List<Message> messages = new LinkedList<>();
         Observable.range(0, 10)
@@ -66,7 +66,7 @@ public class SQSObservableQueueTest {
     }
 
     @Test
-    public void testException() {
+    void exception() {
         com.amazonaws.services.sqs.model.Message message =
                 new com.amazonaws.services.sqs.model.Message()
                         .withMessageId("test")

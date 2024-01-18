@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,15 +43,15 @@ import com.google.common.util.concurrent.Uninterruptibles;
 
 import static com.netflix.conductor.common.metadata.tasks.TaskType.TASK_TYPE_WAIT;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @SuppressWarnings("unchecked")
 @ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
 @RunWith(SpringRunner.class)
-public class DefaultEventQueueProcessorTest {
+class DefaultEventQueueProcessorTest {
 
     private static SQSObservableQueue queue;
     private static WorkflowExecutor workflowExecutor;
@@ -63,16 +63,16 @@ public class DefaultEventQueueProcessorTest {
     private static final List<TaskResult> updatedTasks = new LinkedList<>();
     private static final List<Task> mappedTasks = new LinkedList<>();
 
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         Map<Status, ObservableQueue> queues = new HashMap<>();
         queues.put(Status.COMPLETED, queue);
         defaultEventQueueProcessor =
                 new DefaultEventQueueProcessor(queues, workflowExecutor, objectMapper);
     }
 
-    @BeforeClass
-    public static void setup() {
+    @BeforeAll
+    static void setup() {
 
         queue = mock(SQSObservableQueue.class);
         when(queue.getOrCreateQueue()).thenReturn("junit_queue_url");
@@ -135,7 +135,7 @@ public class DefaultEventQueueProcessorTest {
     }
 
     @Test
-    public void test() throws Exception {
+    void test() throws Exception {
         defaultEventQueueProcessor.updateByTaskRefName(
                 "v_0", "t0", new HashMap<>(), Status.COMPLETED);
         Uninterruptibles.sleepUninterruptibly(1_000, TimeUnit.MILLISECONDS);
@@ -143,15 +143,17 @@ public class DefaultEventQueueProcessorTest {
         assertTrue(updatedTasks.stream().anyMatch(task -> task.getTaskId().equals("t0")));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testFailure() throws Exception {
-        defaultEventQueueProcessor.updateByTaskRefName(
-                "v_1", "t1", new HashMap<>(), Status.CANCELED);
-        Uninterruptibles.sleepUninterruptibly(1_000, TimeUnit.MILLISECONDS);
+    @Test
+    void failure() throws Exception {
+        assertThrows(IllegalArgumentException.class, () -> {
+            defaultEventQueueProcessor.updateByTaskRefName(
+                    "v_1", "t1", new HashMap<>(), Status.CANCELED);
+            Uninterruptibles.sleepUninterruptibly(1_000, TimeUnit.MILLISECONDS);
+        });
     }
 
     @Test
-    public void testWithTaskId() throws Exception {
+    void withTaskId() throws Exception {
         defaultEventQueueProcessor.updateByTaskId("v_2", "t2", new HashMap<>(), Status.COMPLETED);
         Uninterruptibles.sleepUninterruptibly(1_000, TimeUnit.MILLISECONDS);
         assertTrue(updatedTasks.stream().anyMatch(task -> task.getTaskId().equals("t2")));

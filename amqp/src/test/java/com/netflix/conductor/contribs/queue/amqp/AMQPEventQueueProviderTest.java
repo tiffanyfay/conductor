@@ -14,8 +14,8 @@ package com.netflix.conductor.contribs.queue.amqp;
 
 import java.time.Duration;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.contribs.queue.amqp.config.AMQPEventQueueProperties;
 import com.netflix.conductor.contribs.queue.amqp.config.AMQPEventQueueProvider;
@@ -25,17 +25,18 @@ import com.netflix.conductor.core.events.queue.ObservableQueue;
 import com.rabbitmq.client.AMQP.PROTOCOL;
 import com.rabbitmq.client.ConnectionFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class AMQPEventQueueProviderTest {
+class AMQPEventQueueProviderTest {
 
     private AMQPEventQueueProperties properties;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         properties = mock(AMQPEventQueueProperties.class);
         when(properties.getBatchSize()).thenReturn(1);
         when(properties.getPollTimeDuration()).thenReturn(Duration.ofMillis(100));
@@ -57,7 +58,7 @@ public class AMQPEventQueueProviderTest {
     }
 
     @Test
-    public void testAMQPEventQueueProvider_defaultconfig_exchange() {
+    void aMQPEventQueueProvider_defaultconfig_exchange() {
         String exchangestring =
                 "amqp_exchange:myExchangeName?exchangeType=topic&routingKey=test&deliveryMode=2";
         AMQPEventQueueProvider eventqProvider =
@@ -69,7 +70,7 @@ public class AMQPEventQueueProviderTest {
     }
 
     @Test
-    public void testAMQPEventQueueProvider_defaultconfig_queue() {
+    void aMQPEventQueueProvider_defaultconfig_queue() {
         String exchangestring =
                 "amqp_queue:myQueueName?deliveryMode=2&durable=false&autoDelete=true&exclusive=true";
         AMQPEventQueueProvider eventqProvider =

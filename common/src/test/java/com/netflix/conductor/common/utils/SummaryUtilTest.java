@@ -17,8 +17,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -35,11 +35,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ContextConfiguration(
         classes = {
-            TestObjectMapperConfiguration.class,
-            SummaryUtilTest.SummaryUtilTestConfiguration.class
+                TestObjectMapperConfiguration.class,
+                SummaryUtilTest.SummaryUtilTestConfiguration.class
         })
 @RunWith(SpringRunner.class)
-public class SummaryUtilTest {
+class SummaryUtilTest {
 
     @Configuration
     static class SummaryUtilTestConfiguration {
@@ -54,8 +54,8 @@ public class SummaryUtilTest {
 
     private Map<String, Object> testObject;
 
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         Map<String, Object> child = new HashMap<>();
         child.put("testStr", "childTestStr");
 
@@ -69,7 +69,7 @@ public class SummaryUtilTest {
     }
 
     @Test
-    public void testSerializeInputOutput_defaultToString() throws Exception {
+    void serializeInputOutput_defaultToString() throws Exception {
         new ApplicationContextRunner()
                 .withPropertyValues(
                         "conductor.app.summary-input-output-json-serialization.enabled:false")
@@ -86,7 +86,7 @@ public class SummaryUtilTest {
     }
 
     @Test
-    public void testSerializeInputOutput_jsonSerializationEnabled() throws Exception {
+    void serializeInputOutput_jsonSerializationEnabled() throws Exception {
         new ApplicationContextRunner()
                 .withPropertyValues(
                         "conductor.app.summary-input-output-json-serialization.enabled:true")

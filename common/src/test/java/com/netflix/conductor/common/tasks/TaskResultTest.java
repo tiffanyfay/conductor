@@ -14,21 +14,21 @@ package com.netflix.conductor.common.tasks;
 
 import java.util.HashMap;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TaskResultTest {
+class TaskResultTest {
 
     private Task task;
     private TaskResult taskResult;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         task = new Task();
         task.setWorkflowInstanceId("workflow-id");
         task.setTaskId("task-id");
@@ -40,7 +40,7 @@ public class TaskResultTest {
     }
 
     @Test
-    public void testCanceledTask() {
+    void canceledTask() {
         task.setStatus(Task.Status.CANCELED);
         taskResult = new TaskResult(task);
         validateTaskResult();
@@ -48,7 +48,7 @@ public class TaskResultTest {
     }
 
     @Test
-    public void testCompletedWithErrorsTask() {
+    void completedWithErrorsTask() {
         task.setStatus(Task.Status.COMPLETED_WITH_ERRORS);
         taskResult = new TaskResult(task);
         validateTaskResult();
@@ -56,7 +56,7 @@ public class TaskResultTest {
     }
 
     @Test
-    public void testScheduledTask() {
+    void scheduledTask() {
         task.setStatus(Task.Status.SCHEDULED);
         taskResult = new TaskResult(task);
         validateTaskResult();
@@ -64,7 +64,7 @@ public class TaskResultTest {
     }
 
     @Test
-    public void testCompltetedTask() {
+    void compltetedTask() {
         task.setStatus(Task.Status.COMPLETED);
         taskResult = new TaskResult(task);
         validateTaskResult();

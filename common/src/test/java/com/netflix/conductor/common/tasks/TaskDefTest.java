@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 
@@ -26,21 +26,21 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TaskDefTest {
+class TaskDefTest {
 
     private Validator validator;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         this.validator = factory.getValidator();
     }
 
     @Test
-    public void test() {
+    void test() {
         String name = "test1";
         String description = "desc";
         int retryCount = 10;
@@ -54,7 +54,7 @@ public class TaskDefTest {
     }
 
     @Test
-    public void testTaskDef() {
+    void taskDef() {
         TaskDef taskDef = new TaskDef();
         taskDef.setName("task1");
         taskDef.setRetryCount(-1);
@@ -75,7 +75,7 @@ public class TaskDefTest {
     }
 
     @Test
-    public void testTaskDefNameAndOwnerNotSet() {
+    void taskDefNameAndOwnerNotSet() {
         TaskDef taskDef = new TaskDef();
         taskDef.setRetryCount(-1);
         taskDef.setTimeoutSeconds(1000);
@@ -93,7 +93,7 @@ public class TaskDefTest {
     }
 
     @Test
-    public void testTaskDefInvalidEmail() {
+    void taskDefInvalidEmail() {
         TaskDef taskDef = new TaskDef();
         taskDef.setName("test-task");
         taskDef.setRetryCount(1);
@@ -111,7 +111,7 @@ public class TaskDefTest {
     }
 
     @Test
-    public void testTaskDefValidEmail() {
+    void taskDefValidEmail() {
         TaskDef taskDef = new TaskDef();
         taskDef.setName("test-task");
         taskDef.setRetryCount(1);

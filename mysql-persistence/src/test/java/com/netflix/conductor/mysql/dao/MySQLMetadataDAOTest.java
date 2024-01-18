@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.flywaydb.core.Flyway;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
@@ -39,35 +39,31 @@ import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.core.exception.NonTransientException;
 import com.netflix.conductor.mysql.config.MySQLConfiguration;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ContextConfiguration(
         classes = {
-            TestObjectMapperConfiguration.class,
-            MySQLConfiguration.class,
-            FlywayAutoConfiguration.class
+                TestObjectMapperConfiguration.class,
+                MySQLConfiguration.class,
+                FlywayAutoConfiguration.class
         })
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "spring.flyway.clean-disabled=false")
-public class MySQLMetadataDAOTest {
+class MySQLMetadataDAOTest {
 
     @Autowired private MySQLMetadataDAO metadataDAO;
 
     @Autowired Flyway flyway;
 
     // clean the database between tests.
-    @Before
-    public void before() {
+    @BeforeEach
+    void before() {
         flyway.clean();
         flyway.migrate();
     }
 
     @Test
-    public void testDuplicateWorkflowDef() {
+    void duplicateWorkflowDef() {
 
         WorkflowDef def = new WorkflowDef();
         def.setName("testDuplicate");
@@ -82,7 +78,7 @@ public class MySQLMetadataDAOTest {
     }
 
     @Test
-    public void testRemoveNotExistingWorkflowDef() {
+    void removeNotExistingWorkflowDef() {
         NonTransientException applicationException =
                 assertThrows(
                         NonTransientException.class,
@@ -92,7 +88,7 @@ public class MySQLMetadataDAOTest {
     }
 
     @Test
-    public void testWorkflowDefOperations() {
+    void workflowDefOperations() {
         WorkflowDef def = new WorkflowDef();
         def.setName("test");
         def.setVersion(1);
@@ -177,7 +173,7 @@ public class MySQLMetadataDAOTest {
     }
 
     @Test
-    public void testTaskDefOperations() {
+    void taskDefOperations() {
         TaskDef def = new TaskDef("taskA");
         def.setDescription("description");
         def.setCreatedBy("unit_test");
@@ -230,7 +226,7 @@ public class MySQLMetadataDAOTest {
     }
 
     @Test
-    public void testRemoveNotExistingTaskDef() {
+    void removeNotExistingTaskDef() {
         NonTransientException applicationException =
                 assertThrows(
                         NonTransientException.class,
@@ -239,7 +235,7 @@ public class MySQLMetadataDAOTest {
     }
 
     @Test
-    public void testEventHandlers() {
+    void eventHandlers() {
         String event1 = "SQS::arn:account090:sqstest1";
         String event2 = "SQS::arn:account090:sqstest2";
 
@@ -282,7 +278,7 @@ public class MySQLMetadataDAOTest {
     }
 
     @Test
-    public void testGetAllWorkflowDefsLatestVersions() {
+    void getAllWorkflowDefsLatestVersions() {
         WorkflowDef def = new WorkflowDef();
         def.setName("test1");
         def.setVersion(1);

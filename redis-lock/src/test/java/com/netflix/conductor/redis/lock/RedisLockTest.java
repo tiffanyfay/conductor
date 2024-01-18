@@ -14,9 +14,9 @@ package com.netflix.conductor.redis.lock;
 
 import java.util.concurrent.TimeUnit;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -27,12 +27,13 @@ import com.netflix.conductor.redislock.config.RedisLockProperties;
 import com.netflix.conductor.redislock.config.RedisLockProperties.REDIS_SERVER_TYPE;
 import com.netflix.conductor.redislock.lock.RedisLock;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class RedisLockTest {
+class RedisLockTest {
 
     private static RedisLock redisLock;
     private static Config config;
@@ -41,8 +42,8 @@ public class RedisLockTest {
     static GenericContainer redis =
             new GenericContainer("redis:5.0.3-alpine").withExposedPorts(6379);
 
-    @BeforeClass
-    public static void setUp() throws Exception {
+    @BeforeAll
+    static void setUp() throws Exception {
         redis.start();
         int port = redis.getFirstMappedPort();
         String host = redis.getHost();
@@ -65,20 +66,20 @@ public class RedisLockTest {
         redisson = Redisson.create(RedisLockTest.config);
     }
 
-    @AfterClass
-    public static void tearDown() {
+    @AfterAll
+    static void tearDown() {
         redis.stop();
     }
 
     @Test
-    public void testLocking() {
+    void locking() {
         redisson.getKeys().flushall();
         String lockId = "abcd-1234";
         assertTrue(redisLock.acquireLock(lockId, 1000, 1000, TimeUnit.MILLISECONDS));
     }
 
     @Test
-    public void testLockExpiration() throws InterruptedException {
+    void lockExpiration() throws InterruptedException {
         redisson.getKeys().flushall();
         String lockId = "abcd-1234";
         boolean isLocked = redisLock.acquireLock(lockId, 1000, 1000, TimeUnit.MILLISECONDS);
@@ -91,7 +92,7 @@ public class RedisLockTest {
     }
 
     @Test
-    public void testLockReentry() throws InterruptedException {
+    void lockReentry() throws InterruptedException {
         redisson.getKeys().flushall();
         String lockId = "abcd-1234";
         boolean isLocked = redisLock.acquireLock(lockId, 1000, 60000, TimeUnit.MILLISECONDS);
@@ -108,7 +109,7 @@ public class RedisLockTest {
     }
 
     @Test
-    public void testReleaseLock() {
+    void releaseLock() {
         redisson.getKeys().flushall();
         String lockId = "abcd-1234";
 
@@ -122,7 +123,7 @@ public class RedisLockTest {
     }
 
     @Test
-    public void testLockReleaseAndAcquire() throws InterruptedException {
+    void lockReleaseAndAcquire() throws InterruptedException {
         redisson.getKeys().flushall();
         String lockId = "abcd-1234";
 
@@ -140,7 +141,7 @@ public class RedisLockTest {
     }
 
     @Test
-    public void testLockingDuplicateThreads() throws InterruptedException {
+    void lockingDuplicateThreads() throws InterruptedException {
         redisson.getKeys().flushall();
         String lockId = "abcd-1234";
 
@@ -159,7 +160,7 @@ public class RedisLockTest {
     }
 
     @Test
-    public void testDuplicateLockAcquireFailure() throws InterruptedException {
+    void duplicateLockAcquireFailure() throws InterruptedException {
         redisson.getKeys().flushall();
         String lockId = "abcd-1234";
         Worker worker1 = new Worker(redisLock, lockId, 100L, 60000L);
@@ -175,7 +176,7 @@ public class RedisLockTest {
     }
 
     @Test
-    public void testReacquireLostKey() {
+    void reacquireLostKey() {
         redisson.getKeys().flushall();
         String lockId = "abcd-1234";
 
@@ -191,7 +192,7 @@ public class RedisLockTest {
     }
 
     @Test
-    public void testReleaseLockTwice() {
+    void releaseLockTwice() {
         redisson.getKeys().flushall();
         String lockId = "abcd-1234";
 

@@ -23,9 +23,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
@@ -33,7 +31,7 @@ import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 import com.netflix.conductor.model.TaskModel;
 import com.netflix.conductor.model.WorkflowModel;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class ExecutionDAOTest {
 
@@ -43,10 +41,8 @@ public abstract class ExecutionDAOTest {
         return (ConcurrentExecutionLimitDAO) getExecutionDAO();
     }
 
-    @Rule public ExpectedException expectedException = ExpectedException.none();
-
     @Test
-    public void testTaskExceedsLimit() {
+    public void taskExceedsLimit() {
         TaskDef taskDefinition = new TaskDef();
         taskDefinition.setName("task1");
         taskDefinition.setConcurrentExecLimit(1);
@@ -81,39 +77,37 @@ public abstract class ExecutionDAOTest {
     }
 
     @Test
-    public void testCreateTaskException() {
-        TaskModel task = new TaskModel();
-        task.setScheduledTime(1L);
-        task.setSeq(1);
-        task.setTaskId(UUID.randomUUID().toString());
-        task.setTaskDefName("task1");
+    public void createTaskException() {
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+            TaskModel task = new TaskModel();
+            task.setScheduledTime(1L);
+            task.setSeq(1);
+            task.setTaskId(UUID.randomUUID().toString());
+            task.setTaskDefName("task1");
+            getExecutionDAO().createTasks(List.of(task));
 
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("Workflow instance id cannot be null");
-        getExecutionDAO().createTasks(List.of(task));
-
-        task.setWorkflowInstanceId(UUID.randomUUID().toString());
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("Task reference name cannot be null");
-        getExecutionDAO().createTasks(List.of(task));
+            task.setWorkflowInstanceId(UUID.randomUUID().toString());
+            getExecutionDAO().createTasks(List.of(task));
+        });
+        assertTrue(exception.getMessage().contains("Task reference name cannot be null"));
     }
 
     @Test
-    public void testCreateTaskException2() {
-        TaskModel task = new TaskModel();
-        task.setScheduledTime(1L);
-        task.setSeq(1);
-        task.setTaskId(UUID.randomUUID().toString());
-        task.setTaskDefName("task1");
-        task.setWorkflowInstanceId(UUID.randomUUID().toString());
-
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("Task reference name cannot be null");
-        getExecutionDAO().createTasks(Collections.singletonList(task));
+    public void createTaskException2() {
+        Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+            TaskModel task = new TaskModel();
+            task.setScheduledTime(1L);
+            task.setSeq(1);
+            task.setTaskId(UUID.randomUUID().toString());
+            task.setTaskDefName("task1");
+            task.setWorkflowInstanceId(UUID.randomUUID().toString());
+            getExecutionDAO().createTasks(Collections.singletonList(task));
+        });
+        assertTrue(exception.getMessage().contains("Task reference name cannot be null"));
     }
 
     @Test
-    public void testTaskCreateDups() {
+    public void taskCreateDups() {
         List<TaskModel> tasks = new LinkedList<>();
         String workflowId = UUID.randomUUID().toString();
 
@@ -180,7 +174,7 @@ public abstract class ExecutionDAOTest {
     }
 
     @Test
-    public void testTaskOps() {
+    public void taskOps() {
         List<TaskModel> tasks = new LinkedList<>();
         String workflowId = UUID.randomUUID().toString();
 
@@ -241,7 +235,7 @@ public abstract class ExecutionDAOTest {
         found.forEach(
                 task -> {
                     assertTrue(task.getOutputData().containsKey("updated"));
-                    assertEquals(true, task.getOutputData().get("updated"));
+                    assertTrue(task.getOutputData().get("updated"));
                     boolean removed = getExecutionDAO().removeTask(task.getTaskId());
                     assertTrue(removed);
                 });
@@ -251,7 +245,7 @@ public abstract class ExecutionDAOTest {
     }
 
     @Test
-    public void testPending() {
+    public void pending() {
         WorkflowDef def = new WorkflowDef();
         def.setName("pending_count_test");
 
@@ -297,7 +291,7 @@ public abstract class ExecutionDAOTest {
         found = getExecutionDAO().getWorkflow(workflowId);
         assertNotNull(found);
         assertTrue(found.getInput().containsKey("updated"));
-        assertEquals(true, found.getInput().get("updated"));
+        assertTrue(found.getInput().get("updated"));
 
         List<String> running =
                 getExecutionDAO()

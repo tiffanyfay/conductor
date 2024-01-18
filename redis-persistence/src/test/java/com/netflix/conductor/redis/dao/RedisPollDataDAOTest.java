@@ -12,7 +12,7 @@
  */
 package com.netflix.conductor.redis.dao;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -33,14 +33,14 @@ import static org.mockito.Mockito.mock;
 
 @ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
 @RunWith(SpringRunner.class)
-public class RedisPollDataDAOTest extends PollDataDAOTest {
+class RedisPollDataDAOTest extends PollDataDAOTest {
 
     private PollDataDAO redisPollDataDAO;
 
     @Autowired private ObjectMapper objectMapper;
 
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         ConductorProperties conductorProperties = mock(ConductorProperties.class);
         RedisProperties properties = mock(RedisProperties.class);
         JedisCommands jedisMock = new JedisMock();

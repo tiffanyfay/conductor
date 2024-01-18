@@ -13,8 +13,7 @@
 package com.netflix.conductor.contribs.metrics;
 
 import java.util.concurrent.TimeUnit;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +34,12 @@ import static org.mockito.Mockito.verify;
 @RunWith(SpringRunner.class)
 @Import({LoggingMetricsConfiguration.class, MetricsRegistryConfiguration.class})
 @TestPropertySource(properties = {"conductor.metrics-logger.enabled=true"})
-public class LoggingMetricsConfigurationTest {
+class LoggingMetricsConfigurationTest {
 
     @Autowired MetricRegistry metricRegistry;
 
     @Test
-    public void testCollector() {
+    void collector() {
         Logger logger = spy(Logger.class);
         doReturn(true).when(logger).isInfoEnabled(any());
         Slf4jReporterProvider reporterProvider =

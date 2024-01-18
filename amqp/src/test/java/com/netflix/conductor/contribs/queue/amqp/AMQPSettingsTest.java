@@ -14,8 +14,8 @@ package com.netflix.conductor.contribs.queue.amqp;
 
 import java.time.Duration;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.contribs.queue.amqp.config.AMQPEventQueueProperties;
 import com.netflix.conductor.contribs.queue.amqp.util.AMQPSettings;
@@ -23,18 +23,17 @@ import com.netflix.conductor.contribs.queue.amqp.util.AMQPSettings;
 import com.rabbitmq.client.AMQP.PROTOCOL;
 import com.rabbitmq.client.ConnectionFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class AMQPSettingsTest {
+class AMQPSettingsTest {
 
     private AMQPEventQueueProperties properties;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         properties = mock(AMQPEventQueueProperties.class);
         when(properties.getBatchSize()).thenReturn(1);
         when(properties.getPollTimeDuration()).thenReturn(Duration.ofMillis(100));
@@ -56,7 +55,7 @@ public class AMQPSettingsTest {
     }
 
     @Test
-    public void testAMQPSettings_exchange_fromuri_defaultconfig() {
+    void aMQPSettings_exchange_fromuri_defaultconfig() {
         String exchangestring =
                 "amqp_exchange:myExchangeName?exchangeType=topic&routingKey=test&deliveryMode=2";
         AMQPSettings settings = new AMQPSettings(properties);
@@ -67,7 +66,7 @@ public class AMQPSettingsTest {
     }
 
     @Test
-    public void testAMQPSettings_queue_fromuri_defaultconfig() {
+    void aMQPSettings_queue_fromuri_defaultconfig() {
         String exchangestring =
                 "amqp_queue:myQueueName?deliveryMode=2&durable=false&autoDelete=true&exclusive=true";
         AMQPSettings settings = new AMQPSettings(properties);
@@ -79,11 +78,13 @@ public class AMQPSettingsTest {
         assertEquals("myQueueName", settings.getQueueOrExchangeName());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testAMQPSettings_exchange_fromuri_wrongdeliverymode() {
-        String exchangestring =
-                "amqp_exchange:myExchangeName?exchangeType=topic&routingKey=test&deliveryMode=3";
-        AMQPSettings settings = new AMQPSettings(properties);
-        settings.fromURI(exchangestring);
+    @Test
+    void aMQPSettings_exchange_fromuri_wrongdeliverymode() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            String exchangestring =
+                    "amqp_exchange:myExchangeName?exchangeType=topic&routingKey=test&deliveryMode=3";
+            AMQPSettings settings = new AMQPSettings(properties);
+            settings.fromURI(exchangestring);
+        });
     }
 }

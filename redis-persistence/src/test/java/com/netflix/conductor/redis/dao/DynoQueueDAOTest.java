@@ -18,10 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.dao.QueueDAO;
 import com.netflix.conductor.redis.config.RedisProperties;
@@ -36,17 +34,18 @@ import redis.clients.jedis.commands.JedisCommands;
 
 import static com.netflix.conductor.redis.dynoqueue.RedisQueuesShardingStrategyProvider.LOCAL_ONLY_STRATEGY;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DynoQueueDAOTest {
+class DynoQueueDAOTest {
 
     private QueueDAO queueDAO;
 
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         RedisProperties properties = mock(RedisProperties.class);
         when(properties.getQueueShardingStrategy()).thenReturn(LOCAL_ONLY_STRATEGY);
         JedisCommands jedisMock = new JedisMock();
@@ -76,10 +75,8 @@ public class DynoQueueDAOTest {
         queueDAO = new DynoQueueDAO(redisQueues);
     }
 
-    @Rule public ExpectedException expected = ExpectedException.none();
-
     @Test
-    public void test() {
+    void test() {
         String queueName = "TestQueue";
         long offsetTimeInSecond = 0;
 

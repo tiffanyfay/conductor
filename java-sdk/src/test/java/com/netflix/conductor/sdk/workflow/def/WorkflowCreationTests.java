@@ -52,14 +52,14 @@ public class WorkflowCreationTests {
     private static WorkflowTestRunner runner;
 
     @BeforeAll
-    public static void init() throws IOException {
+    static void init() throws IOException {
         runner = new WorkflowTestRunner(8080, "3.7.3");
         runner.init("com.netflix.conductor.sdk");
         executor = runner.getWorkflowExecutor();
     }
 
     @AfterAll
-    public static void cleanUp() {
+    static void cleanUp() {
         runner.shutdown();
     }
 
@@ -143,24 +143,20 @@ public class WorkflowCreationTests {
     }
 
     @Test
-    public void verifyCreatedWorkflow() throws Exception {
+    void verifyCreatedWorkflow() throws Exception {
         ConductorWorkflow<TestWorkflowInput> conductorWorkflow = registerTestWorkflow();
         WorkflowDef def = conductorWorkflow.toWorkflowDef();
         assertNotNull(def);
-        assertTrue(
-                def.getTasks()
-                        .get(def.getTasks().size() - 2)
-                        .getType()
-                        .equals(TaskType.TASK_TYPE_FORK_JOIN_DYNAMIC));
-        assertTrue(
-                def.getTasks()
-                        .get(def.getTasks().size() - 1)
-                        .getType()
-                        .equals(TaskType.TASK_TYPE_JOIN));
+        assertEquals(TaskType.TASK_TYPE_FORK_JOIN_DYNAMIC, def.getTasks()
+                .get(def.getTasks().size() - 2)
+                .getType());
+        assertEquals(TaskType.TASK_TYPE_JOIN, def.getTasks()
+                .get(def.getTasks().size() - 1)
+                .getType());
     }
 
     @Test
-    public void verifyInlineWorkflowExecution() throws ValidationError {
+    void verifyInlineWorkflowExecution() throws ValidationError {
         TestWorkflowInput workflowInput = new TestWorkflowInput("username", "10121", "US");
         try {
             Workflow run = registerTestWorkflow().execute(workflowInput).get(10, TimeUnit.SECONDS);
@@ -175,7 +171,7 @@ public class WorkflowCreationTests {
     }
 
     @Test
-    public void testWorkflowExecutionByName() throws ExecutionException, InterruptedException {
+    void workflowExecutionByName() throws ExecutionException, InterruptedException {
 
         // Register the workflow first
         registerTestWorkflow();
@@ -196,7 +192,7 @@ public class WorkflowCreationTests {
     }
 
     @Test
-    public void verifyWorkflowExecutionFailsIfNotExists()
+    void verifyWorkflowExecutionFailsIfNotExists()
             throws ExecutionException, InterruptedException {
 
         // Register the workflow first

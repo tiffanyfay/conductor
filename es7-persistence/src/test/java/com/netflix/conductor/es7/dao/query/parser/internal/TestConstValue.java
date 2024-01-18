@@ -14,17 +14,17 @@ package com.netflix.conductor.es7.dao.query.parser.internal;
 
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Viren
  */
-public class TestConstValue extends AbstractParserTest {
+class TestConstValue extends AbstractParserTest {
 
     @Test
-    public void testStringConst() throws Exception {
+    void stringConst() throws Exception {
         String test = "'string value'";
         String expected =
                 test.replaceAll(
@@ -42,28 +42,30 @@ public class TestConstValue extends AbstractParserTest {
     }
 
     @Test
-    public void testSystemConst() throws Exception {
+    void systemConst() throws Exception {
         String test = "null";
         ConstValue cv = new ConstValue(getInputStream(test));
         assertNotNull(cv.getValue());
         assertTrue(cv.getValue() instanceof String);
-        assertEquals(cv.getSysConstant(), ConstValue.SystemConsts.NULL);
+        assertEquals(ConstValue.SystemConsts.NULL, cv.getSysConstant());
         test = "null";
 
         test = "not null";
         cv = new ConstValue(getInputStream(test));
         assertNotNull(cv.getValue());
-        assertEquals(cv.getSysConstant(), ConstValue.SystemConsts.NOT_NULL);
-    }
-
-    @Test(expected = ParserException.class)
-    public void testInvalid() throws Exception {
-        String test = "'string value";
-        new ConstValue(getInputStream(test));
+        assertEquals(ConstValue.SystemConsts.NOT_NULL, cv.getSysConstant());
     }
 
     @Test
-    public void testNumConst() throws Exception {
+    void invalid() throws Exception {
+        assertThrows(ParserException.class, () -> {
+            String test = "'string value";
+            new ConstValue(getInputStream(test));
+        });
+    }
+
+    @Test
+    void numConst() throws Exception {
         String test = "12345.89";
         ConstValue cv = new ConstValue(getInputStream(test));
         assertNotNull(cv.getValue());
@@ -76,21 +78,23 @@ public class TestConstValue extends AbstractParserTest {
     }
 
     @Test
-    public void testRange() throws Exception {
+    void range() throws Exception {
         String test = "50 AND 100";
         Range range = new Range(getInputStream(test));
         assertEquals("50", range.getLow());
         assertEquals("100", range.getHigh());
     }
 
-    @Test(expected = ParserException.class)
-    public void testBadRange() throws Exception {
-        String test = "50 AND";
-        new Range(getInputStream(test));
+    @Test
+    void badRange() throws Exception {
+        assertThrows(ParserException.class, () -> {
+            String test = "50 AND";
+            new Range(getInputStream(test));
+        });
     }
 
     @Test
-    public void testArray() throws Exception {
+    void array() throws Exception {
         String test = "(1, 3, 'name', 'value2')";
         ListConst lc = new ListConst(getInputStream(test));
         List<Object> list = lc.getList();

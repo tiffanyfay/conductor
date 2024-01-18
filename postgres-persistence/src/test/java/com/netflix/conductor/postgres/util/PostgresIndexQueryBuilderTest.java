@@ -24,7 +24,7 @@ import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class PostgresIndexQueryBuilderTest {
+class PostgresIndexQueryBuilderTest {
     @Test
     void shouldGenerateQueryForEmptyString() throws SQLException {
         String inputQuery = "";

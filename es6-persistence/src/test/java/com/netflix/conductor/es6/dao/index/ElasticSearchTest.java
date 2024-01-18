@@ -14,8 +14,8 @@ package com.netflix.conductor.es6.dao.index;
 
 import java.util.Map;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -59,13 +59,13 @@ abstract class ElasticSearchTest {
 
     @Autowired protected ElasticSearchProperties properties;
 
-    @BeforeClass
-    public static void startServer() {
+    @BeforeAll
+    static void startServer() {
         container.start();
     }
 
-    @AfterClass
-    public static void stopServer() {
+    @AfterAll
+    static void stopServer() {
         container.stop();
     }
 }

@@ -34,7 +34,7 @@ import com.netflix.conductor.sdk.workflow.task.WorkerTask;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
-public class AnnotatedWorkerTests {
+class AnnotatedWorkerTests {
 
     static class Car {
         String brand;

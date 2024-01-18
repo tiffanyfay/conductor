@@ -17,8 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import com.netflix.conductor.common.metadata.workflow.RerunWorkflowRequest;
@@ -27,7 +27,6 @@ import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.service.WorkflowService;
 import com.netflix.conductor.service.WorkflowTestService;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -41,7 +40,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class WorkflowResourceTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class WorkflowResourceTest {
 
     @Mock private WorkflowService mockWorkflowService;
 
@@ -49,8 +50,8 @@ public class WorkflowResourceTest {
 
     private WorkflowResource workflowResource;
 
-    @Before
-    public void before() {
+    @BeforeEach
+    void before() {
         this.mockWorkflowService = mock(WorkflowService.class);
         this.mockWorkflowTestService = mock(WorkflowTestService.class);
         this.workflowResource =
@@ -58,7 +59,7 @@ public class WorkflowResourceTest {
     }
 
     @Test
-    public void testStartWorkflow() {
+    void startWorkflow() {
         StartWorkflowRequest startWorkflowRequest = new StartWorkflowRequest();
         startWorkflowRequest.setName("w123");
         Map<String, Object> input = new HashMap<>();
@@ -71,7 +72,7 @@ public class WorkflowResourceTest {
     }
 
     @Test
-    public void testStartWorkflowParam() {
+    void startWorkflowParam() {
         Map<String, Object> input = new HashMap<>();
         input.put("1", "abc");
         String workflowID = "w112";
@@ -82,7 +83,7 @@ public class WorkflowResourceTest {
     }
 
     @Test
-    public void getWorkflows() {
+    void getWorkflows() {
         Workflow workflow = new Workflow();
         workflow.setCorrelationId("123");
         ArrayList<Workflow> listOfWorkflows =
@@ -97,7 +98,7 @@ public class WorkflowResourceTest {
     }
 
     @Test
-    public void testGetWorklfowsMultipleCorrelationId() {
+    void getWorklfowsMultipleCorrelationId() {
         Workflow workflow = new Workflow();
         workflow.setCorrelationId("c123");
 
@@ -125,7 +126,7 @@ public class WorkflowResourceTest {
     }
 
     @Test
-    public void testGetExecutionStatus() {
+    void getExecutionStatus() {
         Workflow workflow = new Workflow();
         workflow.setCorrelationId("c123");
 
@@ -135,13 +136,13 @@ public class WorkflowResourceTest {
     }
 
     @Test
-    public void testDelete() {
+    void delete() {
         workflowResource.delete("w123", true);
         verify(mockWorkflowService, times(1)).deleteWorkflow(anyString(), anyBoolean());
     }
 
     @Test
-    public void testGetRunningWorkflow() {
+    void getRunningWorkflow() {
         List<String> listOfWorklfows =
                 new ArrayList<>() {
                     {
@@ -154,32 +155,32 @@ public class WorkflowResourceTest {
     }
 
     @Test
-    public void testDecide() {
+    void decide() {
         workflowResource.decide("w123");
         verify(mockWorkflowService, times(1)).decideWorkflow(anyString());
     }
 
     @Test
-    public void testPauseWorkflow() {
+    void pauseWorkflow() {
         workflowResource.pauseWorkflow("w123");
         verify(mockWorkflowService, times(1)).pauseWorkflow(anyString());
     }
 
     @Test
-    public void testResumeWorkflow() {
+    void resumeWorkflow() {
         workflowResource.resumeWorkflow("test");
         verify(mockWorkflowService, times(1)).resumeWorkflow(anyString());
     }
 
     @Test
-    public void testSkipTaskFromWorkflow() {
+    void skipTaskFromWorkflow() {
         workflowResource.skipTaskFromWorkflow("test", "testTask", null);
         verify(mockWorkflowService, times(1))
                 .skipTaskFromWorkflow(anyString(), anyString(), isNull());
     }
 
     @Test
-    public void testRerun() {
+    void rerun() {
         RerunWorkflowRequest request = new RerunWorkflowRequest();
         workflowResource.rerun("test", request);
         verify(mockWorkflowService, times(1))
@@ -187,57 +188,57 @@ public class WorkflowResourceTest {
     }
 
     @Test
-    public void restart() {
+    void restart() {
         workflowResource.restart("w123", false);
         verify(mockWorkflowService, times(1)).restartWorkflow(anyString(), anyBoolean());
     }
 
     @Test
-    public void testRetry() {
+    void retry() {
         workflowResource.retry("w123", false);
         verify(mockWorkflowService, times(1)).retryWorkflow(anyString(), anyBoolean());
     }
 
     @Test
-    public void testResetWorkflow() {
+    void resetWorkflow() {
         workflowResource.resetWorkflow("w123");
         verify(mockWorkflowService, times(1)).resetWorkflow(anyString());
     }
 
     @Test
-    public void testTerminate() {
+    void terminate() {
         workflowResource.terminate("w123", "test");
         verify(mockWorkflowService, times(1)).terminateWorkflow(anyString(), anyString());
     }
 
     @Test
-    public void testSearch() {
+    void search() {
         workflowResource.search(0, 100, "asc", "*", "*");
         verify(mockWorkflowService, times(1))
                 .searchWorkflows(anyInt(), anyInt(), anyString(), anyString(), anyString());
     }
 
     @Test
-    public void testSearchV2() {
+    void searchV2() {
         workflowResource.searchV2(0, 100, "asc", "*", "*");
         verify(mockWorkflowService).searchWorkflowsV2(0, 100, "asc", "*", "*");
     }
 
     @Test
-    public void testSearchWorkflowsByTasks() {
+    void searchWorkflowsByTasks() {
         workflowResource.searchWorkflowsByTasks(0, 100, "asc", "*", "*");
         verify(mockWorkflowService, times(1))
                 .searchWorkflowsByTasks(anyInt(), anyInt(), anyString(), anyString(), anyString());
     }
 
     @Test
-    public void testSearchWorkflowsByTasksV2() {
+    void searchWorkflowsByTasksV2() {
         workflowResource.searchWorkflowsByTasksV2(0, 100, "asc", "*", "*");
         verify(mockWorkflowService).searchWorkflowsByTasksV2(0, 100, "asc", "*", "*");
     }
 
     @Test
-    public void testGetExternalStorageLocation() {
+    void getExternalStorageLocation() {
         workflowResource.getExternalStorageLocation("path", "operation", "payloadType");
         verify(mockWorkflowService).getExternalStorageLocation("path", "operation", "payloadType");
     }

@@ -14,8 +14,8 @@ package com.netflix.conductor.contribs.listener;
 
 import java.util.UUID;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
@@ -28,14 +28,14 @@ import static org.mockito.Mockito.*;
 /**
  * @author pavel.halabala
  */
-public class ArchivingWorkflowStatusListenerTest {
+class ArchivingWorkflowStatusListenerTest {
 
     WorkflowModel workflow;
     ExecutionDAOFacade executionDAOFacade;
     ArchivingWorkflowStatusListener listener;
 
-    @Before
-    public void before() {
+    @BeforeEach
+    void before() {
         workflow = new WorkflowModel();
         WorkflowDef def = new WorkflowDef();
         def.setName("name1");
@@ -48,14 +48,14 @@ public class ArchivingWorkflowStatusListenerTest {
     }
 
     @Test
-    public void testArchiveOnWorkflowCompleted() {
+    void archiveOnWorkflowCompleted() {
         listener.onWorkflowCompleted(workflow);
         verify(executionDAOFacade, times(1)).removeWorkflow(workflow.getWorkflowId(), true);
         verifyNoMoreInteractions(executionDAOFacade);
     }
 
     @Test
-    public void testArchiveOnWorkflowTerminated() {
+    void archiveOnWorkflowTerminated() {
         listener.onWorkflowTerminated(workflow);
         verify(executionDAOFacade, times(1)).removeWorkflow(workflow.getWorkflowId(), true);
         verifyNoMoreInteractions(executionDAOFacade);

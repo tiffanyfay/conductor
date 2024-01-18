@@ -15,9 +15,9 @@ package com.netflix.conductor.core.execution.tasks;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
-
 import com.netflix.conductor.core.execution.WorkflowExecutor;
+
+import org.junit.jupiter.api.Test;
 import com.netflix.conductor.core.execution.evaluators.Evaluator;
 import com.netflix.conductor.core.execution.evaluators.JavascriptEvaluator;
 import com.netflix.conductor.core.execution.evaluators.ValueParamEvaluator;
@@ -25,15 +25,16 @@ import com.netflix.conductor.model.TaskModel;
 import com.netflix.conductor.model.WorkflowModel;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.mock;
 
-public class InlineTest {
+class InlineTest {
 
     private final WorkflowModel workflow = new WorkflowModel();
     private final WorkflowExecutor executor = mock(WorkflowExecutor.class);
 
     @Test
-    public void testInlineTaskValidationFailures() {
+    void inlineTaskValidationFailures() {
         Inline inline = new Inline(getStringEvaluatorMap());
 
         Map<String, Object> inputObj = new HashMap<>();
@@ -64,7 +65,7 @@ public class InlineTest {
     }
 
     @Test
-    public void testInlineValueParamExpression() {
+    void inlineValueParamExpression() {
         Inline inline = new Inline(getStringEvaluatorMap());
 
         Map<String, Object> inputObj = new HashMap<>();
@@ -96,7 +97,7 @@ public class InlineTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testInlineJavascriptExpression() {
+    void inlineJavascriptExpression() {
         Inline inline = new Inline(getStringEvaluatorMap());
 
         Map<String, Object> inputObj = new HashMap<>();
@@ -112,8 +113,7 @@ public class InlineTest {
         inline.execute(workflow, task, executor);
         assertEquals(TaskModel.Status.COMPLETED, task.getStatus());
         assertNull(task.getReasonForIncompletion());
-        assertEquals(
-                true, ((Map<String, Object>) task.getOutputData().get("result")).get("evalResult"));
+        assertTrue(((Map<String, Object>) task.getOutputData().get("result")).get("evalResult"));
 
         inputObj = new HashMap<>();
         inputObj.put("value", "StringValue");
@@ -128,8 +128,7 @@ public class InlineTest {
         inline.execute(workflow, task, executor);
         assertEquals(TaskModel.Status.COMPLETED, task.getStatus());
         assertNull(task.getReasonForIncompletion());
-        assertEquals(
-                true, ((Map<String, Object>) task.getOutputData().get("result")).get("evalResult"));
+        assertTrue(((Map<String, Object>) task.getOutputData().get("result")).get("evalResult"));
     }
 
     private Map<String, Evaluator> getStringEvaluatorMap() {

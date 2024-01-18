@@ -14,16 +14,14 @@ package com.netflix.conductor.es6.dao.query.parser.internal;
 
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class TestConstValue extends TestAbstractParser {
+class TestConstValue extends TestAbstractParser {
 
     @Test
-    public void testStringConst() throws Exception {
+    void stringConst() throws Exception {
         String test = "'string value'";
         String expected =
                 test.replaceAll(
@@ -41,27 +39,29 @@ public class TestConstValue extends TestAbstractParser {
     }
 
     @Test
-    public void testSystemConst() throws Exception {
+    void systemConst() throws Exception {
         String test = "null";
         ConstValue constValue = new ConstValue(getInputStream(test));
         assertNotNull(constValue.getValue());
         assertTrue(constValue.getValue() instanceof String);
-        assertEquals(constValue.getSysConstant(), ConstValue.SystemConsts.NULL);
+        assertEquals(ConstValue.SystemConsts.NULL, constValue.getSysConstant());
 
         test = "not null";
         constValue = new ConstValue(getInputStream(test));
         assertNotNull(constValue.getValue());
-        assertEquals(constValue.getSysConstant(), ConstValue.SystemConsts.NOT_NULL);
-    }
-
-    @Test(expected = ParserException.class)
-    public void testInvalid() throws Exception {
-        String test = "'string value";
-        new ConstValue(getInputStream(test));
+        assertEquals(ConstValue.SystemConsts.NOT_NULL, constValue.getSysConstant());
     }
 
     @Test
-    public void testNumConst() throws Exception {
+    void invalid() throws Exception {
+        assertThrows(ParserException.class, () -> {
+            String test = "'string value";
+            new ConstValue(getInputStream(test));
+        });
+    }
+
+    @Test
+    void numConst() throws Exception {
         String test = "12345.89";
         ConstValue cv = new ConstValue(getInputStream(test));
         assertNotNull(cv.getValue());
@@ -74,21 +74,23 @@ public class TestConstValue extends TestAbstractParser {
     }
 
     @Test
-    public void testRange() throws Exception {
+    void range() throws Exception {
         String test = "50 AND 100";
         Range range = new Range(getInputStream(test));
         assertEquals("50", range.getLow());
         assertEquals("100", range.getHigh());
     }
 
-    @Test(expected = ParserException.class)
-    public void testBadRange() throws Exception {
-        String test = "50 AND";
-        new Range(getInputStream(test));
+    @Test
+    void badRange() throws Exception {
+        assertThrows(ParserException.class, () -> {
+            String test = "50 AND";
+            new Range(getInputStream(test));
+        });
     }
 
     @Test
-    public void testArray() throws Exception {
+    void array() throws Exception {
         String test = "(1, 3, 'name', 'value2')";
         ListConst listConst = new ListConst(getInputStream(test));
         List<Object> list = listConst.getList();

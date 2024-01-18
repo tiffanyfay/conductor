@@ -14,9 +14,8 @@ package com.netflix.conductor.redis.jedis;
 
 import java.util.HashMap;
 
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import redis.clients.jedis.GeoUnit;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisSentinelPool;
@@ -31,308 +30,308 @@ import redis.clients.jedis.params.ZIncrByParams;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class JedisSentinelTest {
+class JedisSentinelTest {
 
     private final Jedis jedis = mock(Jedis.class);
     private final JedisSentinelPool jedisPool = mock(JedisSentinelPool.class);
     private final JedisSentinel jedisSentinel = new JedisSentinel(jedisPool);
 
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         when(this.jedisPool.getResource()).thenReturn(this.jedis);
     }
 
     @Test
-    public void testSet() {
+    void set() {
         jedisSentinel.set("key", "value");
         jedisSentinel.set("key", "value", SetParams.setParams());
     }
 
     @Test
-    public void testGet() {
+    void get() {
         jedisSentinel.get("key");
     }
 
     @Test
-    public void testExists() {
+    void exists() {
         jedisSentinel.exists("key");
     }
 
     @Test
-    public void testPersist() {
+    void persist() {
         jedisSentinel.persist("key");
     }
 
     @Test
-    public void testType() {
+    void type() {
         jedisSentinel.type("key");
     }
 
     @Test
-    public void testExpire() {
+    void expire() {
         jedisSentinel.expire("key", 1337);
     }
 
     @Test
-    public void testPexpire() {
+    void pexpire() {
         jedisSentinel.pexpire("key", 1337);
     }
 
     @Test
-    public void testExpireAt() {
+    void expireAt() {
         jedisSentinel.expireAt("key", 1337);
     }
 
     @Test
-    public void testPexpireAt() {
+    void pexpireAt() {
         jedisSentinel.pexpireAt("key", 1337);
     }
 
     @Test
-    public void testTtl() {
+    void ttl() {
         jedisSentinel.ttl("key");
     }
 
     @Test
-    public void testPttl() {
+    void pttl() {
         jedisSentinel.pttl("key");
     }
 
     @Test
-    public void testSetbit() {
+    void setbit() {
         jedisSentinel.setbit("key", 1337, "value");
         jedisSentinel.setbit("key", 1337, true);
     }
 
     @Test
-    public void testGetbit() {
+    void getbit() {
         jedisSentinel.getbit("key", 1337);
     }
 
     @Test
-    public void testSetrange() {
+    void setrange() {
         jedisSentinel.setrange("key", 1337, "value");
     }
 
     @Test
-    public void testGetrange() {
+    void getrange() {
         jedisSentinel.getrange("key", 1337, 1338);
     }
 
     @Test
-    public void testGetSet() {
+    void getSet() {
         jedisSentinel.getSet("key", "value");
     }
 
     @Test
-    public void testSetnx() {
+    void setnx() {
         jedisSentinel.setnx("test", "value");
     }
 
     @Test
-    public void testSetex() {
+    void setex() {
         jedisSentinel.setex("key", 1337, "value");
     }
 
     @Test
-    public void testPsetex() {
+    void psetex() {
         jedisSentinel.psetex("key", 1337, "value");
     }
 
     @Test
-    public void testDecrBy() {
+    void decrBy() {
         jedisSentinel.decrBy("key", 1337);
     }
 
     @Test
-    public void testDecr() {
+    void decr() {
         jedisSentinel.decr("key");
     }
 
     @Test
-    public void testIncrBy() {
+    void incrBy() {
         jedisSentinel.incrBy("key", 1337);
     }
 
     @Test
-    public void testIncrByFloat() {
+    void incrByFloat() {
         jedisSentinel.incrByFloat("key", 1337);
     }
 
     @Test
-    public void testIncr() {
+    void incr() {
         jedisSentinel.incr("key");
     }
 
     @Test
-    public void testAppend() {
+    void append() {
         jedisSentinel.append("key", "value");
     }
 
     @Test
-    public void testSubstr() {
+    void substr() {
         jedisSentinel.substr("key", 1337, 1338);
     }
 
     @Test
-    public void testHset() {
+    void hset() {
         jedisSentinel.hset("key", "field", "value");
     }
 
     @Test
-    public void testHget() {
+    void hget() {
         jedisSentinel.hget("key", "field");
     }
 
     @Test
-    public void testHsetnx() {
+    void hsetnx() {
         jedisSentinel.hsetnx("key", "field", "value");
     }
 
     @Test
-    public void testHmset() {
+    void hmset() {
         jedisSentinel.hmset("key", new HashMap<>());
     }
 
     @Test
-    public void testHmget() {
+    void hmget() {
         jedisSentinel.hmget("key", "fields");
     }
 
     @Test
-    public void testHincrBy() {
+    void hincrBy() {
         jedisSentinel.hincrBy("key", "field", 1337);
     }
 
     @Test
-    public void testHincrByFloat() {
+    void hincrByFloat() {
         jedisSentinel.hincrByFloat("key", "field", 1337);
     }
 
     @Test
-    public void testHexists() {
+    void hexists() {
         jedisSentinel.hexists("key", "field");
     }
 
     @Test
-    public void testHdel() {
+    void hdel() {
         jedisSentinel.hdel("key", "field");
     }
 
     @Test
-    public void testHlen() {
+    void hlen() {
         jedisSentinel.hlen("key");
     }
 
     @Test
-    public void testHkeys() {
+    void hkeys() {
         jedisSentinel.hkeys("key");
     }
 
     @Test
-    public void testHvals() {
+    void hvals() {
         jedisSentinel.hvals("key");
     }
 
     @Test
-    public void testGgetAll() {
+    void ggetAll() {
         jedisSentinel.hgetAll("key");
     }
 
     @Test
-    public void testRpush() {
+    void rpush() {
         jedisSentinel.rpush("key", "string");
     }
 
     @Test
-    public void testLpush() {
+    void lpush() {
         jedisSentinel.lpush("key", "string");
     }
 
     @Test
-    public void testLlen() {
+    void llen() {
         jedisSentinel.llen("key");
     }
 
     @Test
-    public void testLrange() {
+    void lrange() {
         jedisSentinel.lrange("key", 1337, 1338);
     }
 
     @Test
-    public void testLtrim() {
+    void ltrim() {
         jedisSentinel.ltrim("key", 1337, 1338);
     }
 
     @Test
-    public void testLindex() {
+    void lindex() {
         jedisSentinel.lindex("key", 1337);
     }
 
     @Test
-    public void testLset() {
+    void lset() {
         jedisSentinel.lset("key", 1337, "value");
     }
 
     @Test
-    public void testLrem() {
+    void lrem() {
         jedisSentinel.lrem("key", 1337, "value");
     }
 
     @Test
-    public void testLpop() {
+    void lpop() {
         jedisSentinel.lpop("key");
     }
 
     @Test
-    public void testRpop() {
+    void rpop() {
         jedisSentinel.rpop("key");
     }
 
     @Test
-    public void testSadd() {
+    void sadd() {
         jedisSentinel.sadd("key", "member");
     }
 
     @Test
-    public void testSmembers() {
+    void smembers() {
         jedisSentinel.smembers("key");
     }
 
     @Test
-    public void testSrem() {
+    void srem() {
         jedisSentinel.srem("key", "member");
     }
 
     @Test
-    public void testSpop() {
+    void spop() {
         jedisSentinel.spop("key");
         jedisSentinel.spop("key", 1337);
     }
 
     @Test
-    public void testScard() {
+    void scard() {
         jedisSentinel.scard("key");
     }
 
     @Test
-    public void testSismember() {
+    void sismember() {
         jedisSentinel.sismember("key", "member");
     }
 
     @Test
-    public void testSrandmember() {
+    void srandmember() {
         jedisSentinel.srandmember("key");
         jedisSentinel.srandmember("key", 1337);
     }
 
     @Test
-    public void testStrlen() {
+    void strlen() {
         jedisSentinel.strlen("key");
     }
 
     @Test
-    public void testZadd() {
+    void zadd() {
         jedisSentinel.zadd("key", new HashMap<>());
         jedisSentinel.zadd("key", new HashMap<>(), ZAddParams.zAddParams());
         jedisSentinel.zadd("key", 1337, "members");
@@ -340,70 +339,70 @@ public class JedisSentinelTest {
     }
 
     @Test
-    public void testZrange() {
+    void zrange() {
         jedisSentinel.zrange("key", 1337, 1338);
     }
 
     @Test
-    public void testZrem() {
+    void zrem() {
         jedisSentinel.zrem("key", "member");
     }
 
     @Test
-    public void testZincrby() {
+    void zincrby() {
         jedisSentinel.zincrby("key", 1337, "member");
         jedisSentinel.zincrby("key", 1337, "member", ZIncrByParams.zIncrByParams());
     }
 
     @Test
-    public void testZrank() {
+    void zrank() {
         jedisSentinel.zrank("key", "member");
     }
 
     @Test
-    public void testZrevrank() {
+    void zrevrank() {
         jedisSentinel.zrevrank("key", "member");
     }
 
     @Test
-    public void testZrevrange() {
+    void zrevrange() {
         jedisSentinel.zrevrange("key", 1337, 1338);
     }
 
     @Test
-    public void testZrangeWithScores() {
+    void zrangeWithScores() {
         jedisSentinel.zrangeWithScores("key", 1337, 1338);
     }
 
     @Test
-    public void testZrevrangeWithScores() {
+    void zrevrangeWithScores() {
         jedisSentinel.zrevrangeWithScores("key", 1337, 1338);
     }
 
     @Test
-    public void testZcard() {
+    void zcard() {
         jedisSentinel.zcard("key");
     }
 
     @Test
-    public void testZscore() {
+    void zscore() {
         jedisSentinel.zscore("key", "member");
     }
 
     @Test
-    public void testSort() {
+    void sort() {
         jedisSentinel.sort("key");
         jedisSentinel.sort("key", new SortingParams());
     }
 
     @Test
-    public void testZcount() {
+    void zcount() {
         jedisSentinel.zcount("key", "min", "max");
         jedisSentinel.zcount("key", 1337, 1338);
     }
 
     @Test
-    public void testZrangeByScore() {
+    void zrangeByScore() {
         jedisSentinel.zrangeByScore("key", "min", "max");
         jedisSentinel.zrangeByScore("key", 1337, 1338);
         jedisSentinel.zrangeByScore("key", "min", "max", 1337, 1338);
@@ -411,7 +410,7 @@ public class JedisSentinelTest {
     }
 
     @Test
-    public void testZrevrangeByScore() {
+    void zrevrangeByScore() {
         jedisSentinel.zrevrangeByScore("key", "max", "min");
         jedisSentinel.zrevrangeByScore("key", 1337, 1338);
         jedisSentinel.zrevrangeByScore("key", "max", "min", 1337, 1338);
@@ -419,7 +418,7 @@ public class JedisSentinelTest {
     }
 
     @Test
-    public void testZrangeByScoreWithScores() {
+    void zrangeByScoreWithScores() {
         jedisSentinel.zrangeByScoreWithScores("key", "min", "max");
         jedisSentinel.zrangeByScoreWithScores("key", "min", "max", 1337, 1338);
         jedisSentinel.zrangeByScoreWithScores("key", 1337, 1338);
@@ -427,7 +426,7 @@ public class JedisSentinelTest {
     }
 
     @Test
-    public void testZrevrangeByScoreWithScores() {
+    void zrevrangeByScoreWithScores() {
         jedisSentinel.zrevrangeByScoreWithScores("key", "max", "min");
         jedisSentinel.zrevrangeByScoreWithScores("key", "max", "min", 1337, 1338);
         jedisSentinel.zrevrangeByScoreWithScores("key", 1337, 1338);
@@ -435,154 +434,154 @@ public class JedisSentinelTest {
     }
 
     @Test
-    public void testZremrangeByRank() {
+    void zremrangeByRank() {
         jedisSentinel.zremrangeByRank("key", 1337, 1338);
     }
 
     @Test
-    public void testZremrangeByScore() {
+    void zremrangeByScore() {
         jedisSentinel.zremrangeByScore("key", "start", "end");
         jedisSentinel.zremrangeByScore("key", 1337, 1338);
     }
 
     @Test
-    public void testZlexcount() {
+    void zlexcount() {
         jedisSentinel.zlexcount("key", "min", "max");
     }
 
     @Test
-    public void testZrangeByLex() {
+    void zrangeByLex() {
         jedisSentinel.zrangeByLex("key", "min", "max");
         jedisSentinel.zrangeByLex("key", "min", "max", 1337, 1338);
     }
 
     @Test
-    public void testZrevrangeByLex() {
+    void zrevrangeByLex() {
         jedisSentinel.zrevrangeByLex("key", "max", "min");
         jedisSentinel.zrevrangeByLex("key", "max", "min", 1337, 1338);
     }
 
     @Test
-    public void testZremrangeByLex() {
+    void zremrangeByLex() {
         jedisSentinel.zremrangeByLex("key", "min", "max");
     }
 
     @Test
-    public void testLinsert() {
+    void linsert() {
         jedisSentinel.linsert("key", ListPosition.AFTER, "pivot", "value");
     }
 
     @Test
-    public void testLpushx() {
+    void lpushx() {
         jedisSentinel.lpushx("key", "string");
     }
 
     @Test
-    public void testRpushx() {
+    void rpushx() {
         jedisSentinel.rpushx("key", "string");
     }
 
     @Test
-    public void testBlpop() {
+    void blpop() {
         jedisSentinel.blpop(1337, "arg");
     }
 
     @Test
-    public void testBrpop() {
+    void brpop() {
         jedisSentinel.brpop(1337, "arg");
     }
 
     @Test
-    public void testDel() {
+    void del() {
         jedisSentinel.del("key");
     }
 
     @Test
-    public void testEcho() {
+    void echo() {
         jedisSentinel.echo("string");
     }
 
     @Test
-    public void testMove() {
+    void move() {
         jedisSentinel.move("key", 1337);
     }
 
     @Test
-    public void testBitcount() {
+    void bitcount() {
         jedisSentinel.bitcount("key");
         jedisSentinel.bitcount("key", 1337, 1338);
     }
 
     @Test
-    public void testBitpos() {
+    void bitpos() {
         jedisSentinel.bitpos("key", true);
     }
 
     @Test
-    public void testHscan() {
+    void hscan() {
         jedisSentinel.hscan("key", "cursor");
         jedisSentinel.hscan("key", "cursor", new ScanParams());
     }
 
     @Test
-    public void testSscan() {
+    void sscan() {
         jedisSentinel.sscan("key", "cursor");
         jedisSentinel.sscan("key", "cursor", new ScanParams());
     }
 
     @Test
-    public void testZscan() {
+    void zscan() {
         jedisSentinel.zscan("key", "cursor");
         jedisSentinel.zscan("key", "cursor", new ScanParams());
     }
 
     @Test
-    public void testPfadd() {
+    void pfadd() {
         jedisSentinel.pfadd("key", "elements");
     }
 
     @Test
-    public void testPfcount() {
+    void pfcount() {
         jedisSentinel.pfcount("key");
     }
 
     @Test
-    public void testGeoadd() {
+    void geoadd() {
         jedisSentinel.geoadd("key", new HashMap<>());
         jedisSentinel.geoadd("key", 1337, 1338, "member");
     }
 
     @Test
-    public void testGeodist() {
+    void geodist() {
         jedisSentinel.geodist("key", "member1", "member2");
         jedisSentinel.geodist("key", "member1", "member2", GeoUnit.KM);
     }
 
     @Test
-    public void testGeohash() {
+    void geohash() {
         jedisSentinel.geohash("key", "members");
     }
 
     @Test
-    public void testGeopos() {
+    void geopos() {
         jedisSentinel.geopos("key", "members");
     }
 
     @Test
-    public void testGeoradius() {
+    void georadius() {
         jedisSentinel.georadius("key", 1337, 1338, 32, GeoUnit.KM);
         jedisSentinel.georadius("key", 1337, 1338, 32, GeoUnit.KM, GeoRadiusParam.geoRadiusParam());
     }
 
     @Test
-    public void testGeoradiusByMember() {
+    void georadiusByMember() {
         jedisSentinel.georadiusByMember("key", "member", 1337, GeoUnit.KM);
         jedisSentinel.georadiusByMember(
                 "key", "member", 1337, GeoUnit.KM, GeoRadiusParam.geoRadiusParam());
     }
 
     @Test
-    public void testBitfield() {
+    void bitfield() {
         jedisSentinel.bitfield("key", "arguments");
     }
 }

@@ -14,39 +14,36 @@ package com.netflix.conductor.dao;
 
 import java.util.List;
 
-import org.junit.Test;
-
 import com.netflix.conductor.common.metadata.tasks.PollData;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class PollDataDAOTest {
 
     protected abstract PollDataDAO getPollDataDAO();
 
     @Test
-    public void testPollData() {
+    public void pollData() {
         getPollDataDAO().updateLastPollData("taskDef", null, "workerId1");
         PollData pollData = getPollDataDAO().getPollData("taskDef", null);
         assertNotNull(pollData);
         assertTrue(pollData.getLastPollTime() > 0);
-        assertEquals(pollData.getQueueName(), "taskDef");
+        assertEquals("taskDef", pollData.getQueueName());
         assertNull(pollData.getDomain());
-        assertEquals(pollData.getWorkerId(), "workerId1");
+        assertEquals("workerId1", pollData.getWorkerId());
 
         getPollDataDAO().updateLastPollData("taskDef", "domain1", "workerId1");
         pollData = getPollDataDAO().getPollData("taskDef", "domain1");
         assertNotNull(pollData);
         assertTrue(pollData.getLastPollTime() > 0);
-        assertEquals(pollData.getQueueName(), "taskDef");
-        assertEquals(pollData.getDomain(), "domain1");
-        assertEquals(pollData.getWorkerId(), "workerId1");
+        assertEquals("taskDef", pollData.getQueueName());
+        assertEquals("domain1", pollData.getDomain());
+        assertEquals("workerId1", pollData.getWorkerId());
 
         List<PollData> pData = getPollDataDAO().getPollData("taskDef");
-        assertEquals(pData.size(), 2);
+        assertEquals(2, pData.size());
 
         pollData = getPollDataDAO().getPollData("taskDef", "domain2");
         assertNull(pollData);

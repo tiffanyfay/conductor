@@ -65,7 +65,7 @@ public class SubWorkflowTest extends AbstractWorkflowTests {
                         .anyMatch(t -> t.getReferenceTaskName().equals("wait")));
 
         // That the call_made variable was set to True
-        assertEquals(true, execution.getVariables().get("call_made"));
+        assertTrue(execution.getVariables().get("call_made"));
 
         // Total number of tasks executed are 17
         assertEquals(17, execution.getTasks().size());

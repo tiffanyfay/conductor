@@ -16,24 +16,20 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.junit.Test;
-
 import com.netflix.conductor.es7.dao.query.parser.internal.AbstractParserTest;
+
+import org.junit.jupiter.api.Test;
 import com.netflix.conductor.es7.dao.query.parser.internal.ConstValue;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Viren
  */
-public class TestExpression extends AbstractParserTest {
+class TestExpression extends AbstractParserTest {
 
     @Test
-    public void test() throws Exception {
+    void test() throws Exception {
         String test =
                 "type='IMAGE' AND subType	='sdp' AND (metadata.width > 50 OR metadata.height > 50)";
         // test = "type='IMAGE' AND subType	='sdp'";
@@ -92,7 +88,7 @@ public class TestExpression extends AbstractParserTest {
     }
 
     @Test
-    public void testWithSysConstants() throws Exception {
+    void withSysConstants() throws Exception {
         String test = "type='IMAGE' AND subType	='sdp' AND description IS null";
         InputStream is = new BufferedInputStream(new ByteArrayInputStream(test.getBytes()));
         Expression expr = new Expression(is);
@@ -131,7 +127,7 @@ public class TestExpression extends AbstractParserTest {
         assertEquals("IS", nv.getOp().getOperator());
         ConstValue cv = nv.getValue();
         assertNotNull(cv);
-        assertEquals(cv.getSysConstant(), ConstValue.SystemConsts.NULL);
+        assertEquals(ConstValue.SystemConsts.NULL, cv.getSysConstant());
 
         test = "description IS not null";
         is = new BufferedInputStream(new ByteArrayInputStream(test.getBytes()));
@@ -144,6 +140,6 @@ public class TestExpression extends AbstractParserTest {
         assertEquals("IS", nv.getOp().getOperator());
         cv = nv.getValue();
         assertNotNull(cv);
-        assertEquals(cv.getSysConstant(), ConstValue.SystemConsts.NOT_NULL);
+        assertEquals(ConstValue.SystemConsts.NOT_NULL, cv.getSysConstant());
     }
 }

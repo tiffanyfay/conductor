@@ -17,8 +17,6 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.junit.Test;
-
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.Task.Status;
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
@@ -26,16 +24,14 @@ import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 
 import com.google.protobuf.Any;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class TaskTest {
+class TaskTest {
 
     @Test
-    public void test() {
+    void test() {
 
         Task task = new Task();
         task.setStatus(Status.FAILED);
@@ -59,7 +55,7 @@ public class TaskTest {
     }
 
     @Test
-    public void testTaskDefinitionIfAvailable() {
+    void taskDefinitionIfAvailable() {
         Task task = new Task();
         task.setStatus(Status.FAILED);
         assertEquals(Status.FAILED, task.getStatus());
@@ -77,7 +73,7 @@ public class TaskTest {
     }
 
     @Test
-    public void testTaskQueueWaitTime() {
+    void taskQueueWaitTime() {
         Task task = new Task();
 
         long currentTimeMillis = System.currentTimeMillis();
@@ -94,7 +90,7 @@ public class TaskTest {
     }
 
     @Test
-    public void testDeepCopyTask() {
+    void deepCopyTask() {
         final Task task = new Task();
         // In order to avoid forgetting putting inside the copy method the newly added fields check
         // the number of declared fields.

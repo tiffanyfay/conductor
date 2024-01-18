@@ -19,10 +19,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
@@ -48,7 +48,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.mock;
 
 @SuppressWarnings("unchecked")
@@ -70,8 +71,8 @@ public class HttpTaskTest {
             new MockServerContainer(
                     DockerImageName.parse("mockserver/mockserver").withTag("mockserver-5.12.0"));
 
-    @BeforeClass
-    public static void init() throws Exception {
+    @BeforeAll
+    static void init() throws Exception {
         Map<String, Object> map = new HashMap<>();
         map.put("key", "value1");
         map.put("num", 42);
@@ -112,8 +113,8 @@ public class HttpTaskTest {
                                 .withBody(JSON_RESPONSE));
     }
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         workflowExecutor = mock(WorkflowExecutor.class);
         DefaultRestTemplateProvider defaultRestTemplateProvider =
                 new DefaultRestTemplateProvider(Duration.ofMillis(150), Duration.ofMillis(100));
@@ -121,7 +122,7 @@ public class HttpTaskTest {
     }
 
     @Test
-    public void testPost() {
+    void post() {
 
         TaskModel task = new TaskModel();
         HttpTask.Input input = new HttpTask.Input();
@@ -136,11 +137,11 @@ public class HttpTaskTest {
         task.getInputData().put(HttpTask.REQUEST_PARAMETER_NAME, input);
 
         httpTask.start(workflow, task, workflowExecutor);
-        assertEquals(task.getReasonForIncompletion(), TaskModel.Status.COMPLETED, task.getStatus());
+        assertEquals(TaskModel.Status.COMPLETED, task.getStatus(), task.getReasonForIncompletion());
         Map<String, Object> hr = (Map<String, Object>) task.getOutputData().get("response");
         Object response = hr.get("body");
         assertEquals(TaskModel.Status.COMPLETED, task.getStatus());
-        assertTrue("response is: " + response, response instanceof Map);
+        assertTrue(response instanceof Map, "response is: " + response);
         Map<String, Object> map = (Map<String, Object>) response;
         Set<String> inputKeys = body.keySet();
         Set<String> responseKeys = map.keySet();
@@ -149,7 +150,7 @@ public class HttpTaskTest {
     }
 
     @Test
-    public void testPostNoContent() {
+    void postNoContent() {
 
         TaskModel task = new TaskModel();
         HttpTask.Input input = new HttpTask.Input();
@@ -163,15 +164,15 @@ public class HttpTaskTest {
         task.getInputData().put(HttpTask.REQUEST_PARAMETER_NAME, input);
 
         httpTask.start(workflow, task, workflowExecutor);
-        assertEquals(task.getReasonForIncompletion(), TaskModel.Status.COMPLETED, task.getStatus());
+        assertEquals(TaskModel.Status.COMPLETED, task.getStatus(), task.getReasonForIncompletion());
         Map<String, Object> hr = (Map<String, Object>) task.getOutputData().get("response");
         Object response = hr.get("body");
         assertEquals(TaskModel.Status.COMPLETED, task.getStatus());
-        assertNull("response is: " + response, response);
+        assertNull(response, "response is: " + response);
     }
 
     @Test
-    public void testFailure() {
+    void failure() {
 
         TaskModel task = new TaskModel();
         HttpTask.Input input = new HttpTask.Input();
@@ -182,7 +183,7 @@ public class HttpTaskTest {
 
         httpTask.start(workflow, task, workflowExecutor);
         assertEquals(
-                "Task output: " + task.getOutputData(), TaskModel.Status.FAILED, task.getStatus());
+                TaskModel.Status.FAILED, task.getStatus(), "Task output: " + task.getOutputData());
         assertTrue(task.getReasonForIncompletion().contains(ERROR_RESPONSE));
 
         task.setStatus(TaskModel.Status.SCHEDULED);
@@ -193,7 +194,7 @@ public class HttpTaskTest {
     }
 
     @Test
-    public void testPostAsyncComplete() {
+    void postAsyncComplete() {
 
         TaskModel task = new TaskModel();
         HttpTask.Input input = new HttpTask.Input();
@@ -208,11 +209,11 @@ public class HttpTaskTest {
 
         httpTask.start(workflow, task, workflowExecutor);
         assertEquals(
-                task.getReasonForIncompletion(), TaskModel.Status.IN_PROGRESS, task.getStatus());
+                TaskModel.Status.IN_PROGRESS, task.getStatus(), task.getReasonForIncompletion());
         Map<String, Object> hr = (Map<String, Object>) task.getOutputData().get("response");
         Object response = hr.get("body");
         assertEquals(TaskModel.Status.IN_PROGRESS, task.getStatus());
-        assertTrue("response is: " + response, response instanceof Map);
+        assertTrue(response instanceof Map, "response is: " + response);
         Map<String, Object> map = (Map<String, Object>) response;
         Set<String> inputKeys = body.keySet();
         Set<String> responseKeys = map.keySet();
@@ -221,7 +222,7 @@ public class HttpTaskTest {
     }
 
     @Test
-    public void testTextGET() {
+    void textGET() {
         TaskModel task = new TaskModel();
         HttpTask.Input input = new HttpTask.Input();
         input.setUri("http://" + mockServer.getHost() + ":" + mockServer.getServerPort() + "/text");
@@ -236,7 +237,7 @@ public class HttpTaskTest {
     }
 
     @Test
-    public void testNumberGET() {
+    void numberGET() {
         TaskModel task = new TaskModel();
         HttpTask.Input input = new HttpTask.Input();
         input.setUri(
@@ -253,7 +254,7 @@ public class HttpTaskTest {
     }
 
     @Test
-    public void testJsonGET() throws JsonProcessingException {
+    void jsonGET() throws JsonProcessingException {
 
         TaskModel task = new TaskModel();
         HttpTask.Input input = new HttpTask.Input();
@@ -271,7 +272,7 @@ public class HttpTaskTest {
     }
 
     @Test
-    public void testExecute() {
+    void execute() {
 
         TaskModel task = new TaskModel();
         HttpTask.Input input = new HttpTask.Input();
@@ -286,7 +287,7 @@ public class HttpTaskTest {
     }
 
     @Test
-    public void testHTTPGetConnectionTimeOut() {
+    void hTTPGetConnectionTimeOut() {
         TaskModel task = new TaskModel();
         HttpTask.Input input = new HttpTask.Input();
         Instant start = Instant.now();
@@ -299,12 +300,12 @@ public class HttpTaskTest {
         httpTask.start(workflow, task, workflowExecutor);
         Instant end = Instant.now();
         long diff = end.toEpochMilli() - start.toEpochMilli();
-        assertEquals(task.getStatus(), TaskModel.Status.FAILED);
+        assertEquals(TaskModel.Status.FAILED, task.getStatus());
         assertTrue(diff >= 110L);
     }
 
     @Test
-    public void testHTTPGETReadTimeOut() {
+    void hTTPGETReadTimeOut() {
         TaskModel task = new TaskModel();
         HttpTask.Input input = new HttpTask.Input();
         input.setReadTimeOut(-1);
@@ -319,7 +320,7 @@ public class HttpTaskTest {
     }
 
     @Test
-    public void testOptional() {
+    void optional() {
         TaskModel task = new TaskModel();
         HttpTask.Input input = new HttpTask.Input();
         input.setUri(
@@ -329,7 +330,7 @@ public class HttpTaskTest {
 
         httpTask.start(workflow, task, workflowExecutor);
         assertEquals(
-                "Task output: " + task.getOutputData(), TaskModel.Status.FAILED, task.getStatus());
+                TaskModel.Status.FAILED, task.getStatus(), "Task output: " + task.getOutputData());
         assertTrue(task.getReasonForIncompletion().contains(ERROR_RESPONSE));
         assertFalse(task.getStatus().isSuccessful());
 

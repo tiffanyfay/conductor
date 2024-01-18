@@ -15,15 +15,15 @@ package com.netflix.conductor.core.events;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestScriptEval {
+class TestScriptEval {
 
     @Test
-    public void testScript() throws Exception {
+    void script() throws Exception {
         Map<String, Object> payload = new HashMap<>();
         Map<String, Object> app = new HashMap<>();
         app.put("name", "conductor");

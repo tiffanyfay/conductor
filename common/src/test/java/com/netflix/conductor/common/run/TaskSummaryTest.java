@@ -12,7 +12,7 @@
  */
 package com.netflix.conductor.common.run;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -23,16 +23,16 @@ import com.netflix.conductor.common.metadata.tasks.Task;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
 @RunWith(SpringRunner.class)
-public class TaskSummaryTest {
+class TaskSummaryTest {
 
     @Autowired private ObjectMapper objectMapper;
 
     @Test
-    public void testJsonSerializing() throws Exception {
+    void jsonSerializing() throws Exception {
         Task task = new Task();
         TaskSummary taskSummary = new TaskSummary(task);
 

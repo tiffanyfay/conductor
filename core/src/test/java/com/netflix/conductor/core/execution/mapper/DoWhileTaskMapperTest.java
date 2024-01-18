@@ -17,8 +17,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
@@ -37,10 +37,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static com.netflix.conductor.common.metadata.tasks.TaskType.TASK_TYPE_DO_WHILE;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class DoWhileTaskMapperTest {
+class DoWhileTaskMapperTest {
 
     private TaskModel task1;
     private DeciderService deciderService;
@@ -50,8 +50,8 @@ public class DoWhileTaskMapperTest {
     private MetadataDAO metadataDAO;
     private ParametersUtils parametersUtils;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         WorkflowTask workflowTask = new WorkflowTask();
         workflowTask.setType(TaskType.DO_WHILE.name());
         workflowTask.setTaskReferenceName("Test");
@@ -94,7 +94,7 @@ public class DoWhileTaskMapperTest {
     }
 
     @Test
-    public void getMappedTasks() {
+    void getMappedTasks() {
 
         Mockito.doReturn(Collections.singletonList(task1))
                 .when(deciderService)
@@ -105,14 +105,14 @@ public class DoWhileTaskMapperTest {
                         .getMappedTasks(taskMapperContext);
 
         assertNotNull(mappedTasks);
-        assertEquals(mappedTasks.size(), 1);
+        assertEquals(1, mappedTasks.size());
         assertEquals(TASK_TYPE_DO_WHILE, mappedTasks.get(0).getTaskType());
         assertNotNull(mappedTasks.get(0).getInputData());
         assertEquals(Map.of("value", "bar"), mappedTasks.get(0).getInputData());
     }
 
     @Test
-    public void shouldNotScheduleCompletedTask() {
+    void shouldNotScheduleCompletedTask() {
 
         task1.setStatus(TaskModel.Status.COMPLETED);
 
@@ -121,11 +121,11 @@ public class DoWhileTaskMapperTest {
                         .getMappedTasks(taskMapperContext);
 
         assertNotNull(mappedTasks);
-        assertEquals(mappedTasks.size(), 1);
+        assertEquals(1, mappedTasks.size());
     }
 
     @Test
-    public void testAppendIteration() {
+    void appendIteration() {
         assertEquals("task__1", TaskUtils.appendIteration("task", 1));
     }
 }

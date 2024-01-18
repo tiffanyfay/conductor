@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -87,22 +87,19 @@ import static com.netflix.conductor.common.metadata.tasks.TaskType.TASK_TYPE_SWI
 import static com.netflix.conductor.common.metadata.tasks.TaskType.USER_DEFINED;
 import static com.netflix.conductor.common.metadata.tasks.TaskType.WAIT;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ContextConfiguration(
         classes = {
-            TestObjectMapperConfiguration.class,
-            TestDeciderOutcomes.TestConfiguration.class
+                TestObjectMapperConfiguration.class,
+                TestDeciderOutcomes.TestConfiguration.class
         })
 @RunWith(SpringRunner.class)
-public class TestDeciderOutcomes {
+class TestDeciderOutcomes {
 
     private DeciderService deciderService;
 
@@ -137,8 +134,8 @@ public class TestDeciderOutcomes {
         }
     }
 
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         MetadataDAO metadataDAO = mock(MetadataDAO.class);
         systemTaskRegistry = mock(SystemTaskRegistry.class);
 
@@ -190,7 +187,7 @@ public class TestDeciderOutcomes {
     }
 
     @Test
-    public void testWorkflowWithNoTasks() throws Exception {
+    void workflowWithNoTasks() throws Exception {
         InputStream stream = new ClassPathResource("./conditional_flow.json").getInputStream();
         WorkflowDef def = objectMapper.readValue(stream, WorkflowDef.class);
         assertNotNull(def);
@@ -211,13 +208,13 @@ public class TestDeciderOutcomes {
         workflow.getTasks().addAll(outcome.tasksToBeScheduled);
         outcome = deciderService.decide(workflow);
         assertFalse(outcome.isComplete);
-        assertEquals(outcome.tasksToBeUpdated.toString(), 3, outcome.tasksToBeUpdated.size());
+        assertEquals(3, outcome.tasksToBeUpdated.size(), outcome.tasksToBeUpdated.toString());
         assertEquals(2, outcome.tasksToBeScheduled.size());
         assertEquals("DECISION", outcome.tasksToBeScheduled.get(0).getTaskDefName());
     }
 
     @Test
-    public void testWorkflowWithNoTasksWithSwitch() throws Exception {
+    void workflowWithNoTasksWithSwitch() throws Exception {
         InputStream stream =
                 new ClassPathResource("./conditional_flow_with_switch.json").getInputStream();
         WorkflowDef def = objectMapper.readValue(stream, WorkflowDef.class);
@@ -239,13 +236,13 @@ public class TestDeciderOutcomes {
         workflow.getTasks().addAll(outcome.tasksToBeScheduled);
         outcome = deciderService.decide(workflow);
         assertFalse(outcome.isComplete);
-        assertEquals(outcome.tasksToBeUpdated.toString(), 3, outcome.tasksToBeUpdated.size());
+        assertEquals(3, outcome.tasksToBeUpdated.size(), outcome.tasksToBeUpdated.toString());
         assertEquals(2, outcome.tasksToBeScheduled.size());
         assertEquals("SWITCH", outcome.tasksToBeScheduled.get(0).getTaskDefName());
     }
 
     @Test
-    public void testRetries() {
+    void retries() {
         WorkflowDef def = new WorkflowDef();
         def.setName("test");
 
@@ -372,7 +369,7 @@ public class TestDeciderOutcomes {
     }
 
     @Test
-    public void testOptional() {
+    void optional() {
         WorkflowDef def = new WorkflowDef();
         def.setName("test");
 
@@ -447,7 +444,7 @@ public class TestDeciderOutcomes {
     }
 
     @Test
-    public void testPermissive() {
+    void permissive() {
         WorkflowDef def = new WorkflowDef();
         def.setName("test-permissive");
 
@@ -520,7 +517,7 @@ public class TestDeciderOutcomes {
     }
 
     @Test
-    public void testOptionalWithDynamicFork() {
+    void optionalWithDynamicFork() {
         WorkflowDef def = new WorkflowDef();
         def.setName("test");
 
@@ -600,7 +597,7 @@ public class TestDeciderOutcomes {
     }
 
     @Test
-    public void testDecisionCases() {
+    void decisionCases() {
         WorkflowDef def = new WorkflowDef();
         def.setName("test");
 

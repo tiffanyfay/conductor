@@ -12,13 +12,13 @@
  */
 package com.netflix.conductor.es7.dao.query.parser;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Viren
  */
-public class TestGroupedExpression {
+class TestGroupedExpression {
 
     @Test
-    public void test() {}
+    void test() {}
 }

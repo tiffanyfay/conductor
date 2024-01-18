@@ -12,71 +12,71 @@
  */
 package com.netflix.conductor.core.utils;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class QueueUtilsTest {
+class QueueUtilsTest {
 
     @Test
-    public void queueNameWithTypeAndIsolationGroup() {
+    void queueNameWithTypeAndIsolationGroup() {
         String queueNameGenerated = QueueUtils.getQueueName("tType", null, "isolationGroup", null);
         String queueNameGeneratedOnlyType = QueueUtils.getQueueName("tType", null, null, null);
         String queueNameGeneratedWithAllValues =
                 QueueUtils.getQueueName("tType", "domain", "iso", "eN");
 
-        Assert.assertEquals("tType-isolationGroup", queueNameGenerated);
-        Assert.assertEquals("tType", queueNameGeneratedOnlyType);
-        Assert.assertEquals("domain:tType@eN-iso", queueNameGeneratedWithAllValues);
+        Assertions.assertEquals("tType-isolationGroup", queueNameGenerated);
+        Assertions.assertEquals("tType", queueNameGeneratedOnlyType);
+        Assertions.assertEquals("domain:tType@eN-iso", queueNameGeneratedWithAllValues);
     }
 
     @Test
-    public void notIsolatedIfSeparatorNotPresent() {
+    void notIsolatedIfSeparatorNotPresent() {
         String notIsolatedQueue = "notIsolated";
-        Assert.assertFalse(QueueUtils.isIsolatedQueue(notIsolatedQueue));
+        Assertions.assertFalse(QueueUtils.isIsolatedQueue(notIsolatedQueue));
     }
 
     @Test
-    public void testGetExecutionNameSpace() {
+    void getExecutionNameSpace() {
         String executionNameSpace = QueueUtils.getExecutionNameSpace("domain:queueName@eN-iso");
-        Assert.assertEquals(executionNameSpace, "eN");
+        Assertions.assertEquals("eN", executionNameSpace);
     }
 
     @Test
-    public void testGetQueueExecutionNameSpaceEmpty() {
-        Assert.assertEquals(QueueUtils.getExecutionNameSpace("queueName"), "");
+    void getQueueExecutionNameSpaceEmpty() {
+        Assertions.assertEquals("", QueueUtils.getExecutionNameSpace("queueName"));
     }
 
     @Test
-    public void testGetQueueExecutionNameSpaceWithIsolationGroup() {
-        Assert.assertEquals(
-                QueueUtils.getExecutionNameSpace("domain:test@executionNameSpace-isolated"),
-                "executionNameSpace");
+    void getQueueExecutionNameSpaceWithIsolationGroup() {
+        Assertions.assertEquals(
+                "executionNameSpace",
+                QueueUtils.getExecutionNameSpace("domain:test@executionNameSpace-isolated"));
     }
 
     @Test
-    public void testGetQueueName() {
-        Assert.assertEquals(
+    void getQueueName() {
+        Assertions.assertEquals(
                 "domain:taskType@eN-isolated",
                 QueueUtils.getQueueName("taskType", "domain", "isolated", "eN"));
     }
 
     @Test
-    public void testGetTaskType() {
-        Assert.assertEquals("taskType", QueueUtils.getTaskType("domain:taskType-isolated"));
+    void getTaskType() {
+        Assertions.assertEquals("taskType", QueueUtils.getTaskType("domain:taskType-isolated"));
     }
 
     @Test
-    public void testGetTaskTypeWithoutDomain() {
-        Assert.assertEquals("taskType", QueueUtils.getTaskType("taskType-isolated"));
+    void getTaskTypeWithoutDomain() {
+        Assertions.assertEquals("taskType", QueueUtils.getTaskType("taskType-isolated"));
     }
 
     @Test
-    public void testGetTaskTypeWithoutDomainAndWithoutIsolationGroup() {
-        Assert.assertEquals("taskType", QueueUtils.getTaskType("taskType"));
+    void getTaskTypeWithoutDomainAndWithoutIsolationGroup() {
+        Assertions.assertEquals("taskType", QueueUtils.getTaskType("taskType"));
     }
 
     @Test
-    public void testGetTaskTypeWithoutDomainAndWithExecutionNameSpace() {
-        Assert.assertEquals("taskType", QueueUtils.getTaskType("taskType@eN"));
+    void getTaskTypeWithoutDomainAndWithExecutionNameSpace() {
+        Assertions.assertEquals("taskType", QueueUtils.getTaskType("taskType@eN"));
     }
 }

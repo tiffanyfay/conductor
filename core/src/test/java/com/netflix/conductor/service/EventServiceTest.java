@@ -13,8 +13,7 @@
 package com.netflix.conductor.service;
 
 import java.util.Set;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -28,15 +27,14 @@ import jakarta.validation.ConstraintViolationException;
 
 import static com.netflix.conductor.TestUtils.getConstraintViolationMessages;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.mock;
 
 @SuppressWarnings("SpringJavaAutowiredMembersInspection")
 @RunWith(SpringRunner.class)
 @EnableAutoConfiguration
-public class EventServiceTest {
+class EventServiceTest {
 
     @TestConfiguration
     static class TestEventConfiguration {
@@ -51,55 +49,63 @@ public class EventServiceTest {
 
     @Autowired private EventService eventService;
 
-    @Test(expected = ConstraintViolationException.class)
-    public void testAddEventHandler() {
-        try {
-            eventService.addEventHandler(null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("EventHandler cannot be null."));
-            throw ex;
-        }
-        fail("eventService.addEventHandler did not throw ConstraintViolationException !");
+    @Test
+    void addEventHandler() {
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                eventService.addEventHandler(null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("EventHandler cannot be null."));
+                throw ex;
+            }
+            fail("eventService.addEventHandler did not throw ConstraintViolationException !");
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
-    public void testUpdateEventHandler() {
-        try {
-            eventService.updateEventHandler(null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("EventHandler cannot be null."));
-            throw ex;
-        }
-        fail("eventService.updateEventHandler did not throw ConstraintViolationException !");
+    @Test
+    void updateEventHandler() {
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                eventService.updateEventHandler(null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("EventHandler cannot be null."));
+                throw ex;
+            }
+            fail("eventService.updateEventHandler did not throw ConstraintViolationException !");
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
-    public void testRemoveEventHandlerStatus() {
-        try {
-            eventService.removeEventHandlerStatus(null);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("EventHandler name cannot be null or empty."));
-            throw ex;
-        }
-        fail("eventService.removeEventHandlerStatus did not throw ConstraintViolationException !");
+    @Test
+    void removeEventHandlerStatus() {
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                eventService.removeEventHandlerStatus(null);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("EventHandler name cannot be null or empty."));
+                throw ex;
+            }
+            fail("eventService.removeEventHandlerStatus did not throw ConstraintViolationException !");
+        });
     }
 
-    @Test(expected = ConstraintViolationException.class)
-    public void testGetEventHandlersForEvent() {
-        try {
-            eventService.getEventHandlersForEvent(null, false);
-        } catch (ConstraintViolationException ex) {
-            assertEquals(1, ex.getConstraintViolations().size());
-            Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
-            assertTrue(messages.contains("Event cannot be null or empty."));
-            throw ex;
-        }
-        fail("eventService.getEventHandlersForEvent did not throw ConstraintViolationException !");
+    @Test
+    void getEventHandlersForEvent() {
+        assertThrows(ConstraintViolationException.class, () -> {
+            try {
+                eventService.getEventHandlersForEvent(null, false);
+            } catch (ConstraintViolationException ex) {
+                assertEquals(1, ex.getConstraintViolations().size());
+                Set<String> messages = getConstraintViolationMessages(ex.getConstraintViolations());
+                assertTrue(messages.contains("Event cannot be null or empty."));
+                throw ex;
+            }
+            fail("eventService.getEventHandlersForEvent did not throw ConstraintViolationException !");
+        });
     }
 }

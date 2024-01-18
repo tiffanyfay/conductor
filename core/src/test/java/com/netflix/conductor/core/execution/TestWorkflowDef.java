@@ -20,22 +20,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-
 import com.netflix.conductor.common.metadata.tasks.TaskType;
+
+import org.junit.jupiter.api.Test;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class TestWorkflowDef {
+class TestWorkflowDef {
 
     @Test
-    public void testContainsType() {
+    void containsType() {
         WorkflowDef def = new WorkflowDef();
         def.setName("test_workflow");
         def.setVersion(1);
@@ -74,7 +70,7 @@ public class TestWorkflowDef {
     }
 
     @Test
-    public void testGetNextTask_Decision() {
+    void getNextTask_Decision() {
         WorkflowDef def = new WorkflowDef();
         def.setName("test_workflow");
         def.setVersion(1);
@@ -138,7 +134,7 @@ public class TestWorkflowDef {
     }
 
     @Test
-    public void testGetNextTask_Conditional() {
+    void getNextTask_Conditional() {
         String COND_TASK_WF = "COND_TASK_WF";
         List<WorkflowTask> workflowTasks = new ArrayList<>(10);
         for (int i = 0; i < 10; i++) {

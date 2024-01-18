@@ -12,15 +12,14 @@
  */
 package com.netflix.conductor.es6.dao.query.parser.internal;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class TestComparisonOp extends TestAbstractParser {
+class TestComparisonOp extends TestAbstractParser {
 
     @Test
-    public void test() throws Exception {
+    void test() throws Exception {
         String[] tests = new String[] {"<", ">", "=", "!=", "IN", "BETWEEN", "STARTS_WITH"};
         for (String test : tests) {
             ComparisonOp name = new ComparisonOp(getInputStream(test));
@@ -30,12 +29,14 @@ public class TestComparisonOp extends TestAbstractParser {
         }
     }
 
-    @Test(expected = ParserException.class)
-    public void testInvalidOp() throws Exception {
-        String test = "AND";
-        ComparisonOp name = new ComparisonOp(getInputStream(test));
-        String nameVal = name.getOperator();
-        assertNotNull(nameVal);
-        assertEquals(test, nameVal);
+    @Test
+    void invalidOp() throws Exception {
+        assertThrows(ParserException.class, () -> {
+            String test = "AND";
+            ComparisonOp name = new ComparisonOp(getInputStream(test));
+            String nameVal = name.getOperator();
+            assertNotNull(nameVal);
+            assertEquals(test, nameVal);
+        });
     }
 }

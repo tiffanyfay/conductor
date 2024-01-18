@@ -15,17 +15,18 @@ package com.netflix.conductor.core.execution.tasks;
 import java.time.Duration;
 import java.util.Collections;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.core.config.ConductorProperties;
 
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TestSystemTaskWorkerCoordinator {
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class TestSystemTaskWorkerCoordinator {
 
     private static final String TEST_QUEUE = "test";
     private static final String EXECUTION_NAMESPACE_CONSTANT = "@exeNS";
@@ -33,8 +34,8 @@ public class TestSystemTaskWorkerCoordinator {
     private SystemTaskWorker systemTaskWorker;
     private ConductorProperties properties;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         systemTaskWorker = mock(SystemTaskWorker.class);
         properties = mock(ConductorProperties.class);
         when(properties.getSystemTaskWorkerPollInterval()).thenReturn(Duration.ofMillis(50));
@@ -42,7 +43,7 @@ public class TestSystemTaskWorkerCoordinator {
     }
 
     @Test
-    public void testIsFromCoordinatorExecutionNameSpace() {
+    void isFromCoordinatorExecutionNameSpace() {
         doReturn("exeNS").when(properties).getSystemTaskWorkerExecutionNamespace();
         SystemTaskWorkerCoordinator systemTaskWorkerCoordinator =
                 new SystemTaskWorkerCoordinator(

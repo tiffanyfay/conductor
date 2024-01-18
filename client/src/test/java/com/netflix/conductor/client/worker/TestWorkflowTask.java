@@ -15,8 +15,8 @@ package com.netflix.conductor.client.worker;
 import java.io.InputStream;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.config.ObjectMapperProvider;
 import com.netflix.conductor.common.metadata.tasks.Task;
@@ -25,20 +25,20 @@ import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class TestWorkflowTask {
+class TestWorkflowTask {
 
     private ObjectMapper objectMapper;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         objectMapper = new ObjectMapperProvider().getObjectMapper();
     }
 
     @Test
-    public void test() throws Exception {
+    void test() throws Exception {
         WorkflowTask task = new WorkflowTask();
         task.setType("Hello");
         task.setName("name");
@@ -65,7 +65,7 @@ public class TestWorkflowTask {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testObjectMapper() throws Exception {
+    void objectMapper() throws Exception {
         try (InputStream stream = TestWorkflowTask.class.getResourceAsStream("/tasks.json")) {
             List<Task> tasks = objectMapper.readValue(stream, List.class);
             assertNotNull(tasks);

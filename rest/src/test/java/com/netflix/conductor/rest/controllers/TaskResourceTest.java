@@ -18,8 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 
 import com.netflix.conductor.common.metadata.tasks.PollData;
@@ -31,8 +31,9 @@ import com.netflix.conductor.common.run.SearchResult;
 import com.netflix.conductor.common.run.TaskSummary;
 import com.netflix.conductor.service.TaskService;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -42,20 +43,20 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class TaskResourceTest {
+class TaskResourceTest {
 
     private TaskService mockTaskService;
 
     private TaskResource taskResource;
 
-    @Before
-    public void before() {
+    @BeforeEach
+    void before() {
         this.mockTaskService = mock(TaskService.class);
         this.taskResource = new TaskResource(this.mockTaskService);
     }
 
     @Test
-    public void testPoll() {
+    void poll() {
         Task task = new Task();
         task.setTaskType("SIMPLE");
         task.setWorkerId("123");
@@ -66,7 +67,7 @@ public class TaskResourceTest {
     }
 
     @Test
-    public void testBatchPoll() {
+    void batchPoll() {
         Task task = new Task();
         task.setTaskType("SIMPLE");
         task.setWorkerId("123");
@@ -82,7 +83,7 @@ public class TaskResourceTest {
     }
 
     @Test
-    public void testUpdateTask() {
+    void updateTask() {
         TaskResult taskResult = new TaskResult();
         taskResult.setStatus(TaskResult.Status.COMPLETED);
         taskResult.setTaskId("123");
@@ -91,13 +92,13 @@ public class TaskResourceTest {
     }
 
     @Test
-    public void testLog() {
+    void log() {
         taskResource.log("123", "test log");
         verify(mockTaskService, times(1)).log(anyString(), anyString());
     }
 
     @Test
-    public void testGetTaskLogs() {
+    void getTaskLogs() {
         List<TaskExecLog> listOfLogs = new ArrayList<>();
         listOfLogs.add(new TaskExecLog("test log"));
         when(mockTaskService.getTaskLogs(anyString())).thenReturn(listOfLogs);
@@ -105,7 +106,7 @@ public class TaskResourceTest {
     }
 
     @Test
-    public void testGetTask() {
+    void getTask() {
         Task task = new Task();
         task.setTaskType("SIMPLE");
         task.setWorkerId("123");
@@ -118,7 +119,7 @@ public class TaskResourceTest {
     }
 
     @Test
-    public void testSize() {
+    void size() {
         Map<String, Integer> map = new HashMap<>();
         map.put("test1", 1);
         map.put("test2", 2);
@@ -132,7 +133,7 @@ public class TaskResourceTest {
     }
 
     @Test
-    public void testAllVerbose() {
+    void allVerbose() {
         Map<String, Long> map = new HashMap<>();
         map.put("queue1", 1L);
         map.put("queue2", 2L);
@@ -148,7 +149,7 @@ public class TaskResourceTest {
     }
 
     @Test
-    public void testQueueDetails() {
+    void queueDetails() {
         Map<String, Long> map = new HashMap<>();
         map.put("queue1", 1L);
         map.put("queue2", 2L);
@@ -158,7 +159,7 @@ public class TaskResourceTest {
     }
 
     @Test
-    public void testGetPollData() {
+    void getPollData() {
         PollData pollData = new PollData("queue", "test", "w123", 100);
         List<PollData> listOfPollData = new ArrayList<>();
         listOfPollData.add(pollData);
@@ -168,7 +169,7 @@ public class TaskResourceTest {
     }
 
     @Test
-    public void testGetAllPollData() {
+    void getAllPollData() {
         PollData pollData = new PollData("queue", "test", "w123", 100);
         List<PollData> listOfPollData = new ArrayList<>();
         listOfPollData.add(pollData);
@@ -178,13 +179,13 @@ public class TaskResourceTest {
     }
 
     @Test
-    public void testRequeueTaskType() {
+    void requeueTaskType() {
         when(mockTaskService.requeuePendingTask(anyString())).thenReturn("1");
         assertEquals("1", taskResource.requeuePendingTask("SIMPLE"));
     }
 
     @Test
-    public void testSearch() {
+    void search() {
         Task task = new Task();
         task.setTaskType("SIMPLE");
         task.setWorkerId("123");
@@ -199,7 +200,7 @@ public class TaskResourceTest {
     }
 
     @Test
-    public void testSearchV2() {
+    void searchV2() {
         Task task = new Task();
         task.setTaskType("SIMPLE");
         task.setWorkerId("123");
@@ -213,7 +214,7 @@ public class TaskResourceTest {
     }
 
     @Test
-    public void testGetExternalStorageLocation() {
+    void getExternalStorageLocation() {
         ExternalStorageLocation externalStorageLocation = mock(ExternalStorageLocation.class);
         when(mockTaskService.getExternalStorageLocation("path", "operation", "payloadType"))
                 .thenReturn(externalStorageLocation);

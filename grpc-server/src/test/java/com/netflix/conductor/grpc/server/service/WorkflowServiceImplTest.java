@@ -17,8 +17,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import com.netflix.conductor.common.run.SearchResult;
@@ -32,11 +32,12 @@ import com.netflix.conductor.service.WorkflowService;
 
 import io.grpc.stub.StreamObserver;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class WorkflowServiceImplTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class WorkflowServiceImplTest {
 
     private static final String WORKFLOW_ID = "anyWorkflowId";
     private static final Boolean RESUME_SUBWORKFLOW_TASKS = true;
@@ -45,15 +46,15 @@ public class WorkflowServiceImplTest {
 
     private WorkflowServiceImpl workflowServiceImpl;
 
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         initMocks(this);
         workflowServiceImpl = new WorkflowServiceImpl(workflowService, 5000);
     }
 
     @SuppressWarnings("unchecked")
     @Test
-    public void givenWorkflowIdWhenRetryWorkflowThenRetriedSuccessfully() {
+    void givenWorkflowIdWhenRetryWorkflowThenRetriedSuccessfully() {
         // Given
         WorkflowServicePb.RetryWorkflowRequest req =
                 WorkflowServicePb.RetryWorkflowRequest.newBuilder()
@@ -67,7 +68,7 @@ public class WorkflowServiceImplTest {
     }
 
     @Test
-    public void searchExceptionTest() throws InterruptedException {
+    void searchExceptionTest() throws InterruptedException {
         CountDownLatch streamAlive = new CountDownLatch(1);
         AtomicReference<Throwable> throwable = new AtomicReference<>();
 
@@ -107,7 +108,7 @@ public class WorkflowServiceImplTest {
     }
 
     @Test
-    public void searchV2ExceptionTest() throws InterruptedException {
+    void searchV2ExceptionTest() throws InterruptedException {
         CountDownLatch streamAlive = new CountDownLatch(1);
         AtomicReference<Throwable> throwable = new AtomicReference<>();
 
@@ -147,7 +148,7 @@ public class WorkflowServiceImplTest {
     }
 
     @Test
-    public void searchTest() throws InterruptedException {
+    void searchTest() throws InterruptedException {
 
         CountDownLatch streamAlive = new CountDownLatch(1);
         AtomicReference<WorkflowServicePb.WorkflowSummarySearchResult> result =
@@ -202,7 +203,7 @@ public class WorkflowServiceImplTest {
     }
 
     @Test
-    public void searchByTasksTest() throws InterruptedException {
+    void searchByTasksTest() throws InterruptedException {
 
         CountDownLatch streamAlive = new CountDownLatch(1);
         AtomicReference<WorkflowServicePb.WorkflowSummarySearchResult> result =
@@ -257,7 +258,7 @@ public class WorkflowServiceImplTest {
     }
 
     @Test
-    public void searchV2Test() throws InterruptedException {
+    void searchV2Test() throws InterruptedException {
 
         CountDownLatch streamAlive = new CountDownLatch(1);
         AtomicReference<WorkflowServicePb.WorkflowSearchResult> result = new AtomicReference<>();
@@ -310,7 +311,7 @@ public class WorkflowServiceImplTest {
     }
 
     @Test
-    public void searchByTasksV2Test() throws InterruptedException {
+    void searchByTasksV2Test() throws InterruptedException {
 
         CountDownLatch streamAlive = new CountDownLatch(1);
         AtomicReference<WorkflowServicePb.WorkflowSearchResult> result = new AtomicReference<>();

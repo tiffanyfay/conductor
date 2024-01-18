@@ -15,26 +15,27 @@ package com.netflix.conductor.core.execution.tasks;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
-
 import com.netflix.conductor.core.execution.WorkflowExecutor;
+
+import org.junit.jupiter.api.Test;
 import com.netflix.conductor.model.TaskModel;
 import com.netflix.conductor.model.WorkflowModel;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author x-ultra
  */
-public class TestLambda {
+class TestLambda {
 
     private final WorkflowModel workflow = new WorkflowModel();
     private final WorkflowExecutor executor = mock(WorkflowExecutor.class);
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
-    public void start() {
+    void start() {
         Lambda lambda = new Lambda();
 
         Map inputObj = new HashMap();
@@ -52,7 +53,7 @@ public class TestLambda {
         task.getInputData().put("scriptExpression", "if ($.input.a==1){return 1}else{return 0 } ");
         lambda.execute(workflow, task, executor);
         assertEquals(TaskModel.Status.COMPLETED, task.getStatus());
-        assertEquals(task.getOutputData().toString(), "{result=1}");
+        assertEquals("{result=1}", task.getOutputData().toString());
 
         // test for scriptExpression ScriptException
         task = new TaskModel();

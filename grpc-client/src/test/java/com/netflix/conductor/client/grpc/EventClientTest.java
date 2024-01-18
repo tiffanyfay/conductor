@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -29,11 +29,12 @@ import com.netflix.conductor.grpc.EventServicePb;
 import com.netflix.conductor.grpc.ProtoMapper;
 import com.netflix.conductor.proto.EventHandlerPb;
 
-import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(SpringRunner.class)
 public class EventClientTest {
@@ -44,15 +45,15 @@ public class EventClientTest {
 
     EventClient eventClient;
 
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         eventClient = new EventClient("test", 0);
         ReflectionTestUtils.setField(eventClient, "stub", mockedStub);
         ReflectionTestUtils.setField(eventClient, "protoMapper", mockedProtoMapper);
     }
 
     @Test
-    public void testRegisterEventHandler() {
+    void registerEventHandler() {
         EventHandler eventHandler = mock(EventHandler.class);
         EventHandlerPb.EventHandler eventHandlerPB = mock(EventHandlerPb.EventHandler.class);
         when(mockedProtoMapper.toProto(eventHandler)).thenReturn(eventHandlerPB);
@@ -66,7 +67,7 @@ public class EventClientTest {
     }
 
     @Test
-    public void testUpdateEventHandler() {
+    void updateEventHandler() {
         EventHandler eventHandler = mock(EventHandler.class);
         EventHandlerPb.EventHandler eventHandlerPB = mock(EventHandlerPb.EventHandler.class);
         when(mockedProtoMapper.toProto(eventHandler)).thenReturn(eventHandlerPB);
@@ -80,7 +81,7 @@ public class EventClientTest {
     }
 
     @Test
-    public void testGetEventHandlers() {
+    void getEventHandlers() {
         EventHandler eventHandler = mock(EventHandler.class);
         EventHandlerPb.EventHandler eventHandlerPB = mock(EventHandlerPb.EventHandler.class);
         when(mockedProtoMapper.fromProto(eventHandlerPB)).thenReturn(eventHandler);
@@ -98,7 +99,7 @@ public class EventClientTest {
     }
 
     @Test
-    public void testUnregisterEventHandler() {
+    void unregisterEventHandler() {
         EventClient eventClient = createClientWithManagedChannel();
         EventServicePb.RemoveEventHandlerRequest request =
                 EventServicePb.RemoveEventHandlerRequest.newBuilder().setName("test").build();
@@ -107,7 +108,7 @@ public class EventClientTest {
     }
 
     @Test
-    public void testUnregisterEventHandlerWithManagedChannel() {
+    void unregisterEventHandlerWithManagedChannel() {
         EventServicePb.RemoveEventHandlerRequest request =
                 EventServicePb.RemoveEventHandlerRequest.newBuilder().setName("test").build();
         eventClient.unregisterEventHandler("test");

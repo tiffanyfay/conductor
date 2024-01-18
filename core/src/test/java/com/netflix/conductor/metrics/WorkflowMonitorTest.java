@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -29,7 +29,7 @@ import com.netflix.conductor.dao.QueueDAO;
 import com.netflix.conductor.service.MetadataService;
 
 @RunWith(SpringRunner.class)
-public class WorkflowMonitorTest {
+class WorkflowMonitorTest {
 
     @Mock private MetadataService metadataService;
     @Mock private QueueDAO queueDAO;
@@ -37,8 +37,8 @@ public class WorkflowMonitorTest {
 
     private WorkflowMonitor workflowMonitor;
 
-    @Before
-    public void beforeEach() {
+    @BeforeEach
+    void beforeEach() {
         workflowMonitor =
                 new WorkflowMonitor(metadataService, queueDAO, executionDAOFacade, 1000, Set.of());
     }
@@ -52,7 +52,7 @@ public class WorkflowMonitorTest {
     }
 
     @Test
-    public void testPendingWorkflowDataMap() {
+    void pendingWorkflowDataMap() {
         WorkflowDef test1_1 = makeDef("test1", 1, null);
         WorkflowDef test1_2 = makeDef("test1", 2, "name1");
 
@@ -64,11 +64,11 @@ public class WorkflowMonitorTest {
                 workflowMonitor.getPendingWorkflowToOwnerAppMap(
                         List.of(test1_1, test1_2, test2_1, test2_2, test2_3));
 
-        Assert.assertEquals(2, mapping.keySet().size());
-        Assert.assertTrue(mapping.containsKey("test1"));
-        Assert.assertTrue(mapping.containsKey("test2"));
+        Assertions.assertEquals(2, mapping.keySet().size());
+        Assertions.assertTrue(mapping.containsKey("test1"));
+        Assertions.assertTrue(mapping.containsKey("test2"));
 
-        Assert.assertEquals("name1", mapping.get("test1"));
-        Assert.assertEquals("last", mapping.get("test2"));
+        Assertions.assertEquals("name1", mapping.get("test1"));
+        Assertions.assertEquals("last", mapping.get("test2"));
     }
 }

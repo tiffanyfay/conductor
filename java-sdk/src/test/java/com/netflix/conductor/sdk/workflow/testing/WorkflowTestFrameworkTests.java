@@ -41,7 +41,7 @@ public class WorkflowTestFrameworkTests {
     private static WorkflowExecutor executor;
 
     @BeforeAll
-    public static void init() throws IOException {
+    static void init() throws IOException {
         testRunner = new WorkflowTestRunner(8080, "3.7.3");
         testRunner.init("com.netflix.conductor.sdk.workflow.testing");
 
@@ -51,12 +51,12 @@ public class WorkflowTestFrameworkTests {
     }
 
     @AfterAll
-    public static void cleanUp() {
+    static void cleanUp() {
         testRunner.shutdown();
     }
 
     @Test
-    public void testDynamicTaskExecuted() throws Exception {
+    void dynamicTaskExecuted() throws Exception {
 
         Map<String, Object> input = new HashMap<>();
         input.put("task2Name", "task_2");
@@ -100,7 +100,7 @@ public class WorkflowTestFrameworkTests {
     }
 
     @Test
-    public void testWorkflowFailure() throws Exception {
+    void workflowFailure() throws Exception {
 
         Map<String, Object> input = new HashMap<>();
         // task2Name is missing which will cause workflow to fail

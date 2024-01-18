@@ -15,8 +15,8 @@ package com.netflix.conductor.core.execution.tasks;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -34,10 +34,8 @@ import com.netflix.conductor.model.WorkflowModel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -45,7 +43,7 @@ import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
 @RunWith(SpringRunner.class)
-public class TestSubWorkflow {
+class TestSubWorkflow {
 
     private WorkflowExecutor workflowExecutor;
     private SubWorkflow subWorkflow;
@@ -53,15 +51,15 @@ public class TestSubWorkflow {
 
     @Autowired private ObjectMapper objectMapper;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         workflowExecutor = mock(WorkflowExecutor.class);
         startWorkflowOperation = mock(StartWorkflowOperation.class);
         subWorkflow = new SubWorkflow(objectMapper, startWorkflowOperation);
     }
 
     @Test
-    public void testStartSubWorkflow() {
+    void startSubWorkflow() {
         WorkflowDef workflowDef = new WorkflowDef();
         WorkflowModel workflowInstance = new WorkflowModel();
         workflowInstance.setWorkflowDefinition(workflowDef);
@@ -105,7 +103,7 @@ public class TestSubWorkflow {
     }
 
     @Test
-    public void testStartSubWorkflowQueueFailure() {
+    void startSubWorkflowQueueFailure() {
         WorkflowDef workflowDef = new WorkflowDef();
         WorkflowModel workflowInstance = new WorkflowModel();
         workflowInstance.setWorkflowDefinition(workflowDef);
@@ -129,13 +127,13 @@ public class TestSubWorkflow {
                 .thenThrow(new TransientException("QueueDAO failure"));
 
         subWorkflow.start(workflowInstance, task, workflowExecutor);
-        assertNull("subWorkflowId should be null", task.getSubWorkflowId());
+        assertNull(task.getSubWorkflowId(), "subWorkflowId should be null");
         assertEquals(TaskModel.Status.SCHEDULED, task.getStatus());
-        assertTrue("Output data should be empty", task.getOutputData().isEmpty());
+        assertTrue(task.getOutputData().isEmpty(), "Output data should be empty");
     }
 
     @Test
-    public void testStartSubWorkflowStartError() {
+    void startSubWorkflowStartError() {
         WorkflowDef workflowDef = new WorkflowDef();
         WorkflowModel workflowInstance = new WorkflowModel();
         workflowInstance.setWorkflowDefinition(workflowDef);
@@ -160,14 +158,14 @@ public class TestSubWorkflow {
                 .thenThrow(new NonTransientException(failureReason));
 
         subWorkflow.start(workflowInstance, task, workflowExecutor);
-        assertNull("subWorkflowId should be null", task.getSubWorkflowId());
+        assertNull(task.getSubWorkflowId(), "subWorkflowId should be null");
         assertEquals(TaskModel.Status.FAILED, task.getStatus());
         assertEquals(failureReason, task.getReasonForIncompletion());
-        assertTrue("Output data should be empty", task.getOutputData().isEmpty());
+        assertTrue(task.getOutputData().isEmpty(), "Output data should be empty");
     }
 
     @Test
-    public void testStartSubWorkflowWithEmptyWorkflowInput() {
+    void startSubWorkflowWithEmptyWorkflowInput() {
         WorkflowDef workflowDef = new WorkflowDef();
         WorkflowModel workflowInstance = new WorkflowModel();
         workflowInstance.setWorkflowDefinition(workflowDef);
@@ -196,7 +194,7 @@ public class TestSubWorkflow {
     }
 
     @Test
-    public void testStartSubWorkflowWithWorkflowInput() {
+    void startSubWorkflowWithWorkflowInput() {
         WorkflowDef workflowDef = new WorkflowDef();
         WorkflowModel workflowInstance = new WorkflowModel();
         workflowInstance.setWorkflowDefinition(workflowDef);
@@ -226,7 +224,7 @@ public class TestSubWorkflow {
     }
 
     @Test
-    public void testStartSubWorkflowTaskToDomain() {
+    void startSubWorkflowTaskToDomain() {
         WorkflowDef workflowDef = new WorkflowDef();
         WorkflowModel workflowInstance = new WorkflowModel();
         workflowInstance.setWorkflowDefinition(workflowDef);
@@ -259,7 +257,7 @@ public class TestSubWorkflow {
     }
 
     @Test
-    public void testExecuteSubWorkflowWithoutId() {
+    void executeSubWorkflowWithoutId() {
         WorkflowDef workflowDef = new WorkflowDef();
         WorkflowModel workflowInstance = new WorkflowModel();
         workflowInstance.setWorkflowDefinition(workflowDef);
@@ -284,7 +282,7 @@ public class TestSubWorkflow {
     }
 
     @Test
-    public void testExecuteWorkflowStatus() {
+    void executeWorkflowStatus() {
         WorkflowDef workflowDef = new WorkflowDef();
         WorkflowModel workflowInstance = new WorkflowModel();
         WorkflowModel subWorkflowInstance = new WorkflowModel();
@@ -352,7 +350,7 @@ public class TestSubWorkflow {
     }
 
     @Test
-    public void testCancelWithWorkflowId() {
+    void cancelWithWorkflowId() {
         WorkflowDef workflowDef = new WorkflowDef();
         WorkflowModel workflowInstance = new WorkflowModel();
         WorkflowModel subWorkflowInstance = new WorkflowModel();
@@ -383,7 +381,7 @@ public class TestSubWorkflow {
     }
 
     @Test
-    public void testCancelWithoutWorkflowId() {
+    void cancelWithoutWorkflowId() {
         WorkflowDef workflowDef = new WorkflowDef();
         WorkflowModel workflowInstance = new WorkflowModel();
         WorkflowModel subWorkflowInstance = new WorkflowModel();
@@ -414,12 +412,12 @@ public class TestSubWorkflow {
     }
 
     @Test
-    public void testIsAsync() {
+    void isAsync() {
         assertTrue(subWorkflow.isAsync());
     }
 
     @Test
-    public void testStartSubWorkflowWithSubWorkflowDefinition() {
+    void startSubWorkflowWithSubWorkflowDefinition() {
         WorkflowDef workflowDef = new WorkflowDef();
         WorkflowModel workflowInstance = new WorkflowModel();
         workflowInstance.setWorkflowDefinition(workflowDef);

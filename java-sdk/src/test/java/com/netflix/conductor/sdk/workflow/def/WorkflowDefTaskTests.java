@@ -18,16 +18,17 @@ import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 import com.netflix.conductor.sdk.workflow.def.tasks.*;
 import com.netflix.conductor.sdk.workflow.executor.WorkflowExecutor;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class WorkflowDefTaskTests {
+class WorkflowDefTaskTests {
 
     static {
         WorkflowExecutor.initTaskImplementations();
     }
 
     @Test
-    public void testWorkflowDefTaskWithStartDelay() {
+    void workflowDefTaskWithStartDelay() {
         SimpleTask simpleTask = new SimpleTask("task_name", "task_ref_name");
         int startDelay = 5;
 
@@ -41,7 +42,7 @@ public class WorkflowDefTaskTests {
     }
 
     @Test
-    public void testWorkflowDefTaskWithOptionalEnabled() {
+    void workflowDefTaskWithOptionalEnabled() {
         SimpleTask simpleTask = new SimpleTask("task_name", "task_ref_name");
 
         simpleTask.setOptional(true);
@@ -49,7 +50,7 @@ public class WorkflowDefTaskTests {
         WorkflowTask workflowTask = simpleTask.getWorkflowDefTasks().get(0);
 
         assertEquals(simpleTask.getStartDelay(), workflowTask.getStartDelay());
-        assertEquals(true, simpleTask.isOptional());
-        assertEquals(true, workflowTask.isOptional());
+        assertTrue(simpleTask.isOptional());
+        assertTrue(workflowTask.isOptional());
     }
 }

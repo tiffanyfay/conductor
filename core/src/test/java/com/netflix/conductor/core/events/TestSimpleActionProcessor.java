@@ -15,8 +15,8 @@ package com.netflix.conductor.core.events;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,13 +42,13 @@ import com.netflix.conductor.model.WorkflowModel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
 @RunWith(SpringRunner.class)
-public class TestSimpleActionProcessor {
+class TestSimpleActionProcessor {
 
     private WorkflowExecutor workflowExecutor;
     private ExternalPayloadStorageUtils externalPayloadStorageUtils;
@@ -57,8 +57,8 @@ public class TestSimpleActionProcessor {
 
     @Autowired private ObjectMapper objectMapper;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         externalPayloadStorageUtils = mock(ExternalPayloadStorageUtils.class);
 
         workflowExecutor = mock(WorkflowExecutor.class);
@@ -74,7 +74,7 @@ public class TestSimpleActionProcessor {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Test
-    public void testStartWorkflow_correlationId() throws Exception {
+    void startWorkflow_correlationId() throws Exception {
         StartWorkflow startWorkflow = new StartWorkflow();
         startWorkflow.setName("testWorkflow");
         startWorkflow.getInput().put("testInput", "${testId}");
@@ -120,7 +120,7 @@ public class TestSimpleActionProcessor {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Test
-    public void testStartWorkflow() throws Exception {
+    void startWorkflow() throws Exception {
         StartWorkflow startWorkflow = new StartWorkflow();
         startWorkflow.setName("testWorkflow");
         startWorkflow.getInput().put("testInput", "${testId}");
@@ -162,7 +162,7 @@ public class TestSimpleActionProcessor {
     }
 
     @Test
-    public void testCompleteTask() throws Exception {
+    void completeTask() throws Exception {
         TaskDetails taskDetails = new TaskDetails();
         taskDetails.setWorkflowId("${workflowId}");
         taskDetails.setTaskRefName("testTask");
@@ -200,15 +200,15 @@ public class TestSimpleActionProcessor {
         assertEquals("testTask", argumentCaptor.getValue().getOutputData().get("taskRefName"));
         assertEquals("someData", argumentCaptor.getValue().getOutputData().get("someKey"));
         // Assert values not in message are evaluated to null
-        assertTrue("testTask", argumentCaptor.getValue().getOutputData().containsKey("someNEKey"));
+        assertTrue(argumentCaptor.getValue().getOutputData().containsKey("someNEKey"), "testTask");
         // Assert null values from message are kept
         assertTrue(
-                "testTask", argumentCaptor.getValue().getOutputData().containsKey("someNullKey"));
-        assertNull("testTask", argumentCaptor.getValue().getOutputData().get("someNullKey"));
+                argumentCaptor.getValue().getOutputData().containsKey("someNullKey"), "testTask");
+        assertNull(argumentCaptor.getValue().getOutputData().get("someNullKey"), "testTask");
     }
 
     @Test
-    public void testCompleteLoopOverTask() throws Exception {
+    void completeLoopOverTask() throws Exception {
         TaskDetails taskDetails = new TaskDetails();
         taskDetails.setWorkflowId("${workflowId}");
         taskDetails.setTaskRefName("testTask");
@@ -247,15 +247,15 @@ public class TestSimpleActionProcessor {
         assertEquals("testTask", argumentCaptor.getValue().getOutputData().get("taskRefName"));
         assertEquals("someData", argumentCaptor.getValue().getOutputData().get("someKey"));
         // Assert values not in message are evaluated to null
-        assertTrue("testTask", argumentCaptor.getValue().getOutputData().containsKey("someNEKey"));
+        assertTrue(argumentCaptor.getValue().getOutputData().containsKey("someNEKey"), "testTask");
         // Assert null values from message are kept
         assertTrue(
-                "testTask", argumentCaptor.getValue().getOutputData().containsKey("someNullKey"));
-        assertNull("testTask", argumentCaptor.getValue().getOutputData().get("someNullKey"));
+                argumentCaptor.getValue().getOutputData().containsKey("someNullKey"), "testTask");
+        assertNull(argumentCaptor.getValue().getOutputData().get("someNullKey"), "testTask");
     }
 
     @Test
-    public void testCompleteTaskByTaskId() throws Exception {
+    void completeTaskByTaskId() throws Exception {
         TaskDetails taskDetails = new TaskDetails();
         taskDetails.setWorkflowId("${workflowId}");
         taskDetails.setTaskId("${taskId}");

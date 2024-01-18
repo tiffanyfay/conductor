@@ -14,32 +14,33 @@ package com.netflix.conductor.redis.jedis;
 
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.redis.config.RedisProperties;
 import com.netflix.conductor.redis.dynoqueue.ConfigurationHostSupplier;
 import com.netflix.dyno.connectionpool.Host;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ConfigurationHostSupplierTest {
+class ConfigurationHostSupplierTest {
 
     private RedisProperties properties;
 
     private ConfigurationHostSupplier configurationHostSupplier;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         properties = mock(RedisProperties.class);
         configurationHostSupplier = new ConfigurationHostSupplier(properties);
     }
 
     @Test
-    public void getHost() {
+    void getHost() {
         when(properties.getHosts()).thenReturn("dyno1:8102:us-east-1c");
 
         List<Host> hosts = configurationHostSupplier.getHosts();
@@ -53,7 +54,7 @@ public class ConfigurationHostSupplierTest {
     }
 
     @Test
-    public void getMultipleHosts() {
+    void getMultipleHosts() {
         when(properties.getHosts()).thenReturn("dyno1:8102:us-east-1c;dyno2:8103:us-east-1c");
 
         List<Host> hosts = configurationHostSupplier.getHosts();
@@ -73,7 +74,7 @@ public class ConfigurationHostSupplierTest {
     }
 
     @Test
-    public void getAuthenticatedHost() {
+    void getAuthenticatedHost() {
         when(properties.getHosts()).thenReturn("redis1:6432:us-east-1c:password");
 
         List<Host> hosts = configurationHostSupplier.getHosts();

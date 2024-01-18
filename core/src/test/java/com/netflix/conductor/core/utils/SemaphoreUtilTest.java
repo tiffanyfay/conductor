@@ -19,17 +19,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("ToArrayCallWithZeroLengthArrayArgument")
-public class SemaphoreUtilTest {
+class SemaphoreUtilTest {
 
     @Test
-    public void testBlockAfterAvailablePermitsExhausted() throws Exception {
+    void blockAfterAvailablePermitsExhausted() throws Exception {
         int threads = 5;
         ExecutorService executorService = Executors.newFixedThreadPool(threads);
         SemaphoreUtil semaphoreUtil = new SemaphoreUtil(threads);
@@ -56,7 +54,7 @@ public class SemaphoreUtilTest {
     }
 
     @Test
-    public void testAllowsPollingWhenPermitBecomesAvailable() throws Exception {
+    void allowsPollingWhenPermitBecomesAvailable() throws Exception {
         int threads = 5;
         ExecutorService executorService = Executors.newFixedThreadPool(threads);
         SemaphoreUtil semaphoreUtil = new SemaphoreUtil(threads);

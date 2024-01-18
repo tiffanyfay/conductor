@@ -15,10 +15,8 @@ package com.netflix.conductor.core.execution.mapper;
 import java.util.HashMap;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
@@ -30,18 +28,17 @@ import com.netflix.conductor.dao.MetadataDAO;
 import com.netflix.conductor.model.TaskModel;
 import com.netflix.conductor.model.WorkflowModel;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
-public class KafkaPublishTaskMapperTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class KafkaPublishTaskMapperTest {
 
     private IDGenerator idGenerator;
     private KafkaPublishTaskMapper kafkaTaskMapper;
 
-    @Rule public ExpectedException expectedException = ExpectedException.none();
-
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         ParametersUtils parametersUtils = mock(ParametersUtils.class);
         MetadataDAO metadataDAO = mock(MetadataDAO.class);
         kafkaTaskMapper = new KafkaPublishTaskMapper(parametersUtils, metadataDAO);
@@ -49,7 +46,7 @@ public class KafkaPublishTaskMapperTest {
     }
 
     @Test
-    public void getMappedTasks() {
+    void getMappedTasks() {
         // Given
         WorkflowTask workflowTask = new WorkflowTask();
         workflowTask.setName("kafka_task");
@@ -82,7 +79,7 @@ public class KafkaPublishTaskMapperTest {
     }
 
     @Test
-    public void getMappedTasks_WithoutTaskDef() {
+    void getMappedTasks_WithoutTaskDef() {
         // Given
         WorkflowTask workflowTask = new WorkflowTask();
         workflowTask.setName("kafka_task");

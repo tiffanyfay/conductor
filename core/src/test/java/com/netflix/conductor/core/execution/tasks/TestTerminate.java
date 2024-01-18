@@ -16,25 +16,26 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
-
 import com.netflix.conductor.core.execution.WorkflowExecutor;
+
+import org.junit.jupiter.api.Test;
 import com.netflix.conductor.model.TaskModel;
 import com.netflix.conductor.model.WorkflowModel;
 
 import static com.netflix.conductor.core.execution.tasks.Terminate.getTerminationStatusParameter;
 import static com.netflix.conductor.core.execution.tasks.Terminate.getTerminationWorkflowOutputParameter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import static org.mockito.Mockito.mock;
 
-public class TestTerminate {
+class TestTerminate {
 
     private final WorkflowExecutor executor = mock(WorkflowExecutor.class);
 
     @Test
-    public void should_fail_if_input_status_is_not_valid() {
+    void should_fail_if_input_status_is_not_valid() {
         WorkflowModel workflow = new WorkflowModel();
         Terminate terminateTask = new Terminate();
 
@@ -48,7 +49,7 @@ public class TestTerminate {
     }
 
     @Test
-    public void should_fail_if_input_status_is_empty() {
+    void should_fail_if_input_status_is_empty() {
         WorkflowModel workflow = new WorkflowModel();
         Terminate terminateTask = new Terminate();
 
@@ -62,7 +63,7 @@ public class TestTerminate {
     }
 
     @Test
-    public void should_fail_if_input_status_is_null() {
+    void should_fail_if_input_status_is_null() {
         WorkflowModel workflow = new WorkflowModel();
         Terminate terminateTask = new Terminate();
 
@@ -76,7 +77,7 @@ public class TestTerminate {
     }
 
     @Test
-    public void should_complete_workflow_on_terminate_task_success() {
+    void should_complete_workflow_on_terminate_task_success() {
         WorkflowModel workflow = new WorkflowModel();
         Terminate terminateTask = new Terminate();
         workflow.setOutput(Collections.singletonMap("output", "${task1.output.value}"));
@@ -100,7 +101,7 @@ public class TestTerminate {
     }
 
     @Test
-    public void should_fail_workflow_on_terminate_task_success() {
+    void should_fail_workflow_on_terminate_task_success() {
         WorkflowModel workflow = new WorkflowModel();
         Terminate terminateTask = new Terminate();
         workflow.setOutput(Collections.singletonMap("output", "${task1.output.value}"));
@@ -124,7 +125,7 @@ public class TestTerminate {
     }
 
     @Test
-    public void should_fail_workflow_on_terminate_task_success_with_empty_output() {
+    void should_fail_workflow_on_terminate_task_success_with_empty_output() {
         WorkflowModel workflow = new WorkflowModel();
         Terminate terminateTask = new Terminate();
 
@@ -139,7 +140,7 @@ public class TestTerminate {
     }
 
     @Test
-    public void should_fail_workflow_on_terminate_task_success_with_resolved_output() {
+    void should_fail_workflow_on_terminate_task_success_with_resolved_output() {
         WorkflowModel workflow = new WorkflowModel();
         Terminate terminateTask = new Terminate();
 

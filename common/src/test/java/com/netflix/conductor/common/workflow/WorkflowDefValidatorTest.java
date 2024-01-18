@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.netflix.conductor.common.metadata.tasks.TaskType;
 import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
@@ -30,20 +30,20 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class WorkflowDefValidatorTest {
+class WorkflowDefValidatorTest {
 
-    @Before
-    public void before() {
+    @BeforeEach
+    void before() {
         System.setProperty("NETFLIX_STACK", "test");
         System.setProperty("NETFLIX_ENVIRONMENT", "test");
         System.setProperty("TEST_ENV", "test");
     }
 
     @Test
-    public void testWorkflowDefConstraints() {
+    void workflowDefConstraints() {
         WorkflowDef workflowDef = new WorkflowDef(); // name is null
         workflowDef.setSchemaVersion(2);
 
@@ -62,7 +62,7 @@ public class WorkflowDefValidatorTest {
     }
 
     @Test
-    public void testWorkflowDefConstraintsWithMultipleEnvVariable() {
+    void workflowDefConstraintsWithMultipleEnvVariable() {
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setSchemaVersion(2);
         workflowDef.setName("test_env");
@@ -104,7 +104,7 @@ public class WorkflowDefValidatorTest {
     }
 
     @Test
-    public void testWorkflowDefConstraintsSingleEnvVariable() {
+    void workflowDefConstraintsSingleEnvVariable() {
         WorkflowDef workflowDef = new WorkflowDef(); // name is null
         workflowDef.setSchemaVersion(2);
         workflowDef.setName("test_env");
@@ -132,7 +132,7 @@ public class WorkflowDefValidatorTest {
     }
 
     @Test
-    public void testWorkflowDefConstraintsDualEnvVariable() {
+    void workflowDefConstraintsDualEnvVariable() {
         WorkflowDef workflowDef = new WorkflowDef(); // name is null
         workflowDef.setSchemaVersion(2);
         workflowDef.setName("test_env");
@@ -160,7 +160,7 @@ public class WorkflowDefValidatorTest {
     }
 
     @Test
-    public void testWorkflowDefConstraintsWithMapAsInputParam() {
+    void workflowDefConstraintsWithMapAsInputParam() {
         WorkflowDef workflowDef = new WorkflowDef(); // name is null
         workflowDef.setSchemaVersion(2);
         workflowDef.setName("test_env");
@@ -195,7 +195,7 @@ public class WorkflowDefValidatorTest {
     }
 
     @Test
-    public void testWorkflowTaskInputParamInvalid() {
+    void workflowTaskInputParamInvalid() {
         WorkflowDef workflowDef = new WorkflowDef(); // name is null
         workflowDef.setSchemaVersion(2);
         workflowDef.setName("test_env");
@@ -226,7 +226,7 @@ public class WorkflowDefValidatorTest {
     }
 
     @Test
-    public void testWorkflowTaskEmptyStringInputParamValue() {
+    void workflowTaskEmptyStringInputParamValue() {
         WorkflowDef workflowDef = new WorkflowDef(); // name is null
         workflowDef.setSchemaVersion(2);
         workflowDef.setName("test_env");
@@ -251,7 +251,7 @@ public class WorkflowDefValidatorTest {
     }
 
     @Test
-    public void testWorkflowTasklistInputParamWithEmptyString() {
+    void workflowTasklistInputParamWithEmptyString() {
         WorkflowDef workflowDef = new WorkflowDef(); // name is null
         workflowDef.setSchemaVersion(2);
         workflowDef.setName("test_env");
@@ -277,7 +277,7 @@ public class WorkflowDefValidatorTest {
     }
 
     @Test
-    public void testWorkflowSchemaVersion1() {
+    void workflowSchemaVersion1() {
         WorkflowDef workflowDef = new WorkflowDef(); // name is null
         workflowDef.setSchemaVersion(3);
         workflowDef.setName("test_env");
@@ -307,7 +307,7 @@ public class WorkflowDefValidatorTest {
     }
 
     @Test
-    public void testWorkflowOwnerInvalidEmail() {
+    void workflowOwnerInvalidEmail() {
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setName("test_env");
         workflowDef.setOwnerEmail("owner");
@@ -336,7 +336,7 @@ public class WorkflowDefValidatorTest {
     }
 
     @Test
-    public void testWorkflowOwnerValidEmail() {
+    void workflowOwnerValidEmail() {
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setName("test_env");
         workflowDef.setOwnerEmail("owner@test.com");

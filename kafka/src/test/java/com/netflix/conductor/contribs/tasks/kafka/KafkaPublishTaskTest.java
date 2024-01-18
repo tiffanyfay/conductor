@@ -21,7 +21,7 @@ import java.util.concurrent.Future;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.common.serialization.IntegerSerializer;
 import org.apache.kafka.common.serialization.LongSerializer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -34,20 +34,21 @@ import com.netflix.conductor.model.WorkflowModel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @SuppressWarnings({"unchecked", "rawtypes"})
 @ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
 @RunWith(SpringRunner.class)
-public class KafkaPublishTaskTest {
+class KafkaPublishTaskTest {
 
     @Autowired private ObjectMapper objectMapper;
 
     @Test
-    public void missingRequest_Fail() {
+    void missingRequest_Fail() {
         KafkaPublishTask kafkaPublishTask =
                 new KafkaPublishTask(getKafkaProducerManager(), objectMapper);
         TaskModel task = new TaskModel();
@@ -56,7 +57,7 @@ public class KafkaPublishTaskTest {
     }
 
     @Test
-    public void missingValue_Fail() {
+    void missingValue_Fail() {
 
         TaskModel task = new TaskModel();
         KafkaPublishTask.Input input = new KafkaPublishTask.Input();
@@ -72,7 +73,7 @@ public class KafkaPublishTaskTest {
     }
 
     @Test
-    public void missingBootStrapServers_Fail() {
+    void missingBootStrapServers_Fail() {
 
         TaskModel task = new TaskModel();
         KafkaPublishTask.Input input = new KafkaPublishTask.Input();
@@ -90,7 +91,7 @@ public class KafkaPublishTaskTest {
     }
 
     @Test
-    public void kafkaPublishExecutionException_Fail()
+    void kafkaPublishExecutionException_Fail()
             throws ExecutionException, InterruptedException {
 
         TaskModel task = getTask();
@@ -117,7 +118,7 @@ public class KafkaPublishTaskTest {
     }
 
     @Test
-    public void kafkaPublishUnknownException_Fail() {
+    void kafkaPublishUnknownException_Fail() {
 
         TaskModel task = getTask();
 
@@ -137,7 +138,7 @@ public class KafkaPublishTaskTest {
     }
 
     @Test
-    public void kafkaPublishSuccess_Completed() {
+    void kafkaPublishSuccess_Completed() {
 
         TaskModel task = getTask();
 
@@ -154,7 +155,7 @@ public class KafkaPublishTaskTest {
     }
 
     @Test
-    public void kafkaPublishSuccess_AsyncComplete() {
+    void kafkaPublishSuccess_AsyncComplete() {
 
         TaskModel task = getTask();
         task.getInputData().put("asyncComplete", true);
@@ -188,32 +189,32 @@ public class KafkaPublishTaskTest {
     }
 
     @Test
-    public void integerSerializer_integerObject() {
+    void integerSerializer_integerObject() {
         KafkaPublishTask kPublishTask =
                 new KafkaPublishTask(getKafkaProducerManager(), objectMapper);
         KafkaPublishTask.Input input = new KafkaPublishTask.Input();
         input.setKeySerializer(IntegerSerializer.class.getCanonicalName());
         input.setKey(String.valueOf(Integer.MAX_VALUE));
-        assertEquals(kPublishTask.getKey(input), Integer.MAX_VALUE);
+        assertEquals(Integer.MAX_VALUE, kPublishTask.getKey(input));
     }
 
     @Test
-    public void longSerializer_longObject() {
+    void longSerializer_longObject() {
         KafkaPublishTask kPublishTask =
                 new KafkaPublishTask(getKafkaProducerManager(), objectMapper);
         KafkaPublishTask.Input input = new KafkaPublishTask.Input();
         input.setKeySerializer(LongSerializer.class.getCanonicalName());
         input.setKey(String.valueOf(Long.MAX_VALUE));
-        assertEquals(kPublishTask.getKey(input), Long.MAX_VALUE);
+        assertEquals(Long.MAX_VALUE, kPublishTask.getKey(input));
     }
 
     @Test
-    public void noSerializer_StringObject() {
+    void noSerializer_StringObject() {
         KafkaPublishTask kPublishTask =
                 new KafkaPublishTask(getKafkaProducerManager(), objectMapper);
         KafkaPublishTask.Input input = new KafkaPublishTask.Input();
         input.setKey("testStringKey");
-        assertEquals(kPublishTask.getKey(input), "testStringKey");
+        assertEquals("testStringKey", kPublishTask.getKey(input));
     }
 
     private KafkaProducerManager getKafkaProducerManager() {

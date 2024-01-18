@@ -12,8 +12,8 @@
  */
 package com.netflix.conductor.client.grpc;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -31,9 +31,10 @@ import com.netflix.conductor.proto.WorkflowSummaryPb;
 
 import io.grpc.ManagedChannelBuilder;
 
-import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(SpringRunner.class)
 public class WorkflowClientTest {
@@ -44,15 +45,15 @@ public class WorkflowClientTest {
 
     WorkflowClient workflowClient;
 
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         workflowClient = new WorkflowClient("test", 0);
         ReflectionTestUtils.setField(workflowClient, "stub", mockedStub);
         ReflectionTestUtils.setField(workflowClient, "protoMapper", mockedProtoMapper);
     }
 
     @Test
-    public void testSearch() {
+    void search() {
         WorkflowSummary workflow = mock(WorkflowSummary.class);
         WorkflowSummaryPb.WorkflowSummary workflowPB =
                 mock(WorkflowSummaryPb.WorkflowSummary.class);
@@ -71,7 +72,7 @@ public class WorkflowClientTest {
     }
 
     @Test
-    public void testSearchV2() {
+    void searchV2() {
         Workflow workflow = mock(Workflow.class);
         WorkflowPb.Workflow workflowPB = mock(WorkflowPb.Workflow.class);
         when(mockedProtoMapper.fromProto(workflowPB)).thenReturn(workflow);
@@ -89,7 +90,7 @@ public class WorkflowClientTest {
     }
 
     @Test
-    public void testSearchWithParams() {
+    void searchWithParams() {
         WorkflowSummary workflow = mock(WorkflowSummary.class);
         WorkflowSummaryPb.WorkflowSummary workflowPB =
                 mock(WorkflowSummaryPb.WorkflowSummary.class);
@@ -115,7 +116,7 @@ public class WorkflowClientTest {
     }
 
     @Test
-    public void testSearchV2WithParams() {
+    void searchV2WithParams() {
         Workflow workflow = mock(Workflow.class);
         WorkflowPb.Workflow workflowPB = mock(WorkflowPb.Workflow.class);
         when(mockedProtoMapper.fromProto(workflowPB)).thenReturn(workflow);
@@ -139,7 +140,7 @@ public class WorkflowClientTest {
     }
 
     @Test
-    public void testSearchV2WithParamsWithManagedChannel() {
+    void searchV2WithParamsWithManagedChannel() {
         WorkflowClient workflowClient = createClientWithManagedChannel();
         Workflow workflow = mock(Workflow.class);
         WorkflowPb.Workflow workflowPB = mock(WorkflowPb.Workflow.class);

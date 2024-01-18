@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
@@ -43,9 +43,7 @@ import com.netflix.conductor.common.run.Workflow.WorkflowStatus;
 import com.netflix.conductor.common.run.WorkflowSummary;
 import com.netflix.conductor.test.integration.AbstractEndToEndTest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(
@@ -99,7 +97,7 @@ public abstract class AbstractGrpcEndToEndTest extends AbstractEndToEndTest {
     }
 
     @Test
-    public void testAll() throws Exception {
+    public void all() throws Exception {
         assertNotNull(taskClient);
         List<TaskDef> defs = new LinkedList<>();
         for (int i = 0; i < 5; i++) {
@@ -170,7 +168,7 @@ public abstract class AbstractGrpcEndToEndTest extends AbstractEndToEndTest {
 
         polled = taskClient.batchPollTasksByTaskType(t0.getName(), "test", 1, 100);
         assertNotNull(polled);
-        assertTrue(polled.toString(), polled.isEmpty());
+        assertTrue(polled.isEmpty(), polled.toString());
 
         workflow = workflowClient.getWorkflow(workflowId, true);
         assertNotNull(workflow);

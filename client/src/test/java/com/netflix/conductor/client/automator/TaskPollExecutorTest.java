@@ -21,8 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.*;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -39,13 +38,12 @@ import com.netflix.discovery.EurekaClient;
 import static com.netflix.conductor.common.metadata.tasks.TaskResult.Status.COMPLETED;
 import static com.netflix.conductor.common.metadata.tasks.TaskResult.Status.IN_PROGRESS;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class TaskPollExecutorTest {
+class TaskPollExecutorTest {
 
     private static final String TEST_TASK_DEF_NAME = "test";
 
@@ -53,7 +51,7 @@ public class TaskPollExecutorTest {
             Collections.singletonMap(TEST_TASK_DEF_NAME, 1);
 
     @Test
-    public void testTaskExecutionException() throws InterruptedException {
+    void taskExecutionException() throws InterruptedException {
         Worker worker =
                 Worker.create(
                         TEST_TASK_DEF_NAME,
@@ -91,7 +89,7 @@ public class TaskPollExecutorTest {
 
     @SuppressWarnings("rawtypes")
     @Test
-    public void testMultipleTasksExecution() throws InterruptedException {
+    void multipleTasksExecution() throws InterruptedException {
         String outputKey = "KEY";
         Task task = testTask();
         Worker worker = mock(Worker.class);
@@ -151,7 +149,7 @@ public class TaskPollExecutorTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testLargePayloadCanFailUpdateWithRetry() throws InterruptedException {
+    void largePayloadCanFailUpdateWithRetry() throws InterruptedException {
         Task task = testTask();
 
         Worker worker = mock(Worker.class);
@@ -197,7 +195,7 @@ public class TaskPollExecutorTest {
     }
 
     @Test
-    public void testLargePayloadLocationUpdate() throws InterruptedException {
+    void largePayloadLocationUpdate() throws InterruptedException {
         Task task = testTask();
         String largePayloadLocation = "large_payload_location";
 
@@ -242,7 +240,7 @@ public class TaskPollExecutorTest {
     }
 
     @Test
-    public void testTaskPollException() throws InterruptedException {
+    void taskPollException() throws InterruptedException {
         Task task = testTask();
 
         Worker worker = mock(Worker.class);
@@ -280,7 +278,7 @@ public class TaskPollExecutorTest {
     }
 
     @Test
-    public void testTaskPoll() throws InterruptedException {
+    void taskPoll() throws InterruptedException {
         Task task = testTask();
 
         Worker worker = mock(Worker.class);
@@ -317,7 +315,7 @@ public class TaskPollExecutorTest {
     }
 
     @Test
-    public void testTaskPollDomain() throws InterruptedException {
+    void taskPollDomain() throws InterruptedException {
         TaskClient taskClient = Mockito.mock(TaskClient.class);
         String testDomain = "foo";
         Map<String, String> taskToDomain = new HashMap<>();
@@ -349,7 +347,7 @@ public class TaskPollExecutorTest {
     }
 
     @Test
-    public void testPollOutOfDiscoveryForTask() throws InterruptedException {
+    void pollOutOfDiscoveryForTask() throws InterruptedException {
         Task task = testTask();
 
         EurekaClient client = mock(EurekaClient.class);
@@ -395,7 +393,7 @@ public class TaskPollExecutorTest {
     }
 
     @Test
-    public void testPollOutOfDiscoveryAsDefaultFalseForTask()
+    void pollOutOfDiscoveryAsDefaultFalseForTask()
             throws ExecutionException, InterruptedException {
         Task task = testTask();
 
@@ -437,7 +435,7 @@ public class TaskPollExecutorTest {
     }
 
     @Test
-    public void testPollOutOfDiscoveryAsExplicitFalseForTask()
+    void pollOutOfDiscoveryAsExplicitFalseForTask()
             throws ExecutionException, InterruptedException {
         Task task = testTask();
 
@@ -479,7 +477,7 @@ public class TaskPollExecutorTest {
     }
 
     @Test
-    public void testPollOutOfDiscoveryIsIgnoredWhenDiscoveryIsUp() throws InterruptedException {
+    void pollOutOfDiscoveryIsIgnoredWhenDiscoveryIsUp() throws InterruptedException {
         Task task = testTask();
 
         EurekaClient client = mock(EurekaClient.class);
@@ -524,7 +522,7 @@ public class TaskPollExecutorTest {
     }
 
     @Test
-    public void testTaskThreadCount() throws InterruptedException {
+    void taskThreadCount() throws InterruptedException {
         TaskClient taskClient = Mockito.mock(TaskClient.class);
 
         Map<String, Integer> taskThreadCount = new HashMap<>();
@@ -557,7 +555,7 @@ public class TaskPollExecutorTest {
     }
 
     @Test
-    public void testTaskLeaseExtend() throws InterruptedException {
+    void taskLeaseExtend() throws InterruptedException {
         Task task = testTask();
         task.setResponseTimeoutSeconds(1);
 
@@ -597,7 +595,7 @@ public class TaskPollExecutorTest {
     }
 
     @Test
-    public void testBatchTasksExecution() throws InterruptedException {
+    void batchTasksExecution() throws InterruptedException {
         int threadCount = 10;
         TaskClient taskClient = Mockito.mock(TaskClient.class);
         Map<String, Integer> taskThreadCount = new HashMap<>();

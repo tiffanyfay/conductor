@@ -12,18 +12,18 @@
  */
 package com.netflix.conductor.es7.dao.query.parser.internal;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author Viren
  */
-public class TestName extends AbstractParserTest {
+class TestName extends AbstractParserTest {
 
     @Test
-    public void test() throws Exception {
+    void test() throws Exception {
         String test = "metadata.en_US.lang		";
         Name name = new Name(getInputStream(test));
         String nameVal = name.getName();

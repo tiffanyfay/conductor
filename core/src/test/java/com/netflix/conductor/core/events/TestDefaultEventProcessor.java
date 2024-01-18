@@ -16,8 +16,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,18 +55,18 @@ import com.netflix.conductor.service.MetadataService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.*;
 
 @ContextConfiguration(
         classes = {
-            TestObjectMapperConfiguration.class,
-            TestDefaultEventProcessor.TestConfiguration.class,
-            ConductorCoreConfiguration.class
+                TestObjectMapperConfiguration.class,
+                TestDefaultEventProcessor.TestConfiguration.class,
+                ConductorCoreConfiguration.class
         })
 @RunWith(SpringRunner.class)
-public class TestDefaultEventProcessor {
+class TestDefaultEventProcessor {
 
     private String event;
     private ObservableQueue queue;
@@ -92,8 +92,8 @@ public class TestDefaultEventProcessor {
     @ComponentScan(basePackageClasses = {Evaluator.class}) // load all Evaluator beans
     public static class TestConfiguration {}
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         event = "sqs:arn:account090:sqstest1";
         String queueURI = "arn:account090:sqstest1";
 
@@ -123,7 +123,7 @@ public class TestDefaultEventProcessor {
     }
 
     @Test
-    public void testEventProcessor() {
+    void eventProcessor() {
         // setup event handler
         EventHandler eventHandler = new EventHandler();
         eventHandler.setName(UUID.randomUUID().toString());
@@ -226,7 +226,7 @@ public class TestDefaultEventProcessor {
     }
 
     @Test
-    public void testEventHandlerWithCondition() {
+    void eventHandlerWithCondition() {
         EventHandler eventHandler = new EventHandler();
         eventHandler.setName("cms_intermediate_video_ingest_handler");
         eventHandler.setActive(true);
@@ -295,7 +295,7 @@ public class TestDefaultEventProcessor {
     }
 
     @Test
-    public void testEventHandlerWithConditionEvaluator() {
+    void eventHandlerWithConditionEvaluator() {
         EventHandler eventHandler = new EventHandler();
         eventHandler.setName("cms_intermediate_video_ingest_handler");
         eventHandler.setActive(true);
@@ -365,7 +365,7 @@ public class TestDefaultEventProcessor {
     }
 
     @Test
-    public void testEventProcessorWithRetriableError() {
+    void eventProcessorWithRetriableError() {
         EventHandler eventHandler = new EventHandler();
         eventHandler.setName(UUID.randomUUID().toString());
         eventHandler.setActive(true);
@@ -403,7 +403,7 @@ public class TestDefaultEventProcessor {
     }
 
     @Test
-    public void testEventProcessorWithNonRetriableError() {
+    void eventProcessorWithNonRetriableError() {
         EventHandler eventHandler = new EventHandler();
         eventHandler.setName(UUID.randomUUID().toString());
         eventHandler.setActive(true);
@@ -440,7 +440,7 @@ public class TestDefaultEventProcessor {
     }
 
     @Test
-    public void testExecuteInvalidAction() {
+    void executeInvalidAction() {
         AtomicInteger executeInvoked = new AtomicInteger(0);
         doAnswer(
                         (Answer<Map<String, Object>>)
@@ -475,7 +475,7 @@ public class TestDefaultEventProcessor {
     }
 
     @Test
-    public void testExecuteNonRetriableException() {
+    void executeNonRetriableException() {
         AtomicInteger executeInvoked = new AtomicInteger(0);
         doAnswer(
                         (Answer<Map<String, Object>>)
@@ -511,7 +511,7 @@ public class TestDefaultEventProcessor {
     }
 
     @Test
-    public void testExecuteTransientException() {
+    void executeTransientException() {
         AtomicInteger executeInvoked = new AtomicInteger(0);
         doAnswer(
                         (Answer<Map<String, Object>>)

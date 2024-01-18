@@ -20,8 +20,8 @@ import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.netflix.conductor.client.exception.ConductorClientException;
@@ -32,45 +32,49 @@ import com.netflix.conductor.common.metadata.tasks.TaskResult;
 
 import static com.netflix.conductor.common.metadata.tasks.TaskResult.Status.COMPLETED;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TaskRunnerConfigurerTest {
+class TaskRunnerConfigurerTest {
 
     private static final String TEST_TASK_DEF_NAME = "test";
 
     private TaskClient client;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         client = Mockito.mock(TaskClient.class);
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testNoWorkersException() {
-        new TaskRunnerConfigurer.Builder(null, null).build();
-    }
-
-    @Test(expected = ConductorClientException.class)
-    public void testInvalidThreadConfig() {
-        Worker worker1 = Worker.create("task1", TaskResult::new);
-        Worker worker2 = Worker.create("task2", TaskResult::new);
-        Map<String, Integer> taskThreadCount = new HashMap<>();
-        taskThreadCount.put(worker1.getTaskDefName(), 2);
-        taskThreadCount.put(worker2.getTaskDefName(), 3);
-        new TaskRunnerConfigurer.Builder(client, Arrays.asList(worker1, worker2))
-                .withThreadCount(10)
-                .withTaskThreadCount(taskThreadCount)
-                .build();
+    @Test
+    void noWorkersException() {
+        assertThrows(NullPointerException.class, () -> {
+            new TaskRunnerConfigurer.Builder(null, null).build();
+        });
     }
 
     @Test
-    public void testMissingTaskThreadConfig() {
+    void invalidThreadConfig() {
+        assertThrows(ConductorClientException.class, () -> {
+            Worker worker1 = Worker.create("task1", TaskResult::new);
+            Worker worker2 = Worker.create("task2", TaskResult::new);
+            Map<String, Integer> taskThreadCount = new HashMap<>();
+            taskThreadCount.put(worker1.getTaskDefName(), 2);
+            taskThreadCount.put(worker2.getTaskDefName(), 3);
+            new TaskRunnerConfigurer.Builder(client, Arrays.asList(worker1, worker2))
+                    .withThreadCount(10)
+                    .withTaskThreadCount(taskThreadCount)
+                    .build();
+        });
+    }
+
+    @Test
+    void missingTaskThreadConfig() {
         Worker worker1 = Worker.create("task1", TaskResult::new);
         Worker worker2 = Worker.create("task2", TaskResult::new);
         Map<String, Integer> taskThreadCount = new HashMap<>();
@@ -87,7 +91,7 @@ public class TaskRunnerConfigurerTest {
     }
 
     @Test
-    public void testPerTaskThreadPool() {
+    void perTaskThreadPool() {
         Worker worker1 = Worker.create("task1", TaskResult::new);
         Worker worker2 = Worker.create("task2", TaskResult::new);
         Map<String, Integer> taskThreadCount = new HashMap<>();
@@ -104,7 +108,7 @@ public class TaskRunnerConfigurerTest {
     }
 
     @Test
-    public void testSharedThreadPool() {
+    void sharedThreadPool() {
         Worker worker = Worker.create(TEST_TASK_DEF_NAME, TaskResult::new);
         TaskRunnerConfigurer configurer =
                 new TaskRunnerConfigurer.Builder(client, Arrays.asList(worker, worker, worker))
@@ -139,7 +143,7 @@ public class TaskRunnerConfigurerTest {
     }
 
     @Test
-    public void testMultipleWorkersExecution() throws Exception {
+    void multipleWorkersExecution() throws Exception {
         String task1Name = "task1";
         Worker worker1 = mock(Worker.class);
         when(worker1.getPollingInterval()).thenReturn(3000);

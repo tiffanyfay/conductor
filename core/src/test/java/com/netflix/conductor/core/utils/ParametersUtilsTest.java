@@ -23,8 +23,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -36,28 +36,26 @@ import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ContextConfiguration(classes = {TestObjectMapperConfiguration.class})
 @RunWith(SpringRunner.class)
 @SuppressWarnings("rawtypes")
-public class ParametersUtilsTest {
+class ParametersUtilsTest {
 
     private ParametersUtils parametersUtils;
     private JsonUtils jsonUtils;
 
     @Autowired private ObjectMapper objectMapper;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         parametersUtils = new ParametersUtils(objectMapper);
         jsonUtils = new JsonUtils(objectMapper);
     }
 
     @Test
-    public void testReplace() throws Exception {
+    void replace() throws Exception {
         Map<String, Object> map = new HashMap<>();
         map.put("name", "conductor");
         map.put("version", 2);
@@ -79,7 +77,7 @@ public class ParametersUtilsTest {
     }
 
     @Test
-    public void testReplaceWithArrayExpand() {
+    void replaceWithArrayExpand() {
         List<Object> list = new LinkedList<>();
         Map<String, Object> map = new HashMap<>();
         map.put("externalId", "[{\"taskRefName\":\"t001\",\"workflowId\":\"w002\"}]");
@@ -97,14 +95,14 @@ public class ParametersUtilsTest {
 
         Map<String, Object> replaced = parametersUtils.replace(input, list);
         assertNotNull(replaced);
-        assertEquals(replaced.get("k2"), "t001");
+        assertEquals("t001", replaced.get("k2"));
         assertNull(replaced.get("k3"));
-        assertEquals(replaced.get("k4"), "conductor");
-        assertEquals(replaced.get("k5"), 2);
+        assertEquals("conductor", replaced.get("k4"));
+        assertEquals(2, replaced.get("k5"));
     }
 
     @Test
-    public void testReplaceWithMapExpand() {
+    void replaceWithMapExpand() {
         Map<String, Object> map = new HashMap<>();
         map.put("externalId", "{\"taskRefName\":\"t001\",\"workflowId\":\"w002\"}");
         map.put("name", "conductor");
@@ -126,7 +124,7 @@ public class ParametersUtilsTest {
     }
 
     @Test
-    public void testReplaceConcurrent() throws ExecutionException, InterruptedException {
+    void replaceConcurrent() throws ExecutionException, InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
 
         AtomicReference<String> generatedId = new AtomicReference<>("test-0");
@@ -174,7 +172,7 @@ public class ParametersUtilsTest {
     // Tests ParametersUtils with Map and List input values, and verifies input map is not mutated
     // by ParametersUtils.
     @Test
-    public void testReplaceInputWithMapAndList() throws Exception {
+    void replaceInputWithMapAndList() throws Exception {
         Map<String, Object> map = new HashMap<>();
         map.put("name", "conductor");
         map.put("version", 2);
@@ -234,7 +232,7 @@ public class ParametersUtilsTest {
     }
 
     @Test
-    public void testNestedPathExpressions() throws Exception {
+    void nestedPathExpressions() throws Exception {
         Map<String, Object> map = new HashMap<>();
         map.put("name", "conductor");
         map.put("index", 1);
@@ -258,7 +256,7 @@ public class ParametersUtilsTest {
     }
 
     @Test
-    public void testReplaceWithLineTerminators() throws Exception {
+    void replaceWithLineTerminators() throws Exception {
         Map<String, Object> map = new HashMap<>();
         map.put("name", "conductor");
         map.put("version", 2);
@@ -282,7 +280,7 @@ public class ParametersUtilsTest {
     }
 
     @Test
-    public void testReplaceWithEscapedTags() throws Exception {
+    void replaceWithEscapedTags() throws Exception {
         Map<String, Object> map = new HashMap<>();
         map.put("someString", "conductor");
         map.put("someNumber", 2);
@@ -346,7 +344,7 @@ public class ParametersUtilsTest {
     }
 
     @Test
-    public void getWorkflowInputHandlesNullInputTemplate() {
+    void getWorkflowInputHandlesNullInputTemplate() {
         WorkflowDef workflowDef = new WorkflowDef();
         Map<String, Object> inputParams = Map.of("key", "value");
         Map<String, Object> workflowInput =
@@ -355,7 +353,7 @@ public class ParametersUtilsTest {
     }
 
     @Test
-    public void getWorkflowInputFillsInTemplatedFields() {
+    void getWorkflowInputFillsInTemplatedFields() {
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setInputTemplate(Map.of("other_key", "other_value"));
         Map<String, Object> inputParams = new HashMap<>(Map.of("key", "value"));
@@ -366,7 +364,7 @@ public class ParametersUtilsTest {
     }
 
     @Test
-    public void getWorkflowInputPreservesExistingFieldsIfPopulated() {
+    void getWorkflowInputPreservesExistingFieldsIfPopulated() {
         WorkflowDef workflowDef = new WorkflowDef();
         String keyName = "key";
         workflowDef.setInputTemplate(Map.of(keyName, "templated_value"));

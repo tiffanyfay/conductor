@@ -23,11 +23,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -67,14 +65,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static com.netflix.conductor.common.metadata.tasks.TaskType.*;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.*;
 
 @ContextConfiguration(
         classes = {TestObjectMapperConfiguration.class, TestDeciderService.TestConfiguration.class})
 @RunWith(SpringRunner.class)
-public class TestDeciderService {
+class TestDeciderService {
 
     @Configuration
     @ComponentScan(basePackageClasses = TaskMapper.class) // loads all TaskMapper beans
@@ -139,16 +137,14 @@ public class TestDeciderService {
 
     @Autowired private MetadataDAO metadataDAO;
 
-    @Rule public ExpectedException exception = ExpectedException.none();
-
-    @BeforeClass
-    public static void init() {
+    @BeforeAll
+    static void init() {
         registry = new DefaultRegistry();
         Spectator.globalRegistry().add(registry);
     }
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         externalPayloadStorageUtils = mock(ExternalPayloadStorageUtils.class);
 
         WorkflowDef workflowDef = new WorkflowDef();
@@ -170,7 +166,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testGetTaskInputV2() {
+    void getTaskInputV2() {
         WorkflowModel workflow = createDefaultWorkflow();
 
         workflow.getWorkflowDefinition().setSchemaVersion(2);
@@ -207,7 +203,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testGetTaskInputV2Partial() {
+    void getTaskInputV2Partial() {
         WorkflowModel workflow = createDefaultWorkflow();
         System.setProperty("EC2_INSTANCE", "i-123abcdef990");
         workflow.getWorkflowDefinition().setSchemaVersion(2);
@@ -263,7 +259,7 @@ public class TestDeciderService {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testGetTaskInput() {
+    void getTaskInput() {
         Map<String, Object> ip = new HashMap<>();
         ip.put("workflowInputParam", "${workflow.input.requestId}");
         ip.put("taskOutputParam", "${task2.output.location}");
@@ -311,7 +307,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testGetTaskInputV1() {
+    void getTaskInputV1() {
         Map<String, Object> ip = new HashMap<>();
         ip.put("workflowInputParam", "workflow.input.requestId");
         ip.put("taskOutputParam", "task2.output.location");
@@ -338,7 +334,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testGetTaskInputV2WithInputTemplate() {
+    void getTaskInputV2WithInputTemplate() {
         TaskDef def = new TaskDef();
         Map<String, Object> inputTemplate = new HashMap<>();
         inputTemplate.put("url", "https://some_url:7004");
@@ -376,16 +372,16 @@ public class TestDeciderService {
                         workflowTask.getInputParameters(), workflow, null, def);
         assertTrue(taskInput.containsKey("url"));
         assertTrue(taskInput.containsKey("default_url"));
-        assertEquals(taskInput.get("url"), "https://some_new_url:7004");
-        assertEquals(taskInput.get("default_url"), "https://default_url:7004");
-        assertEquals(taskInput.get("workflow_input_url"), "https://workflow_input_url:7004");
+        assertEquals("https://some_new_url:7004", taskInput.get("url"));
+        assertEquals("https://default_url:7004", taskInput.get("default_url"));
+        assertEquals("https://workflow_input_url:7004", taskInput.get("workflow_input_url"));
         assertEquals("some_other_value", taskInput.get("someOtherKey"));
         assertEquals("someValue", taskInput.get("someKey"));
         assertNull(taskInput.get("someNowhereToBeFoundKey"));
     }
 
     @Test
-    public void testGetNextTask() {
+    void getNextTask() {
 
         WorkflowDef def = createNestedWorkflow();
         WorkflowTask firstTask = def.getTasks().get(0);
@@ -442,7 +438,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testCaseStatement() {
+    void caseStatement() {
 
         WorkflowDef def = createConditionalWF();
 
@@ -462,7 +458,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testGetTaskByRef() {
+    void getTaskByRef() {
         WorkflowModel workflow = new WorkflowModel();
         TaskModel t1 = new TaskModel();
         t1.setReferenceTaskName("ref");
@@ -490,7 +486,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testTaskTimeout() {
+    void taskTimeout() {
         Counter counter =
                 registry.counter("task_timeout", "class", "WorkflowMonitor", "taskType", "test");
         long counterCount = counter.count();
@@ -547,7 +543,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testCheckTaskPollTimeout() {
+    void checkTaskPollTimeout() {
         Counter counter =
                 registry.counter("task_timeout", "class", "WorkflowMonitor", "taskType", "test");
         long counterCount = counter.count();
@@ -579,7 +575,7 @@ public class TestDeciderService {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testConcurrentTaskInputCalc() throws InterruptedException {
+    void concurrentTaskInputCalc() throws InterruptedException {
         TaskDef def = new TaskDef();
 
         Map<String, Object> inputMap = new HashMap<>();
@@ -656,118 +652,120 @@ public class TestDeciderService {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testTaskRetry() {
-        WorkflowModel workflow = createDefaultWorkflow();
+    void taskRetry() {
+        assertThrows(TerminateWorkflowException.class, () -> {
+            WorkflowModel workflow = createDefaultWorkflow();
 
-        workflow.getWorkflowDefinition().setSchemaVersion(2);
+            workflow.getWorkflowDefinition().setSchemaVersion(2);
 
-        Map<String, Object> inputParams = new HashMap<>();
-        inputParams.put("workflowInputParam", "${workflow.input.requestId}");
-        inputParams.put("taskOutputParam", "${task2.output.location}");
-        inputParams.put("constParam", "Some String value");
-        inputParams.put("nullValue", null);
-        inputParams.put("task2Status", "${task2.status}");
-        inputParams.put("null", null);
-        inputParams.put("task_id", "${CPEWF_TASK_ID}");
+            Map<String, Object> inputParams = new HashMap<>();
+            inputParams.put("workflowInputParam", "${workflow.input.requestId}");
+            inputParams.put("taskOutputParam", "${task2.output.location}");
+            inputParams.put("constParam", "Some String value");
+            inputParams.put("nullValue", null);
+            inputParams.put("task2Status", "${task2.status}");
+            inputParams.put("null", null);
+            inputParams.put("task_id", "${CPEWF_TASK_ID}");
 
-        Map<String, Object> env = new HashMap<>();
-        env.put("env_task_id", "${CPEWF_TASK_ID}");
-        inputParams.put("env", env);
+            Map<String, Object> env = new HashMap<>();
+            env.put("env_task_id", "${CPEWF_TASK_ID}");
+            inputParams.put("env", env);
 
-        Map<String, Object> taskInput =
-                parametersUtils.getTaskInput(inputParams, workflow, null, "t1");
-        TaskModel task = new TaskModel();
-        task.getInputData().putAll(taskInput);
-        task.setStatus(TaskModel.Status.FAILED);
-        task.setTaskId("t1");
+            Map<String, Object> taskInput =
+                    parametersUtils.getTaskInput(inputParams, workflow, null, "t1");
+            TaskModel task = new TaskModel();
+            task.getInputData().putAll(taskInput);
+            task.setStatus(TaskModel.Status.FAILED);
+            task.setTaskId("t1");
 
-        TaskDef taskDef = new TaskDef();
-        WorkflowTask workflowTask = new WorkflowTask();
-        workflowTask.getInputParameters().put("task_id", "${CPEWF_TASK_ID}");
-        workflowTask.getInputParameters().put("env", env);
+            TaskDef taskDef = new TaskDef();
+            WorkflowTask workflowTask = new WorkflowTask();
+            workflowTask.getInputParameters().put("task_id", "${CPEWF_TASK_ID}");
+            workflowTask.getInputParameters().put("env", env);
 
-        Optional<TaskModel> task2 = deciderService.retry(taskDef, workflowTask, task, workflow);
-        assertEquals("t1", task.getInputData().get("task_id"));
-        assertEquals(
-                "t1", ((Map<String, Object>) task.getInputData().get("env")).get("env_task_id"));
+            Optional<TaskModel> task2 = deciderService.retry(taskDef, workflowTask, task, workflow);
+            assertEquals("t1", task.getInputData().get("task_id"));
+            assertEquals(
+                    "t1", ((Map<String, Object>) task.getInputData().get("env")).get("env_task_id"));
 
-        assertNotSame(task.getTaskId(), task2.get().getTaskId());
-        assertEquals(task2.get().getTaskId(), task2.get().getInputData().get("task_id"));
-        assertEquals(
-                task2.get().getTaskId(),
-                ((Map<String, Object>) task2.get().getInputData().get("env")).get("env_task_id"));
+            assertNotSame(task.getTaskId(), task2.get().getTaskId());
+            assertEquals(task2.get().getTaskId(), task2.get().getInputData().get("task_id"));
+            assertEquals(
+                    task2.get().getTaskId(),
+                    ((Map<String, Object>) task2.get().getInputData().get("env")).get("env_task_id"));
 
-        TaskModel task3 = new TaskModel();
-        task3.getInputData().putAll(taskInput);
-        task3.setStatus(TaskModel.Status.FAILED_WITH_TERMINAL_ERROR);
-        task3.setTaskId("t1");
-        when(metadataDAO.getWorkflowDef(anyString(), anyInt()))
-                .thenReturn(Optional.of(new WorkflowDef()));
-        exception.expect(TerminateWorkflowException.class);
-        deciderService.retry(taskDef, workflowTask, task3, workflow);
+            TaskModel task3 = new TaskModel();
+            task3.getInputData().putAll(taskInput);
+            task3.setStatus(TaskModel.Status.FAILED_WITH_TERMINAL_ERROR);
+            task3.setTaskId("t1");
+            when(metadataDAO.getWorkflowDef(anyString(), anyInt()))
+                    .thenReturn(Optional.of(new WorkflowDef()));
+            deciderService.retry(taskDef, workflowTask, task3, workflow);
+        });
     }
 
     @SuppressWarnings("unchecked")
     @Test
-    public void testWorkflowTaskRetry() {
-        WorkflowModel workflow = createDefaultWorkflow();
+    void workflowTaskRetry() {
+        assertThrows(TerminateWorkflowException.class, () -> {
+            WorkflowModel workflow = createDefaultWorkflow();
 
-        workflow.getWorkflowDefinition().setSchemaVersion(2);
+            workflow.getWorkflowDefinition().setSchemaVersion(2);
 
-        Map<String, Object> inputParams = new HashMap<>();
-        inputParams.put("workflowInputParam", "${workflow.input.requestId}");
-        inputParams.put("taskOutputParam", "${task2.output.location}");
-        inputParams.put("constParam", "Some String value");
-        inputParams.put("nullValue", null);
-        inputParams.put("task2Status", "${task2.status}");
-        inputParams.put("null", null);
-        inputParams.put("task_id", "${CPEWF_TASK_ID}");
+            Map<String, Object> inputParams = new HashMap<>();
+            inputParams.put("workflowInputParam", "${workflow.input.requestId}");
+            inputParams.put("taskOutputParam", "${task2.output.location}");
+            inputParams.put("constParam", "Some String value");
+            inputParams.put("nullValue", null);
+            inputParams.put("task2Status", "${task2.status}");
+            inputParams.put("null", null);
+            inputParams.put("task_id", "${CPEWF_TASK_ID}");
 
-        Map<String, Object> env = new HashMap<>();
-        env.put("env_task_id", "${CPEWF_TASK_ID}");
-        inputParams.put("env", env);
+            Map<String, Object> env = new HashMap<>();
+            env.put("env_task_id", "${CPEWF_TASK_ID}");
+            inputParams.put("env", env);
 
-        Map<String, Object> taskInput =
-                parametersUtils.getTaskInput(inputParams, workflow, null, "t1");
+            Map<String, Object> taskInput =
+                    parametersUtils.getTaskInput(inputParams, workflow, null, "t1");
 
-        // Create a first failed task
-        TaskModel task = new TaskModel();
-        task.getInputData().putAll(taskInput);
-        task.setStatus(TaskModel.Status.FAILED);
-        task.setTaskId("t1");
+            // Create a first failed task
+            TaskModel task = new TaskModel();
+            task.getInputData().putAll(taskInput);
+            task.setStatus(TaskModel.Status.FAILED);
+            task.setTaskId("t1");
 
-        TaskDef taskDef = new TaskDef();
-        assertEquals(3, taskDef.getRetryCount());
+            TaskDef taskDef = new TaskDef();
+            assertEquals(3, taskDef.getRetryCount());
 
-        WorkflowTask workflowTask = new WorkflowTask();
-        workflowTask.getInputParameters().put("task_id", "${CPEWF_TASK_ID}");
-        workflowTask.getInputParameters().put("env", env);
-        workflowTask.setRetryCount(1);
+            WorkflowTask workflowTask = new WorkflowTask();
+            workflowTask.getInputParameters().put("task_id", "${CPEWF_TASK_ID}");
+            workflowTask.getInputParameters().put("env", env);
+            workflowTask.setRetryCount(1);
 
-        // Retry the failed task and assert that a new one has been created
-        Optional<TaskModel> task2 = deciderService.retry(taskDef, workflowTask, task, workflow);
-        assertEquals("t1", task.getInputData().get("task_id"));
-        assertEquals(
-                "t1", ((Map<String, Object>) task.getInputData().get("env")).get("env_task_id"));
+            // Retry the failed task and assert that a new one has been created
+            Optional<TaskModel> task2 = deciderService.retry(taskDef, workflowTask, task, workflow);
+            assertEquals("t1", task.getInputData().get("task_id"));
+            assertEquals(
+                    "t1", ((Map<String, Object>) task.getInputData().get("env")).get("env_task_id"));
 
-        assertNotSame(task.getTaskId(), task2.get().getTaskId());
-        assertEquals(task2.get().getTaskId(), task2.get().getInputData().get("task_id"));
-        assertEquals(
-                task2.get().getTaskId(),
-                ((Map<String, Object>) task2.get().getInputData().get("env")).get("env_task_id"));
+            assertNotSame(task.getTaskId(), task2.get().getTaskId());
+            assertEquals(task2.get().getTaskId(), task2.get().getInputData().get("task_id"));
+            assertEquals(
+                    task2.get().getTaskId(),
+                    ((Map<String, Object>) task2.get().getInputData().get("env")).get("env_task_id"));
 
-        // Set the retried task to FAILED, retry it again and assert that the workflow failed
-        task2.get().setStatus(TaskModel.Status.FAILED);
-        exception.expect(TerminateWorkflowException.class);
-        final Optional<TaskModel> task3 =
-                deciderService.retry(taskDef, workflowTask, task2.get(), workflow);
+            // Set the retried task to FAILED, retry it again and assert that the workflow failed
+            task2.get().setStatus(TaskModel.Status.FAILED);
+            final Optional<TaskModel> task3 =
+                    deciderService.retry(taskDef, workflowTask, task2.get(), workflow);
 
-        assertFalse(task3.isPresent());
-        assertEquals(WorkflowModel.Status.FAILED, workflow.getStatus());
+            assertFalse(task3.isPresent());
+            assertEquals(WorkflowModel.Status.FAILED, workflow.getStatus());
+        });
     }
 
     @Test
-    public void testLinearBackoff() {
+    void linearBackoff() {
         WorkflowModel workflow = createDefaultWorkflow();
 
         TaskModel task = new TaskModel();
@@ -800,7 +798,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testExponentialBackoff() {
+    void exponentialBackoff() {
         WorkflowModel workflow = createDefaultWorkflow();
 
         TaskModel task = new TaskModel();
@@ -831,7 +829,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testFork() throws IOException {
+    void fork() throws IOException {
         InputStream stream = TestDeciderService.class.getResourceAsStream("/test.json");
         WorkflowModel workflow = objectMapper.readValue(stream, WorkflowModel.class);
 
@@ -842,7 +840,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testDecideSuccessfulWorkflow() {
+    void decideSuccessfulWorkflow() {
         WorkflowDef workflowDef = createLinearWorkflow();
 
         WorkflowModel workflow = new WorkflowModel();
@@ -889,7 +887,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testDecideWithLoopTask() {
+    void decideWithLoopTask() {
         WorkflowDef workflowDef = createLinearWorkflow();
 
         WorkflowModel workflow = new WorkflowModel();
@@ -919,7 +917,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testDecideFailedTask() {
+    void decideFailedTask() {
         WorkflowDef workflowDef = createLinearWorkflow();
 
         WorkflowModel workflow = new WorkflowModel();
@@ -954,7 +952,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testGetTasksToBeScheduled() {
+    void getTasksToBeScheduled() {
         WorkflowDef workflowDef = createLinearWorkflow();
 
         WorkflowModel workflow = new WorkflowModel();
@@ -985,7 +983,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testIsResponseTimedOut() {
+    void isResponseTimedOut() {
         TaskDef taskDef = new TaskDef();
         taskDef.setName("test_rt");
         taskDef.setResponseTimeoutSeconds(10);
@@ -1008,7 +1006,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testFilterNextLoopOverTasks() {
+    void filterNextLoopOverTasks() {
 
         WorkflowModel workflow = new WorkflowModel();
 
@@ -1053,7 +1051,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testUpdateWorkflowOutput() {
+    void updateWorkflowOutput() {
         WorkflowModel workflow = new WorkflowModel();
         workflow.setWorkflowDefinition(new WorkflowDef());
         deciderService.updateWorkflowOutput(workflow, null);
@@ -1075,7 +1073,7 @@ public class TestDeciderService {
     // when workflow definition has outputParameters defined
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Test
-    public void testUpdateWorkflowOutput_WhenDefinitionHasOutputParameters() {
+    void updateWorkflowOutput_WhenDefinitionHasOutputParameters() {
         WorkflowModel workflow = new WorkflowModel();
         WorkflowDef workflowDef = new WorkflowDef();
         workflowDef.setOutputParameters(
@@ -1100,7 +1098,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testUpdateWorkflowOutput_WhenWorkflowHasTerminateTask() {
+    void updateWorkflowOutput_WhenWorkflowHasTerminateTask() {
         WorkflowModel workflow = new WorkflowModel();
         TaskModel task = new TaskModel();
         task.setTaskType(TASK_TYPE_TERMINATE);
@@ -1137,7 +1135,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testCheckWorkflowTimeout() {
+    void checkWorkflowTimeout() {
         Counter counter =
                 registry.counter(
                         "workflow_failure",
@@ -1193,7 +1191,7 @@ public class TestDeciderService {
     }
 
     @Test
-    public void testCheckForWorkflowCompletion() {
+    void checkForWorkflowCompletion() {
         WorkflowDef conditionalWorkflowDef = createConditionalWF();
         WorkflowTask terminateWT = new WorkflowTask();
         terminateWT.setType(TaskType.TERMINATE.name());
