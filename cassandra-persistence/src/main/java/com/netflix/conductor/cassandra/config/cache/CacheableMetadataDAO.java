@@ -154,7 +154,7 @@ public class CacheableMetadataDAO implements MetadataDAO {
             taskDefsCache.clear();
             List<TaskDef> taskDefs = cassandraMetadataDAO.getAllTaskDefs();
             taskDefs.forEach(taskDef -> taskDefsCache.put(taskDef.getName(), taskDef));
-            LOGGER.debug("Refreshed task defs, total num: " + taskDefs.size());
+            LOGGER.debug("Refreshed task defs, total num: {}", taskDefs.size());
             return taskDefs;
         } catch (Exception e) {
             Monitors.error(CLASS_NAME, "refreshTaskDefs");

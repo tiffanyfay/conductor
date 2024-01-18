@@ -137,7 +137,7 @@ public class StartWorkflowOperation implements WorkflowOperation<StartWorkflowIn
             try {
                 executionDAOFacade.removeWorkflow(workflowId, false);
             } catch (Exception rwe) {
-                LOGGER.error("Could not remove the workflowId: " + workflowId, rwe);
+                LOGGER.error("Could not remove the workflowId: {}", workflowId, rwe);
             }
             throw e;
         }

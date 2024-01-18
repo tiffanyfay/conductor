@@ -160,7 +160,7 @@ public class DefaultEventQueueManager extends LifecycleAwareComponent implements
                         try {
                             queue.stop();
                         } catch (Exception e) {
-                            LOGGER.error("Failed to stop queue: " + queue, e);
+                            LOGGER.error("Failed to stop queue: {}", queue, e);
                         }
                     });
 

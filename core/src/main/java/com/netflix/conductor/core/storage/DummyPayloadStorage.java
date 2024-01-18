@@ -51,7 +51,7 @@ public class DummyPayloadStorage implements ExternalPayloadStorage {
         } catch (IOException ioException) {
             LOGGER.error(
                     "Exception encountered while creating payloads directory : {}",
-                    ioException.getMessage());
+                    ioException.getMessage(), ioException);
         }
     }
 

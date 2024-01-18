@@ -150,13 +150,7 @@ public class RedisExecutionDAO extends BaseDynoDAO
                             taskKey,
                             task.getTaskId());
             if (added < 1) {
-                LOGGER.debug(
-                        "Task already scheduled, skipping the run "
-                                + task.getTaskId()
-                                + ", ref="
-                                + task.getReferenceTaskName()
-                                + ", key="
-                                + taskKey);
+                LOGGER.debug("Task already scheduled, skipping the run {}, ref={}, key={}", task.getTaskId(), task.getReferenceTaskName(), taskKey);
                 continue;
             }
 

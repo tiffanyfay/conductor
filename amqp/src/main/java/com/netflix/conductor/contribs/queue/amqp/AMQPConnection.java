@@ -212,7 +212,7 @@ public class AMQPConnection {
         int retryIndex = 1;
         while (true) {
             try {
-                LOGGER.debug("Creating a channel for " + connType);
+                LOGGER.debug("Creating a channel for {}", connType);
                 locChn = rmqConnection.createChannel();
                 if (locChn == null || !locChn.isOpen()) {
                     throw new RuntimeException("Fail to open " + connType + " channel");

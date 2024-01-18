@@ -48,7 +48,7 @@ public class MySQLQueueDAO extends MySQLBaseDAO implements QueueDAO {
                         UNACK_SCHEDULE_MS,
                         UNACK_SCHEDULE_MS,
                         TimeUnit.MILLISECONDS);
-        logger.debug(MySQLQueueDAO.class.getName() + " is ready to serve");
+        logger.debug("{} is ready to serve", MySQLQueueDAO.class.getName());
     }
 
     @Override

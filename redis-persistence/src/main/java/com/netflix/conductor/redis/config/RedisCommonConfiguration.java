@@ -105,7 +105,7 @@ public class RedisCommonConfiguration {
                         60_000,
                         60_000,
                         shardingStrategy);
-        LOGGER.info("DynoQueueDAO initialized with prefix " + properties.getQueuePrefix() + "!");
+        LOGGER.info("DynoQueueDAO initialized with prefix {}!", properties.getQueuePrefix());
         return queues;
     }
 }

@@ -166,7 +166,7 @@ public class DefaultEventQueueProcessor {
                             }
                         },
                         (Throwable t) -> LOGGER.error(t.getMessage(), t));
-        LOGGER.info("QueueListener::STARTED...listening for " + queue.getName());
+        LOGGER.info("QueueListener::STARTED...listening for {}", queue.getName());
     }
 
     private String getValue(String fieldName, JsonNode json) {

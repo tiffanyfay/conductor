@@ -163,7 +163,7 @@ public abstract class PostgresBaseDAO {
                 return result;
             } catch (Throwable th) {
                 tx.rollback();
-                logger.info(th.getMessage());
+                logger.info("", th);
                 return null;
             } finally {
                 tx.setAutoCommit(previousAutoCommitMode);

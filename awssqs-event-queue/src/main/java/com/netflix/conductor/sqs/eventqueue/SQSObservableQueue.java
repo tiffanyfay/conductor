@@ -257,17 +257,15 @@ public class SQSObservableQueue implements ObservableQueue {
 
     private void addPolicy(List<String> accountsToAuthorize) {
         if (accountsToAuthorize == null || accountsToAuthorize.isEmpty()) {
-            LOGGER.info("No additional security policies attached for the queue " + queueName);
+            LOGGER.info("No additional security policies attached for the queue {}", queueName);
             return;
         }
-        LOGGER.info("Authorizing " + accountsToAuthorize + " to the queue " + queueName);
+        LOGGER.info("Authorizing {} to the queue {}", accountsToAuthorize, queueName);
         Map<String, String> attributes = new HashMap<>();
         attributes.put("Policy", getPolicy(accountsToAuthorize));
         SetQueueAttributesResult result = client.setQueueAttributes(queueURL, attributes);
-        LOGGER.info("policy attachment result: " + result);
-        LOGGER.info(
-                "policy attachment result: status="
-                        + result.getSdkHttpMetadata().getHttpStatusCode());
+        LOGGER.info("policy attachment result: {}", result);
+        LOGGER.info("policy attachment result: status={}", result.getSdkHttpMetadata().getHttpStatusCode());
     }
 
     private String getPolicy(List<String> accountIds) {

@@ -32,7 +32,7 @@ import redis.clients.jedis.commands.JedisCommands;
 @ConditionalOnProperty(name = "conductor.db.type", havingValue = "redis_standalone")
 public class RedisStandaloneConfiguration extends JedisCommandsConfigurer {
 
-    private static final Logger log = LoggerFactory.getLogger(RedisSentinelConfiguration.class);
+    private static final Logger log = LoggerFactory.getLogger(RedisStandaloneConfiguration.class);
 
     @Override
     protected JedisCommands createJedisCommands(

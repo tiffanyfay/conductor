@@ -270,7 +270,7 @@ public class ElasticSearchDAOV6 extends ElasticSearchBaseDAO implements IndexDAO
                         .execute()
                         .actionGet();
             } catch (Exception e) {
-                LOGGER.error("Failed to init " + template, e);
+                LOGGER.error("Failed to init {}", template, e);
             }
         }
     }
@@ -346,7 +346,7 @@ public class ElasticSearchDAOV6 extends ElasticSearchBaseDAO implements IndexDAO
                         .execute()
                         .actionGet();
             } catch (Exception e) {
-                LOGGER.error("Failed to init index " + indexName + " mappings", e);
+                LOGGER.error("Failed to init index {} mappings", indexName, e);
             }
         }
     }

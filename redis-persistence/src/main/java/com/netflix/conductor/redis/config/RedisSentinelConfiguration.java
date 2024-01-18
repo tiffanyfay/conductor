@@ -54,9 +54,7 @@ public class RedisSentinelConfiguration extends JedisCommandsConfigurer {
         genericObjectPoolConfig.setTimeBetweenEvictionRunsMillis(
                 properties.getTimeBetweenEvictionRunsMillis());
         genericObjectPoolConfig.setNumTestsPerEvictionRun(properties.getNumTestsPerEvictionRun());
-        log.info(
-                "Starting conductor server using redis_sentinel and cluster "
-                        + properties.getClusterName());
+        log.info("Starting conductor server using redis_sentinel and cluster {}", properties.getClusterName());
         Set<String> sentinels = new HashSet<>();
         for (Host host : hostSupplier.getHosts()) {
             sentinels.add(host.getHostName() + ":" + host.getPort());

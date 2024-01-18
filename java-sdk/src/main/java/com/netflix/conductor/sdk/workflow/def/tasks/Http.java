@@ -49,7 +49,7 @@ public class Http extends Task<Http> {
             try {
                 this.httpRequest = objectMapper.convertValue(inputRequest, Input.class);
             } catch (Exception e) {
-                LOGGER.error("Error while trying to convert input request " + e.getMessage(), e);
+                LOGGER.error("Error while trying to convert input request {}", e.getMessage(), e);
             }
         }
     }

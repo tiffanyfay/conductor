@@ -122,5 +122,5 @@ public interface Worker {
 
 final class LoggerHolder {
 
-    static final Logger logger = LoggerFactory.getLogger(Worker.class);
+    static final Logger logger = LoggerFactory.getLogger(LoggerHolder.class);
 }

@@ -126,7 +126,7 @@ public class DeciderService {
         checkWorkflowTimeout(workflow);
 
         if (workflow.getStatus().equals(WorkflowModel.Status.PAUSED)) {
-            LOGGER.debug("Workflow " + workflow.getWorkflowId() + " is paused");
+            LOGGER.debug("Workflow {} is paused", workflow.getWorkflowId());
             return outcome;
         }
 

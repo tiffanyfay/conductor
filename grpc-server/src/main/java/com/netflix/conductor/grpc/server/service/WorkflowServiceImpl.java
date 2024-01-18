@@ -42,7 +42,7 @@ import io.grpc.stub.StreamObserver;
 @Service("grpcWorkflowService")
 public class WorkflowServiceImpl extends WorkflowServiceGrpc.WorkflowServiceImplBase {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TaskServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WorkflowServiceImpl.class);
     private static final ProtoMapper PROTO_MAPPER = ProtoMapper.INSTANCE;
     private static final GRPCHelper GRPC_HELPER = new GRPCHelper(LOGGER);
 

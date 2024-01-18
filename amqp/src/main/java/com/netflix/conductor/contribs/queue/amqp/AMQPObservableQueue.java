@@ -137,11 +137,10 @@ public class AMQPObservableQueue implements ObservableQueue {
                                                                 }
                                                             });
                                                     LOGGER.info(
-                                                            String.format(
-                                                                    "Batch from %s to conductor is %s",
+                                                                    "Batch from {} to conductor is {}",
                                                                     settings
                                                                             .getQueueOrExchangeName(),
-                                                                    buffer.toString()));
+                                                                    buffer.toString());
                                                 }
                                                 return Observable.from(available);
                                             }
@@ -300,7 +299,7 @@ public class AMQPObservableQueue implements ObservableQueue {
                         routingKey,
                         buildBasicProperties(message, settings),
                         payload.getBytes(settings.getContentEncoding()));
-                LOGGER.info(String.format("Published message to %s: %s", exchange, payload));
+                LOGGER.info("Published message to {}: {}", exchange, payload);
                 break;
             } catch (Exception ex) {
                 AMQPRetryPattern retry = retrySettings;

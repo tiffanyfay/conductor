@@ -120,7 +120,7 @@ public class AnnotatedWorkerExecutor {
                                     // constructor and will fail
                                     LOGGER.trace(
                                             "Caught exception while loading and scanning class {}",
-                                            t.getMessage());
+                                            t.getMessage(), t);
                                 }
                             });
             LOGGER.info(

@@ -39,7 +39,7 @@ public class GRPCServer {
     @PostConstruct
     public void start() throws IOException {
         server.start();
-        LOGGER.info("grpc: Server started, listening on " + server.getPort());
+        LOGGER.info("grpc: Server started, listening on {}", server.getPort());
     }
 
     @PreDestroy

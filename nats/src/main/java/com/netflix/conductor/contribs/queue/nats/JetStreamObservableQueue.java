@@ -243,7 +243,7 @@ public class JetStreamObservableQueue implements ObservableQueue {
             StreamInfo streamInfo = jsm.addStream(streamConfig);
             LOG.debug("Create stream, info: {}", streamInfo);
         } catch (IOException | JetStreamApiException e) {
-            LOG.error("Failed to add stream: " + streamConfig, e);
+            LOG.error("Failed to add stream: {}", streamConfig, e);
         }
     }
 

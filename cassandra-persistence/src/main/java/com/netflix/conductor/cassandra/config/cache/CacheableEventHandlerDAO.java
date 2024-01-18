@@ -123,7 +123,7 @@ public class CacheableEventHandlerDAO implements EventHandlerDAO {
             List<EventHandler> eventHandlers = cassandraEventHandlerDAO.getAllEventHandlers();
             eventHandlers.forEach(
                     eventHandler -> eventHandlersCache.put(eventHandler.getName(), eventHandler));
-            LOGGER.debug("Refreshed event handlers, total num: " + eventHandlers.size());
+            LOGGER.debug("Refreshed event handlers, total num: {}", eventHandlers.size());
             return eventHandlers;
         } catch (Exception e) {
             Monitors.error(CLASS_NAME, "refreshEventHandlersCache");

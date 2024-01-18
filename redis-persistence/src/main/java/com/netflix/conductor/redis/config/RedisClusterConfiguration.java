@@ -36,7 +36,7 @@ import redis.clients.jedis.commands.JedisCommands;
 @ConditionalOnProperty(name = "conductor.db.type", havingValue = "redis_cluster")
 public class RedisClusterConfiguration extends JedisCommandsConfigurer {
 
-    private static final Logger log = LoggerFactory.getLogger(JedisCommandsConfigurer.class);
+    private static final Logger log = LoggerFactory.getLogger(RedisClusterConfiguration.class);
 
     // Same as redis.clients.jedis.BinaryJedisCluster
     protected static final int DEFAULT_MAX_ATTEMPTS = 5;

@@ -100,7 +100,7 @@ public class RedisMetadataDAO extends BaseDynoDAO implements MetadataDAO {
             Map<String, TaskDef> map = new HashMap<>();
             getAllTaskDefs().forEach(taskDef -> map.put(taskDef.getName(), taskDef));
             this.taskDefCache = map;
-            LOGGER.debug("Refreshed task defs " + this.taskDefCache.size());
+            LOGGER.debug("Refreshed task defs {}", this.taskDefCache.size());
         } catch (Exception e) {
             Monitors.error(className, "refreshTaskDefs");
             LOGGER.error("refresh TaskDefs failed ", e);

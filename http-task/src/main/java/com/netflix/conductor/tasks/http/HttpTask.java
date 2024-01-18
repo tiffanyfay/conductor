@@ -183,9 +183,8 @@ public class HttpTask extends WorkflowSystemTask {
             return response;
         } catch (RestClientException ex) {
             LOGGER.error(
-                    String.format(
-                            "Got unexpected http response - uri: %s, vipAddress: %s",
-                            input.getUri(), input.getVipAddress()),
+                            "Got unexpected http response - uri: {}, vipAddress: {}",
+                            input.getUri(), input.getVipAddress(),
                     ex);
             String reason = ex.getLocalizedMessage();
             LOGGER.error(reason, ex);

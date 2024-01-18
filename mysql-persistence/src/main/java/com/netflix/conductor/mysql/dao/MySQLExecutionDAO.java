@@ -121,13 +121,7 @@ public class MySQLExecutionDAO extends MySQLBaseDAO
                         boolean scheduledTaskAdded = addScheduledTask(connection, task, taskKey);
 
                         if (!scheduledTaskAdded) {
-                            logger.trace(
-                                    "Task already scheduled, skipping the run "
-                                            + task.getTaskId()
-                                            + ", ref="
-                                            + task.getReferenceTaskName()
-                                            + ", key="
-                                            + taskKey);
+                            logger.trace("Task already scheduled, skipping the run {}, ref={}, key={}", task.getTaskId(), task.getReferenceTaskName(), taskKey);
                             continue;
                         }
 

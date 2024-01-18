@@ -40,7 +40,7 @@ import jakarta.validation.ValidationException;
 @Order(ValidationExceptionMapper.ORDER)
 public class ValidationExceptionMapper {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationExceptionMapper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ValidationExceptionMapper.class);
 
     public static final int ORDER = Ordered.HIGHEST_PRECEDENCE;
 

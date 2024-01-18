@@ -69,14 +69,13 @@ public abstract class NATSAbstractQueue implements ObservableQueue {
             queue = null;
         }
         LOGGER.info(
-                String.format(
-                        "Initialized with queueURI=%s, subject=%s, queue=%s",
-                        queueURI, subject, queue));
+                        "Initialized with queueURI={}, subject={}, queue={}",
+                        queueURI, subject, queue);
     }
 
     void onMessage(String subject, byte[] data) {
         String payload = new String(data);
-        LOGGER.info(String.format("Received message for %s: %s", subject, payload));
+        LOGGER.info("Received message for {}: {}", subject, payload);
 
         Message dstMsg = new Message();
         dstMsg.setId(NUID.nextGlobal());
@@ -87,7 +86,7 @@ public abstract class NATSAbstractQueue implements ObservableQueue {
 
     @Override
     public Observable<Message> observe() {
-        LOGGER.info("Observe invoked for queueURI " + queueURI);
+        LOGGER.info("Observe invoked for queueURI {}", queueURI);
         observable = true;
 
         mu.lock();
@@ -126,9 +125,8 @@ public abstract class NATSAbstractQueue implements ObservableQueue {
                                                             }
                                                         });
                                                 LOGGER.info(
-                                                        String.format(
-                                                                "Batch from %s to conductor is %s",
-                                                                subject, buffer.toString()));
+                                                                "Batch from {} to conductor is {}",
+                                                                subject, buffer.toString());
                                             }
 
                                             return Observable.from(available);
@@ -174,14 +172,9 @@ public abstract class NATSAbstractQueue implements ObservableQueue {
                     try {
                         String payload = message.getPayload();
                         publish(subject, payload.getBytes());
-                        LOGGER.info(String.format("Published message to %s: %s", subject, payload));
+                        LOGGER.info("Published message to {}: {}", subject, payload);
                     } catch (Exception ex) {
-                        LOGGER.error(
-                                "Failed to publish message "
-                                        + message.getPayload()
-                                        + " to "
-                                        + subject,
-                                ex);
+                        LOGGER.error("Failed to publish message {} to {}", message.getPayload(), subject, ex);
                         throw new RuntimeException(ex);
                     }
                 });
@@ -194,7 +187,7 @@ public abstract class NATSAbstractQueue implements ObservableQueue {
 
     @Override
     public void close() {
-        LOGGER.info("Closing connection for " + queueURI);
+        LOGGER.info("Closing connection for {}", queueURI);
         mu.lock();
         try {
             if (execs != null) {
@@ -240,7 +233,7 @@ public abstract class NATSAbstractQueue implements ObservableQueue {
             return;
         }
 
-        LOGGER.error("Monitor invoked for " + queueURI);
+        LOGGER.error("Monitor invoked for {}", queueURI);
         mu.lock();
         try {
             closeSubs();
@@ -254,7 +247,7 @@ public abstract class NATSAbstractQueue implements ObservableQueue {
                 subscribe();
             }
         } catch (Exception ex) {
-            LOGGER.error("Monitor failed with " + ex.getMessage() + " for " + queueURI, ex);
+            LOGGER.error("Monitor failed with {} for {}", ex.getMessage(), queueURI, ex);
         } finally {
             mu.unlock();
         }

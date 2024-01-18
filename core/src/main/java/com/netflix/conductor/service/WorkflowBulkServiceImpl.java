@@ -28,7 +28,7 @@ import com.netflix.conductor.core.execution.WorkflowExecutor;
 @Service
 public class WorkflowBulkServiceImpl implements WorkflowBulkService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WorkflowBulkService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WorkflowBulkServiceImpl.class);
     private final WorkflowExecutor workflowExecutor;
 
     public WorkflowBulkServiceImpl(WorkflowExecutor workflowExecutor) {

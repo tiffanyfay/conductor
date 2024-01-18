@@ -115,7 +115,7 @@ public class LocalServerRunner {
                         } catch (Exception e) {
                             LOGGER.warn(
                                     "Caught an exception while polling for server running status {}",
-                                    e.getMessage());
+                                    e.getMessage(), e);
                         }
                     },
                     100,

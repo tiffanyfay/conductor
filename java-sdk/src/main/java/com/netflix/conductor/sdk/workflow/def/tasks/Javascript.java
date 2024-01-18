@@ -102,7 +102,7 @@ public class Javascript extends Task<Javascript> {
     public Javascript validate() {
         ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("Nashorn");
         if (scriptEngine == null) {
-            LOGGER.error("missing " + ENGINE + " engine.  Ensure you are running supported JVM");
+            LOGGER.error("missing {} engine.  Ensure you are running supported JVM", ENGINE);
             return this;
         }
 
@@ -130,7 +130,7 @@ public class Javascript extends Task<Javascript> {
 
         ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("Nashorn");
         if (scriptEngine == null) {
-            LOGGER.error("missing " + ENGINE + " engine.  Ensure you are running supported JVM");
+            LOGGER.error("missing {} engine.  Ensure you are running supported JVM", ENGINE);
             return this;
         }
 

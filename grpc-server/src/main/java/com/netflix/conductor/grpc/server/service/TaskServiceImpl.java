@@ -105,7 +105,7 @@ public class TaskServiceImpl extends TaskServiceGrpc.TaskServiceImplBase {
                             GRPC_HELPER.optional(req.getDomain()),
                             count,
                             timeout);
-            LOGGER.info("polled tasks: " + polledTasks);
+            LOGGER.info("polled tasks: {}", polledTasks);
             polledTasks.stream().map(PROTO_MAPPER::toProto).forEach(response::onNext);
             response.onCompleted();
         } catch (Exception e) {

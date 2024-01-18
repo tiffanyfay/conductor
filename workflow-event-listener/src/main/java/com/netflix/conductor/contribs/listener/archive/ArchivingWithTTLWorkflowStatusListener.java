@@ -52,9 +52,7 @@ public class ArchivingWithTTLWorkflowStatusListener implements WorkflowStatusLis
                             Monitors.recordDiscardedArchivalCount();
                         });
         this.scheduledThreadPoolExecutor.setRemoveOnCancelPolicy(true);
-        LOGGER.warn(
-                "Workflow removal with TTL is no longer supported, "
-                        + "when using this class, workflows will be removed immediately");
+        LOGGER.warn("Workflow removal with TTL is no longer supported, when using this class, workflows will be removed immediately");
     }
 
     @PreDestroy
